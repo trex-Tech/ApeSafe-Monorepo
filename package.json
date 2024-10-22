@@ -16,7 +16,11 @@
     "postinstall": "husky install",
     "compile": "yarn workspace @apesafe-monorepo/foundry compile",
     "foundry:test": "yarn workspace @apesafe-monorepo/foundry compile",
-    "test": "forge foundry:test"
+    "test": "forge foundry:test",
+    "react:start": "yarn workspace @apesafe-monorepo/react dev",
+    "react:build": "yarn workspace @apesafe-monorepo/react build",
+    "react:lint": "yarn workspace @apesafe-monorepo/react lint",
+    "react:preview": "yarn workspace @apesafe-monorepo/react preview"
   },
   "husky": {
     "hooks": {
