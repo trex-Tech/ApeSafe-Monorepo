@@ -1,0 +1,16 @@
+{
+  "name": "@apesafe-monorepo/foundry",
+  "version": "0.0.1",
+  "scripts": {
+    "compile": "forge build",
+    "test": "forge test",
+    "deploy": "forge script script/Deploy.s.sol --broadcast",
+    "format": "forge fmt",
+    "lint": "forge lint",
+    "account": "forge account",
+    "chain": "anvil",
+    "flatten": "forge flatten",
+    "fork": "anvil --fork-url <RPC_URL>",
+    "generate": "forge inspect <contract_name> abi > abi/<contract_name>.json"
+  }
+}
