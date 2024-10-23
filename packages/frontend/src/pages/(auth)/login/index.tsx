@@ -52,7 +52,6 @@ export default function LoginPage({}) {
 		}
 	}, [])
 
-
 	return (
 		<CardLayout
 			className="md:w-[40%] z-10 gap-y-4 bg-white dark:bg-bg-dark-50 h-fit min-h-[50vh] items-center justify-center gap-1 px-6 py-12">
