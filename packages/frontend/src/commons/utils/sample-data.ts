@@ -1,0 +1,206 @@
+export const sample_users: IUser[] = [
+	{
+		id: "1",
+		username: "janeDoe123",
+		email: "jane.doe123@gmail.com",
+		contact_verified: true,
+		status: "active",
+		first_name: "Jane",
+		last_name: "Doe",
+		phone_number: "08091234567",
+		profile_details: {
+			location: {
+				coordinates: {
+					latitude: 6.5244,
+					longitude: 3.3792,
+				},
+				address: "12, Ocean Street",
+				city: "Lagos",
+				country: "Nigeria",
+			},
+			bio: "Software developer passionate about pet tech and innovation.",
+			photo: "https://randomuser.me/api/portraits/women/1.jpg",
+			goals: ["pet_buyer", "pet_seller"],
+			owns_pets: true,
+			favourite_pets: ["dogs", "cats"],
+		},
+	},
+	{
+		id: "2",
+		username: "johnSmith21",
+		email: "john.smith21@gmail.com",
+		contact_verified: true,
+		status: "pending",
+		first_name: "John",
+		last_name: "Smith",
+		phone_number: "08097654321",
+		profile_details: {
+			location: {
+				coordinates: {
+					latitude: 51.5074,
+					longitude: -0.1278,
+				},
+				address: "221B Baker Street",
+				city: "London",
+				country: "UK",
+			},
+			bio: "Animal lover with a passion for pet care. Always looking for ways to give pets a better life.",
+			photo: "https://randomuser.me/api/portraits/men/1.jpg",
+			goals: ["pet_service_provider"],
+			owns_pets: true,
+			favourite_pets: ["birds", "rabbits"],
+		},
+	},
+	{
+		id: "3",
+		username: "aliceW",
+		email: "alice.w@gmail.com",
+		contact_verified: true,
+		status: "flagged",
+		first_name: "Alice",
+		last_name: "Walker",
+		phone_number: "07087654321",
+		profile_details: {
+			location: {
+				coordinates: {
+					latitude: 34.0522,
+					longitude: -118.2437,
+				},
+				address: "500, Hollywood Boulevard",
+				city: "Los Angeles",
+				country: "USA",
+			},
+			bio: "Experienced pet trainer with over 10 years in the industry.",
+			photo: "https://randomuser.me/api/portraits/women/2.jpg",
+			goals: ["pet_seller"],
+			owns_pets: false,
+			favourite_pets: ["dogs"],
+		},
+	},
+	{
+		id: "4",
+		username: "williamJones",
+		email: "william.jones@gmail.com",
+		contact_verified: true,
+		status: "active",
+		first_name: "William",
+		last_name: "Jones",
+		phone_number: "08123456789",
+		profile_details: {
+			location: {
+				coordinates: {
+					latitude: -33.8688,
+					longitude: 151.2093,
+				},
+				address: "10, Bondi Beach",
+				city: "Sydney",
+				country: "Australia",
+			},
+			bio: "Veterinarian dedicated to helping animals live healthy lives.",
+			photo: "https://randomuser.me/api/portraits/men/2.jpg",
+			goals: ["pet_buyer"],
+			owns_pets: true,
+			favourite_pets: ["horses", "dogs"],
+		},
+	},
+	{
+		id: "5",
+		username: "sarahM",
+		email: "sarah.m@gmail.com",
+		contact_verified: true,
+		status: "pending",
+		first_name: "Sarah",
+		last_name: "Miller",
+		phone_number: "09098765432",
+		profile_details: {
+			location: {
+				coordinates: {
+					latitude: 40.7128,
+					longitude: -74.006,
+				},
+				address: "100, Wall Street",
+				city: "New York",
+				country: "USA",
+			},
+			bio: "Pet adoption coordinator with a passion for finding homes for every pet.",
+			photo: "https://randomuser.me/api/portraits/women/3.jpg",
+			goals: ["pet_adopter"],
+			owns_pets: true,
+			favourite_pets: ["cats"],
+		},
+	},
+]
+
+
+const post: IPost = {
+	id: "c62fe17d-bfb0-479b-b5c6-7a9ce2e01e74",
+	title: "Trading Crancky off",
+	status: "active",
+	photos: [
+		{
+			id: 27,
+			photo: "https://petassign.com/posts/c5ce0d45-b3b2-4c1f-9942-5bdff7f3ef83.png",
+		},
+	],
+	description: "Crancky is a Crancky cat",
+	special_needs: null,
+	price: "30000.00",
+	seller: {
+		id: "029f1231-9424-4466-b913-1a74526e9ec5",
+		email: "kelliebrighty@gmail.com",
+		username: "kelliebrighty",
+		phone_number: null,
+		first_name: "Kelly",
+		last_name: "Owoju",
+		status: "active",
+		profile_details: {
+			bio: "I am a pet lover",
+			location: {
+				coordinates: {
+					latitude: null,
+					longitude: null,
+				},
+				country: null,
+				city: null,
+				address: null,
+			},
+			photo: "https://petassign.com/profile_photos/c544106d-86b3-4035-9ad3-7c10b12c52dc.jpg",
+		},
+	},
+	created_at: "2024-08-28T07:48:01.637807Z",
+	type: "pet_sale",
+	features: {
+		id: "c2e615ab-3a0f-4183-ae17-be5c828a3b39",
+		pet_name: "Crancky",
+		pet_type: "Cat",
+		age: "2 months",
+		gender: "Female",
+		quantity: null,
+		breed: null,
+		health_status: null,
+	},
+	location: {
+		coordinates: {
+			latitude: 7.508785328270702,
+			longitude: 4.496006640415295,
+		},
+		address: "GF5W+78, Ife 220103, Osun, Nigeria",
+		city: "Ife",
+		country: "Nigeria",
+	},
+}
+
+export const sample_transactions: ITransaction[] = [
+	{
+		id: 1,
+		type: "purchase",
+		amount: "1500",
+		date: "2022-01-10T10:00:00Z",
+		status: "completed",
+		ref_id: "paystack-ref-101",
+		product: post,
+		seller: sample_users[0],
+		buyer: sample_users[1],
+	},
+]
+export const sample_products: IPost[] = [post]
