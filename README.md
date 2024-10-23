@@ -10,3 +10,4 @@ All things ApeSafe. Contract and Frontend code can be found respectively in ./pa
 - Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
 - [Git](https://git-scm.com/downloads)
 - [Foundry](https://book.getfoundry.sh/getting-started/installation) (>= v0.2.0)
+- [Django-Rest](https://www.django-rest-framework.org/) 
