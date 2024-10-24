@@ -8,9 +8,10 @@ interface Props<T = any> {
 	rows: TableRowType<T>[]
 	filter?: { key: string; value: string; type?: "exclude" | "include" }
 	onRowClick?: (row: T) => void
+	tHeadBorder?: boolean
 }
 
-export const renderTable = <T,>({ rows, data, filter, count, onRowClick }: Props<T>) => {
+export const renderTable = <T,>({ rows, data, filter, count, onRowClick, tHeadBorder = true }: Props<T>) => {
 	return (
 		<ThemeProvider theme={MuiTheme}>
 			<TableContainer>
@@ -25,7 +26,8 @@ export const renderTable = <T,>({ rows, data, filter, count, onRowClick }: Props
 									<TableCell
 										className="font-bold capitalize text-gray-300 dark:text-gray-500"
 										sx={{
-											borderTop: 1,
+											borderTop: tHeadBorder ? 1 : 0,
+											borderBottom: tHeadBorder ? 1 : 0,
 											borderColor: "rgba(141,141,141,0.28)",
 										}}
 										key={index}>
