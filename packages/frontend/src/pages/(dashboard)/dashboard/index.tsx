@@ -147,17 +147,17 @@ const HomePage = ({ className }: Props) => {
 	return (
 		<div className={twMerge("mt-[58px] flex w-full flex-col gap-y-4 px-[5%] pb-[5%]", className)}>
 			<p className="h-1 text-off-white ">Welcome,</p>
-			<p className="text-primary-500 h-1 text-2xl">Create a new coin</p>
+			<p className="text-primary-500 h-1 text-2xl">Create a new token</p>
 
-			<label className="mb-0 mt-6">Token Name</label>
-			<div className="flex w-auto flex-row items-center justify-start ">
+			{/* <label className="mb-0 mt-6">Token Name</label> */}
+			<div className="mt-[33px] lg:flex items-end">
 				<FormInput
-					className="w-48 py-2"
-					// label={"Token Name"}
+					className={`py-2 w-[100%] lg:w-[576px]`}
+					label={"Token Name"}
 				/>
 				<CustomButton
 					text="Create Token"
-					className="w-36 "
+					className="w-full lg:w-36 mt-[20px] lg:mt-0"
 					onClick={() => router.push("/create-token")}
 				/>
 			</div>
@@ -169,8 +169,8 @@ const HomePage = ({ className }: Props) => {
 						{ name: "Terminal", component: <div>asd</div> },
 					]}
 				/> */}
-				<div className="flex flex-row gap-x-2">
-					<button
+				{/* <div className="flex flex-row gap-x-2"> */}
+				{/* <button
 						onClick={() => setActiveTab("following")}
 						className={`text-custom-grey ${activeTab === "following" && "border-b-2 border-black dark:border-white"}`}>
 						Following
@@ -179,25 +179,25 @@ const HomePage = ({ className }: Props) => {
 						onClick={() => setActiveTab("terminal")}
 						className={`text-custom-grey ${activeTab === "terminal" && "border-b-2 border-black dark:border-white"}`}>
 						Terminal
-					</button>
-					{/* <div
+					</button> */}
+				{/* <div
 						className={`relative bottom-0 left-0 h-1 w-full bg-red-500 transition-transform duration-300 ease-in-out ${
 							activeTab === "following" ? "translate-x-0" : "translate-x-1/2"
 						}`}
 					/> */}
-				</div>
+				{/* </div> */}
 				<div className="flex flex-row items-center border-b-2">
 					<LucideSearch />
 					<input
 						className="border-none bg-inherit py-2 pl-2 outline-none"
-						placeholder="Search"
+						placeholder="Search token..."
 					/>
 				</div>
 			</div>
 
-			<div>
+			{/* <div>
 				<NFTList items={items} />
-			</div>
+			</div> */}
 
 			<div className="mt-12 flex flex-col rounded-lg border p-4">
 				<div className="mb-6 flex items-center justify-between">
