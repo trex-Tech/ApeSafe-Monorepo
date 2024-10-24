@@ -9,7 +9,7 @@ import { useGetDashboardStats } from "@commons/api/general"
 import FormInput from "@/src/commons/components/FormInput"
 import CustomButton from "@/src/commons/components/CustomButton"
 import TabView from "@/src/commons/components/TabView"
-import { LucideChevronDown, LucideSearch } from "lucide-react"
+import { ArrowDown, ArrowUp, ChevronDown, Search } from "lucide-react"
 import NFTList from "@/src/commons/components/NftList"
 import { renderTable } from "@/src/commons/components/Table"
 
@@ -102,7 +102,7 @@ const rows = [
 		view: (row: any) => (
 			<div className="flex items-center gap-2">
 				<img
-					src={row.logo}
+					src={"/b-icon.png"}
 					alt={row.name}
 					className="h-6 w-6"
 				/>{" "}
@@ -125,10 +125,22 @@ const rows = [
 		value: "change",
 		visible: true,
 		view: (row: any) => (
-			<span
-				className={`rounded-full p-2 text-white ${row.changeType === "positive" ? "bg-green-500" : "bg-red-500"}`}>
-				{row.change}
-			</span>
+			<div className="flex items-center gap-1">
+				<p>{row.change}</p>
+				{row.changeType === "positive" ? (
+					<ArrowUp
+						size={20}
+						color="green"
+						strokeWidth={3}
+					/>
+				) : (
+					<ArrowDown
+						size={20}
+						color="red"
+						strokeWidth={3}
+					/>
+				)}
+			</div>
 		),
 	},
 	{
@@ -146,48 +158,24 @@ const HomePage = ({ className }: Props) => {
 
 	return (
 		<div className={twMerge("mt-[58px] flex w-full flex-col gap-y-4 px-[5%] pb-[5%]", className)}>
-			<p className="h-1 text-off-white ">Welcome,</p>
+			<p className="text-off-white h-1 ">Welcome,</p>
 			<p className="text-primary-500 h-1 text-2xl">Create a new token</p>
 
-			{/* <label className="mb-0 mt-6">Token Name</label> */}
-			<div className="mt-[33px] lg:flex items-end">
-				<FormInput
-					className={`py-2 w-[100%] lg:w-[576px]`}
-					label={"Token Name"}
-				/>
+			<label className="mt-6">Token Name</label>
+			<div className="-mt-4 flex w-auto items-center justify-between gap-x-4 md:justify-start">
+				<div className="w-[55%] md:w-[45%]">
+					<FormInput className="py-2" />
+				</div>
 				<CustomButton
 					text="Create Token"
-					className="w-full lg:w-36 mt-[20px] lg:mt-0"
+					className="rounded-md"
 					onClick={() => router.push("/create-token")}
 				/>
 			</div>
 
-			<div className="mt-8 flex flex-row items-center justify-between">
-				{/* <TabView
-					tabs={[
-						{ name: "Following", component: <div className="w-full border">asd</div> },
-						{ name: "Terminal", component: <div>asd</div> },
-					]}
-				/> */}
-				{/* <div className="flex flex-row gap-x-2"> */}
-				{/* <button
-						onClick={() => setActiveTab("following")}
-						className={`text-custom-grey ${activeTab === "following" && "border-b-2 border-black dark:border-white"}`}>
-						Following
-					</button>
-					<button
-						onClick={() => setActiveTab("terminal")}
-						className={`text-custom-grey ${activeTab === "terminal" && "border-b-2 border-black dark:border-white"}`}>
-						Terminal
-					</button> */}
-				{/* <div
-						className={`relative bottom-0 left-0 h-1 w-full bg-red-500 transition-transform duration-300 ease-in-out ${
-							activeTab === "following" ? "translate-x-0" : "translate-x-1/2"
-						}`}
-					/> */}
-				{/* </div> */}
-				<div className="flex flex-row items-center border-b-2">
-					<LucideSearch />
+			<div className="mt-4 flex flex-col items-start md:flex-row  md:items-center md:justify-between">
+				<div className=" flex w-full flex-row items-center border-b-2 md:mt-0 md:w-[25%]">
+					<Search />
 					<input
 						className="border-none bg-inherit py-2 pl-2 outline-none"
 						placeholder="Search token..."
@@ -199,18 +187,18 @@ const HomePage = ({ className }: Props) => {
 				<NFTList items={items} />
 			</div> */}
 
-			<div className="mt-12 flex flex-col rounded-lg border p-4">
-				<div className="mb-6 flex items-center justify-between">
+			<div className="mt-4 flex flex-col rounded-lg border p-4">
+				<div className="mb-6 flex flex-col justify-between md:flex-row md:items-center">
 					<h3 className="text-[20px]">Tokens</h3>
 					<div className="flex gap-x-4">
 						<FormInput
-							startIcon={<LucideSearch />}
+							startIcon={<Search />}
 							placeholder="Search"
 							className="py-2"
 						/>
-						<button className="flex items-center rounded-lg bg-input bg-off-white px-2 py-0">
+						<button className="bg-off-white hidden items-center rounded-lg bg-input px-2 py-0 md:flex">
 							<p className="whitespace-nowrap">Sort by date</p>
-							<LucideChevronDown />
+							<ChevronDown />
 						</button>
 					</div>
 				</div>
