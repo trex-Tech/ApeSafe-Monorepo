@@ -164,31 +164,16 @@ const HomePage = ({ className }: Props) => {
 			<label className="mt-6">Token Name</label>
 			<div className="-mt-4 flex w-auto items-center justify-between gap-x-4 md:justify-start">
 				<div className="w-[55%] md:w-[45%]">
-					<FormInput
-						className="py-2"
-						width={"45%"}
-					/>
+					<FormInput className="py-2" />
 				</div>
 				<CustomButton
 					text="Create Token"
-					className="mt-[20px] w-full lg:mt-0 lg:rounded-sm"
+					className="rounded-md"
 					onClick={() => router.push("/create-token")}
 				/>
 			</div>
 
-			<div className="mt-8 flex flex-col items-start md:flex-row  md:items-center md:justify-between">
-				{/* <div className="flex flex-row gap-x-2">
-					<button
-						onClick={() => setActiveTab("following")}
-						className={`text-custom-grey ${activeTab === "following" && "border-b-2 border-black dark:border-white"}`}>
-						Following
-					</button>
-					<button
-						onClick={() => setActiveTab("terminal")}
-						className={`text-custom-grey ${activeTab === "terminal" && "border-b-2 border-black dark:border-white"}`}>
-						Terminal
-					</button>
-				</div> */}
+			<div className="mt-4 flex flex-col items-start md:flex-row  md:items-center md:justify-between">
 				<div className=" flex w-full flex-row items-center border-b-2 md:mt-0 md:w-[25%]">
 					<Search />
 					<input
@@ -202,7 +187,7 @@ const HomePage = ({ className }: Props) => {
 				<NFTList items={items} />
 			</div> */}
 
-			<div className="mt-12 flex flex-col rounded-lg border p-4">
+			<div className="mt-4 flex flex-col rounded-lg border p-4">
 				<div className="mb-6 flex flex-col justify-between md:flex-row md:items-center">
 					<h3 className="text-[20px]">Tokens</h3>
 					<div className="flex gap-x-4">
@@ -211,7 +196,7 @@ const HomePage = ({ className }: Props) => {
 							placeholder="Search"
 							className="py-2"
 						/>
-						<button className="bg-off-white flex hidden items-center rounded-lg bg-input px-2 py-0 md:flex">
+						<button className="bg-off-white hidden items-center rounded-lg bg-input px-2 py-0 md:flex">
 							<p className="whitespace-nowrap">Sort by date</p>
 							<ChevronDown />
 						</button>
