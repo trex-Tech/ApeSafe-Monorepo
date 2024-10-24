@@ -1,10 +1,12 @@
 import CustomButton from "@/src/commons/components/CustomButton"
 import FileUploader from "@/src/commons/components/FileUploader"
 import FormInput from "@/src/commons/components/FormInput"
+import { useRouter } from "@/src/commons/router"
 import React, { useState } from "react"
 
 const index = () => {
 	const [files, setFiles] = useState<File[]>([])
+	const router = useRouter()
 
 	const handleFileChange = (file: File) => {
 		console.log("File changed:", file)
@@ -15,7 +17,7 @@ const index = () => {
 		<div className={`mt-[58px] px-[5%]`}>
 			<div>
 				<p className={`text-center text-[#C3C3C3] lg:text-left`}>Setup token</p>
-				<p className={`mt-[7px] text-center text-[24px] text-[#C3C3C3] lg:text-[30px]`}>
+				<p className={`mt-[7px] text-center lg:text-left text-[24px] text-[#C3C3C3] lg:text-[30px]`}>
 					Setup your HERITAGE token
 				</p>
 			</div>
@@ -73,7 +75,10 @@ const index = () => {
 					/>
 				</div>
 				<div className={`my-[26px] flex lg:w-[50%] lg:justify-end`}>
-					<CustomButton text="Launch Token" />
+					<CustomButton
+						text="Launch Token"
+						onClick={() => router.push("/select-chain")}
+					/>
 				</div>
 			</div>
 		</div>
