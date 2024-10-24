@@ -5,7 +5,8 @@
   "workspaces": {
     "packages": [
       "packages/foundry",
-      "packages/react"
+      "packages/react",
+      "packages/django-rest"
     ]
   },
   "devDependencies": {
@@ -20,7 +21,8 @@
     "react:start": "yarn workspace @apesafe-monorepo/react dev",
     "react:build": "yarn workspace @apesafe-monorepo/react build",
     "react:lint": "yarn workspace @apesafe-monorepo/react lint",
-    "react:preview": "yarn workspace @apesafe-monorepo/react preview"
+    "react:preview": "yarn workspace @apesafe-monorepo/react preview",
+    "django:start": "yarn workspace @apesafe-monorepo/django-rest dev" 
   },
   "husky": {
     "hooks": {
