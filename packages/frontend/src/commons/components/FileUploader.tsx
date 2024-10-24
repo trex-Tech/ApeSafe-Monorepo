@@ -41,7 +41,7 @@ const FileUploader = (props: Props) => {
 		<div className={twMerge("flex flex-col", className)}>
 			{
 				(files.length > 0) && (
-					<div className="flex my-4 flex-wrap w-full h-[20vh] gap-4">
+					<div className="flex my-4 flex-wrap w-full h-[150px] gap-4">
 						{
 							files.map((file, i) => (
 								file.type.includes("image") ? (
@@ -80,9 +80,9 @@ const FileUploader = (props: Props) => {
 						handleChange={fileChangedHandler}
 						name="file"
 						types={allowedFileTypes}>
-						<div className={"w-full"}>
+						<div className={"w-full h-[300px]"}>
 							<label
-								className={twMerge("flex w-full h-[20vh] cursor-pointer flex-col gap-2 appearance-none justify-center items-center overflow-clip rounded-lg border-2 border-dashed border-gray-600 bg-primary-dark transition hover:border-gray-400 focus:outline-none dark:bg-bg-dark-50", fieldClassName)}>
+								className={twMerge("flex w-full h-full cursor-pointer flex-col gap-2 appearance-none justify-center items-center overflow-clip rounded-lg border-2 border-dashed border-gray-600 bg-primary-dark transition hover:border-gray-400 focus:outline-none dark:bg-bg-dark-50", fieldClassName)}>
 
 								<ArrowUpOnSquareIcon className="h-8 w-8 text-gray-500" />
 								<p className="text-gray-500 text-lg font-heading">{prompt}</p>

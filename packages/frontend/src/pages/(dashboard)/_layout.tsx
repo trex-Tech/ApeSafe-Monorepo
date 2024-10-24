@@ -7,18 +7,14 @@ import { useGlobalStore } from "@store"
 import { useRouter } from "@router"
 
 const DashboardLayout = ({ children }) => {
-
 	const { loading } = useGlobalStore()
 	const router = useRouter()
 
-
 	return (
-		<main className="flex flex-col w-full h-screen">
+		<main className="flex h-screen w-full flex-col">
 			<Header />
 
-			<div>
-				{children ? children : (<Outlet />)}
-			</div>
+			<div>{children ? children : <Outlet />}</div>
 		</main>
 	)
 }
