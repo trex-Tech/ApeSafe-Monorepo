@@ -4,6 +4,13 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+class Chain(UuidModel):
+    name = models.CharField(max_length=255, help_text="Name of the chain")
+    contract_address = models.CharField(max_length=255, help_text="Contract address of the chain")
+
+    def __str__(self):
+        return self.name
+
 class Token(UuidModel):
     name = models.CharField(max_length=255, help_text="Name of the token")
     ticker = models.CharField(max_length=10, unique=True, help_text="Ticker symbol for the token")
@@ -15,7 +22,8 @@ class Token(UuidModel):
     twitter_url = models.URLField(max_length=200, blank=True, null=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tokens')
     date_created = models.DateTimeField(auto_now_add=True)
-    chains = models.ManyToManyField()
+    chains = models.ManyToManyField(Chain)
+
 
     def __str__(self):
         return self.name

@@ -1,9 +1,15 @@
 from rest_framework import serializers
-from .models import Token
+from .models import Token, Chain
 from drf_extra_fields.fields import Base64ImageField
+
+class ChainSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Chain
+        fields = '__all__'
 
 class TokenSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
+    chains = ChainSerializer(many=True)
     class Meta:
         model = Token
         fields = '__all__'
@@ -12,4 +18,12 @@ class TokenSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context.get('request')  
         validated_data['creator'] = request.user  
-        return super().create(validated_data)
+        chains_data = validated_data.pop('chains')
+        token = super().create(validated_data)
+        for chain_data in chains_data:
+            chain, created = Chain.objects.get_or_create(
+                name=chain_data.get('name'),
+                contract_address=chain_data.get('contract_address'),
+            )
+            token.chains.add(chain)
+        return token
