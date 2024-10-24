@@ -5,7 +5,7 @@
   "workspaces": {
     "packages": [
       "packages/foundry",
-      "packages/react"
+      "packages/frontend"
     ]
   },
   "devDependencies": {
@@ -15,12 +15,14 @@
   "scripts": {
     "postinstall": "husky install",
     "compile": "yarn workspace @apesafe-monorepo/foundry compile",
+    "deploy": "yarn workspace @apesafe-monorepo/foundry deploy",
     "foundry:test": "yarn workspace @apesafe-monorepo/foundry compile",
+    "foundry:add-pkg": "yarn workspace @apesafe-monorepo/foundry forge-install --no-commit",
     "test": "forge foundry:test",
-    "react:start": "yarn workspace @apesafe-monorepo/react dev",
-    "react:build": "yarn workspace @apesafe-monorepo/react build",
-    "react:lint": "yarn workspace @apesafe-monorepo/react lint",
-    "react:preview": "yarn workspace @apesafe-monorepo/react preview"
+    "react:start": "yarn workspace @apesafe-monorepo/frontend start",
+    "react:build": "yarn workspace @apesafe-monorepo/frontend build",
+    "react:lint": "yarn workspace @apesafe-monorepo/frontend prettier",
+    "react:preview": "yarn workspace @apesafe-monorepo/frontend preview"
   },
   "husky": {
     "hooks": {

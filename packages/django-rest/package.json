@@ -1,0 +1,7 @@
+{
+  "name": "@apesafe-monorepo/django-rest",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {"dev":"python manage.py runserver"}
+}

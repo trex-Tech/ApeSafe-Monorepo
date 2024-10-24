@@ -157,9 +157,9 @@ const HomePage = ({ className }: Props) => {
 	const [activeTab, setActiveTab] = useState<"following" | "terminal">("following")
 
 	return (
-		<div className={twMerge("flex w-full flex-col gap-y-4 px-[5%] pb-[5%]", className)}>
-			<p className="text-off-white h-1 text-center font-semibold md:text-left ">Welcome,</p>
-			<p className="text-primary-500 h-1 text-center text-3xl font-semibold md:text-left">Create a new coin</p>
+		<div className={twMerge("mt-[58px] flex w-full flex-col gap-y-4 px-[5%] pb-[5%]", className)}>
+			<p className="text-off-white h-1 ">Welcome,</p>
+			<p className="text-primary-500 h-1 text-2xl">Create a new token</p>
 
 			<label className="mt-6">Token Name</label>
 			<div className="-mt-4 flex w-auto items-center justify-between gap-x-4 md:justify-start">
@@ -171,7 +171,8 @@ const HomePage = ({ className }: Props) => {
 				</div>
 				<CustomButton
 					text="Create Token"
-					className="rounded-sm "
+					className="mt-[20px] w-full lg:mt-0 lg:rounded-sm"
+					onClick={() => router.push("/create-token")}
 				/>
 			</div>
 
@@ -192,14 +193,14 @@ const HomePage = ({ className }: Props) => {
 					<Search />
 					<input
 						className="border-none bg-inherit py-2 pl-2 outline-none"
-						placeholder="Search"
+						placeholder="Search token..."
 					/>
 				</div>
 			</div>
 
-			<div>
+			{/* <div>
 				<NFTList items={items} />
-			</div>
+			</div> */}
 
 			<div className="mt-12 flex flex-col rounded-lg border p-4">
 				<div className="mb-6 flex flex-col justify-between md:flex-row md:items-center">
