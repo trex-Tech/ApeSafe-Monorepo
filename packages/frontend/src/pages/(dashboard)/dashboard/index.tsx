@@ -16,14 +16,9 @@ const HomePage = ({ className }: Props) => {
 	const { user } = useUserStore()
 	const { data: stats } = useGetDashboardStats()
 
-
 	return (
 		<div className={twMerge("flex w-full flex-col gap-y-4 px-[5%] pb-[5%]", className)}>
-
-			<p className="h-1 text-2xl text-primary-500">
-				This is homepage [START EDITING HERE]
-			</p>
-
+			<p className="text-primary-500 h-1 text-2xl">This is homepage [START EDITING HERE]</p>
 		</div>
 	)
 }
