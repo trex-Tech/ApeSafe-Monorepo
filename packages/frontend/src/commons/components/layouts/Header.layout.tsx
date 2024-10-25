@@ -7,12 +7,13 @@ import ThemeSwitch from "@components/ThemeSwitch"
 import DynamicBreadcrumb from "@components/DynamicBreadcrumb"
 import ApeSafeLogo from "@assets/images/apesafe-logo.svg"
 import CustomButton from "../CustomButton"
-
+import { useAppKit } from "@reown/appkit/react"
 type Props = {
 	className?: string
 } & React.PropsWithChildren
 
 const Header = ({ className = "" }: Props) => {
+	const { open} = useAppKit()
 	const { user } = useUserStore()
 	const { loading } = useGlobalStore()
 	const router = useRouter()
@@ -60,9 +61,11 @@ const Header = ({ className = "" }: Props) => {
 				</div>
 			</div>
 			<div className={`flex flex-row items-center gap-x-10`}>
+			
 				<CustomButton
 					text="Connect Wallet"
 					className="w-[155px]"
+					onClick={() => open()}
 				/>
 			</div>
 		</div>
