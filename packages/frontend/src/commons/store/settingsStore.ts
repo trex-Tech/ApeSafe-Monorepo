@@ -13,7 +13,7 @@ interface SettingsState {
 
 
 export const useSettingsStore = create<SettingsState>((set) => ({
-	darkMode: false,
+	darkMode: true,
 	setDarkMode: (value) => set({ darkMode: value }),
 	biometricAuthEnabled: false,
 	setBiometricAuthEnabled: (value) => set((state) => ({ biometricAuthEnabled: value })),
