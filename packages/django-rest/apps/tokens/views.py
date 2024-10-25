@@ -48,14 +48,15 @@ class TokenViewSet(viewsets.ModelViewSet):
         }
 
         return Response(response_data, status=status.HTTP_201_CREATED)
-    
+
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', True)
         instance = self.get_object()
-        
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
-        
+
         chains_data = request.data.get('chains', [])
         if chains_data:
             new_chains = []
@@ -69,30 +70,28 @@ class TokenViewSet(viewsets.ModelViewSet):
             instance.chains.add(*new_chains)
 
         serializer.save()
-        
+
         response_data.update({
             "result": serializer.data,
             "message": "Token updated successfully",
             "status": status.HTTP_200_OK,
             "success": True
         })
-        
+
         return Response(response_data, status=status.HTTP_200_OK)
 
-    
-  
     def list(self, request, *args, **kwargs):
 
         search_query = self.request.GET.get('search', '')
 
         if search_query:
-            get_search = queryset.objects.filter(
+            get_search = Token.objects.filter(
                 Q(name__icontains=search_query) | Q(description__icontains=search_query))
             seriailizer = self.get_serializer(get_search, many=True)
             response_data['result'] = seriailizer.data
             return Response(response_data, status=status.HTTP_200_OK)
         else:
-            get_all = queryset.objects.all()
+            get_all = Token.objects.all()
             seriailizer = self.get_serializer(get_all, many=True)
             response_data['result'] = seriailizer.data
             response_data['status'] = status.HTTP_200_OK
