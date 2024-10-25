@@ -13,7 +13,7 @@ class Chain(UuidModel):
 
 class Token(UuidModel):
     name = models.CharField(max_length=255, help_text="Name of the token")
-    ticker = models.CharField(max_length=10, unique=True, help_text="Ticker symbol for the token")
+    ticker = models.CharField(max_length=20, unique=True, help_text="Ticker symbol for the token")
     description = models.TextField(help_text="Description of the token")
     image = models.ImageField(upload_to='tokens/') 
 

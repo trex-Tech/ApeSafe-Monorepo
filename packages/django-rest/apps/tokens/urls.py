@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import TokenViewSet
 
 router = DefaultRouter()
-router.register(r'create-token', TokenViewSet)
+router.register(r'token', TokenViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

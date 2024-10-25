@@ -27,3 +27,20 @@ class TokenSerializer(serializers.ModelSerializer):
             )
             token.chains.add(chain)
         return token
+    
+    def update(self, instance, validated_data):
+        chains_data = validated_data.pop('chains', None)
+        instance = super().update(instance, validated_data)
+
+        if chains_data:
+            instance.chains.clear() 
+            
+            for chain_data in chains_data:
+                chain, created = Chain.objects.get_or_create(
+                    name=chain_data.get('name'),
+                    contract_address=chain_data.get('contract_address'),
+                )
+                instance.chains.add(chain)
+
+        instance.save()
+        return instance
