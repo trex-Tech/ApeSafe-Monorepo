@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import useUserStore from "@store/userStore"
 import { usePathname, useRouter } from "@router"
 import { api, handleApiError } from "@utils/axiosProvider"
@@ -8,27 +8,28 @@ import DynamicBreadcrumb from "@components/DynamicBreadcrumb"
 import ApeSafeLogo from "@assets/images/apesafe-logo.svg"
 import CustomButton from "../CustomButton"
 import { useAppKit } from "@reown/appkit/react"
+import { useAccount, useBalance } from "wagmi"
+import LoadingSpinner from "../LoadingSpinner"
 type Props = {
 	className?: string
 } & React.PropsWithChildren
 
 const Header = ({ className = "" }: Props) => {
 	const { open } = useAppKit()
-	const { user } = useUserStore()
-	const { loading } = useGlobalStore()
 	const router = useRouter()
-	const pathname = usePathname()
+	const { address, isConnected } = useAccount()
+	const { data: balanceData, isLoading } = useBalance({
+		address,
+	})
+	const [showWalletInfo, setShowWalletInfo] = useState(false)
 
-	let logOut = () => {
-		loading.start()
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setShowWalletInfo(true)
+		}, 2000)
 
-		api.post("/auth/logout", {})
-			.then(() => {
-				router.push("/login")
-			})
-			.catch(handleApiError)
-			.finally(loading.reset)
-	}
+		return () => clearTimeout(timer)
+	}, [])
 
 	return (
 		<div
@@ -61,11 +62,27 @@ const Header = ({ className = "" }: Props) => {
 				</div>
 			</div>
 			<div className={`flex flex-row items-center gap-x-10`}>
-				<CustomButton
-					text="Connect Wallet"
-					className="w-[155px]"
-					onClick={() => open()}
-				/>
+				<div className={"flex cursor-pointer text-white"}>
+					{!isLoading ? (
+						<>
+							{isConnected && balanceData ? (
+								<CustomButton
+									text={`${address.substring(36, 42)} 🐸 ${balanceData.formatted.substring(0, 4)} ETH `}
+									className="w-[200px]"
+									onClick={() => open()}
+								/>
+							) : (
+								<CustomButton
+									text="Connect Wallet"
+									className="w-[155px]"
+									onClick={() => open()}
+								/>
+							)}
+						</>
+					) : (
+						<LoadingSpinner />
+					)}
+				</div>
 			</div>
 		</div>
 	)
