@@ -7,6 +7,3 @@
 [submodule "packages/foundry/lib/example-native-token-transfers"]
 	path = packages/foundry/lib/example-native-token-transfers
 	url = https://github.com/wormhole-foundation/example-native-token-transfers.git
-[submodule "packages/foundry/lib/wormhole-solidity-sdk"]
-	path = packages/foundry/lib/wormhole-solidity-sdk
-	url = https://github.com/wormhole-foundation/wormhole-solidity-sdk
