@@ -20,15 +20,15 @@ retrieveSettings().then(()=>console.log("Settings retrieved and loaded"))
 
 function BaseLayout({}) {
 
-	const { darkMode: isDark } = useSettingsStore()
+	// const { darkMode: isDark } = useSettingsStore()
 
-	useEffect(() => {
-		if (isDark) {
-			document.body.classList.add("dark")
-		} else {
-			document.body.classList.remove("dark")
-		}
-	}, [isDark])
+	// useEffect(() => {
+	// 	if (isDark) {
+	// 		document.body.classList.add("dark")
+	// 	} else {
+	// 		document.body.classList.remove("dark")
+	// 	}
+	// }, [isDark])
 
 
 	return (
