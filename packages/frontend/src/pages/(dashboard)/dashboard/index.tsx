@@ -1,96 +1,20 @@
 import { twMerge } from "tailwind-merge"
-import React, { useState } from "react"
-import CustomText from "@components/CustomText"
+import React, { useEffect } from "react"
 import { useRouter } from "@router"
 import useUserStore from "@store/userStore"
-import AvatarImage from "@components/AvatarImage"
-import { StarIcon } from "@heroicons/react/24/solid"
-import { useGetDashboardStats } from "@commons/api/general"
 import FormInput from "@/src/commons/components/FormInput"
 import CustomButton from "@/src/commons/components/CustomButton"
-import TabView from "@/src/commons/components/TabView"
 import { ArrowDown, ArrowUp, ChevronDown, Search } from "lucide-react"
-import NFTList from "@/src/commons/components/NftList"
 import { renderTable } from "@/src/commons/components/Table"
 import { useAccount } from "wagmi"
+import { TableRowType } from "@interfaces"
+import { useGetAllTokens } from "@commons/api/tokens"
 
 interface Props {
 	className?: string
 }
 
-const items = [
-	{
-		id: 1,
-		image: "https://media.mkpcdn.com/prod/1000x/d41d8cd98f00b204e9800998ecf8427e_656731.jpg",
-		createdBy: "heritage",
-		timeAgo: "10h ago",
-		marketCap: "4.9K",
-		replies: "13",
-		token: "TKN",
-	},
-	{
-		id: 2,
-		image: "https://media.mkpcdn.com/prod/1000x/d41d8cd98f00b204e9800998ecf8427e_656731.jpg",
-		createdBy: "heritage",
-		timeAgo: "10h ago",
-		marketCap: "4.9K",
-		replies: "13",
-		token: "TKN",
-	},
-	{
-		id: 3,
-		image: "https://media.mkpcdn.com/prod/1000x/d41d8cd98f00b204e9800998ecf8427e_656731.jpg",
-		createdBy: "heritage",
-		timeAgo: "10h ago",
-		marketCap: "4.9K",
-		replies: "13",
-		token: "TKN",
-	},
-	{
-		id: 4,
-		image: "https://media.mkpcdn.com/prod/1000x/d41d8cd98f00b204e9800998ecf8427e_656731.jpg",
-		createdBy: "heritage",
-		timeAgo: "10h ago",
-		marketCap: "4.9K",
-		replies: "13",
-		token: "TKN",
-	},
-]
-
-const data = [
-	{
-		rank: 1,
-		name: "TOKEN",
-		ticker: "TKN",
-		creator: "Heritage",
-		change: "+26%",
-		date: "04/09/24",
-		logo: "path/to/bitcoin.png",
-		changeType: "positive", // This can be used to determine the color of the change bubble
-	},
-	{
-		rank: 2,
-		name: "Ethereum",
-		ticker: "$1,850",
-		creator: "Txnt",
-		change: "+12%",
-		date: "01/06/24",
-		logo: "path/to/ethereum.png",
-		changeType: "positive",
-	},
-	{
-		rank: 3,
-		name: "Solana",
-		ticker: "$25.6",
-		creator: "Crypto_m",
-		change: "-18%",
-		date: "02/04/24",
-		logo: "path/to/solana.png",
-		changeType: "negative",
-	},
-]
-
-const rows = [
+const rows: TableRowType<IToken>[] = [
 	{
 		label: "Rank",
 		value: "rank",
@@ -100,7 +24,7 @@ const rows = [
 		label: "Name",
 		value: "name",
 		visible: true,
-		view: (row: any) => (
+		view: (row) => (
 			<div className="flex items-center gap-2">
 				<img
 					src={"/b-icon.png"}
@@ -118,7 +42,7 @@ const rows = [
 	},
 	{
 		label: "Creator",
-		value: "creator",
+		value: "creator.username" as any,
 		visible: true,
 	},
 	{
@@ -128,7 +52,7 @@ const rows = [
 		view: (row: any) => (
 			<div className="flex items-center gap-1">
 				<p>{row.change}</p>
-				{row.changeType === "positive" ? (
+				{row.change > 0 ? (
 					<ArrowUp
 						size={20}
 						color="green"
@@ -146,7 +70,7 @@ const rows = [
 	},
 	{
 		label: "Date",
-		value: "date",
+		format: (row) => new Date(row.date).toDateString(),
 		visible: true,
 	},
 ]
@@ -154,13 +78,18 @@ const rows = [
 const HomePage = ({ className }: Props) => {
 	const router = useRouter()
 	const { user } = useUserStore()
-	const { data: stats } = useGetDashboardStats()
-	const [activeTab, setActiveTab] = useState<"following" | "terminal">("following")
+	const { data } = useGetAllTokens()
 	const { address } = useAccount()
 
+	useEffect(() => {
+		console.log(data)
+	}, [data])
+
 	return (
-		<div className={twMerge("mt-[58px] flex w-full flex-col gap-y-4 px-[5%] pb-[5%]", className)}>
-			<p className="h-1 text-off-white ">{address ? `Welcome, ${address.substring(36, 42)} 🐸` : "Welcome, mate"}</p>
+		<div className={twMerge("flex w-full flex-col gap-y-4", className)}>
+			<p className="h-1 text-off-white ">
+				{address ? `Welcome, ${address.substring(36, 42)} 🐸` : "Welcome, mate"}
+			</p>
 			<p className="text-primary-500 h-1 text-2xl">Create a new token</p>
 
 			<label className="mt-6">Token Name</label>
@@ -205,7 +134,14 @@ const HomePage = ({ className }: Props) => {
 					</div>
 				</div>
 
-				{renderTable({ rows, data, tHeadBorder: false })}
+				{renderTable<IToken>({
+					rows,
+					data,
+					tHeadBorder: false,
+					onRowClick: (row) => {
+						router.push(`/tokens/${row.ticker}`)
+					},
+				})}
 			</div>
 		</div>
 	)

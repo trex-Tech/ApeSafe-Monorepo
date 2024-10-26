@@ -37,8 +37,7 @@ export const renderTable = <T,>({ rows, data, filter, count, onRowClick, tHeadBo
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{sortArrayByDate(data, "createdAt")
-							?.filter((row) => {
+						{data?.filter((row) => {
 								if (filter) {
 									if (filter?.type == "exclude") {
 										return (

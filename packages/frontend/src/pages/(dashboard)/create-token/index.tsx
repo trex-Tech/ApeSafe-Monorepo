@@ -27,7 +27,7 @@ const index = () => {
 	}
 
 	return (
-		<div className={`mt-[58px] px-[5%]`}>
+		<div className={``}>
 			<div>
 				<p className={`mt-[7px] text-center text-[24px] text-[#C3C3C3] lg:text-left lg:text-[30px]`}>
 					Setup your HERITAGE token
