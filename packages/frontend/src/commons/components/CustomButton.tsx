@@ -42,7 +42,7 @@ const CustomButton = (props: CustomButtonProps) => {
 		secondary: `${border && "border"} bg-secondary text-primary-dark hover:ring-2 px-4`,
 		"outlined-gray": "text-white border border-outline hover:ring-2 px-4",
 		outlined: "text-primary border border-primary hover:ring-2 px-4",
-		text: `text-black dark:text-white w-fit px-0 hover:text-secondary px-0`,
+		text: `w-fit px-0 hover:text-secondary px-0`,
 		"text-gradient": `text-secondary w-fit px-0 `,
 	}[variant]
 
@@ -52,7 +52,7 @@ const CustomButton = (props: CustomButtonProps) => {
 	}
 
 	const classes = twMerge(
-		`${styling} py-2 font-[500]  h-fit flex justify-center items-center gap-1 cursor-pointer rounded-xl font-heading relative overflow-hidden transition duration-500 ${className} ${(disabled === true) && "cursor-not-allowed bg-gray-700 text-white opacity-50"}`,
+		`${styling} py-2 font-[500]  h-fit flex justify-center items-center gap-1 cursor-pointer rounded-md font-heading relative overflow-hidden transition duration-500 ${className} ${(disabled === true) && "cursor-not-allowed bg-gray-700 text-white opacity-50"}`,
 	)
 
 	return (

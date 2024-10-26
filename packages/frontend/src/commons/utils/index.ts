@@ -144,7 +144,7 @@ export const formatAmount = (
 	return Number(amount).toFixed(2)
 }
 
-export function getNestedProperty(obj: object, path: string) {
+export function getNestedProperty(obj: object | any, path: string) {
 	const keys = path.split(".")
 	let nestedObj: any = obj
 	for (const key of keys) {

@@ -1,13 +1,17 @@
 import { UseFormProps } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { ObjectSchema } from "yup"
 
 interface Config {
-	useForm: UseFormProps
+	useForm: (props: UseFormProps, schema: ObjectSchema<any>) => UseFormProps
 }
 
 const CONFIG: Config = {
-	useForm: {
+	useForm: (props = {}, schema) => ({
 		mode: "all",
-	},
+		resolver: schema ? yupResolver(schema) : null,
+		...props,
+	}),
 }
 
 export default CONFIG
