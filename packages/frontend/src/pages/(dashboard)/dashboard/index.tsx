@@ -12,6 +12,7 @@ import TabView from "@/src/commons/components/TabView"
 import { ArrowDown, ArrowUp, ChevronDown, Search } from "lucide-react"
 import NFTList from "@/src/commons/components/NftList"
 import { renderTable } from "@/src/commons/components/Table"
+import { useAccount } from "wagmi"
 
 interface Props {
 	className?: string
@@ -155,10 +156,11 @@ const HomePage = ({ className }: Props) => {
 	const { user } = useUserStore()
 	const { data: stats } = useGetDashboardStats()
 	const [activeTab, setActiveTab] = useState<"following" | "terminal">("following")
+	const { address } = useAccount()
 
 	return (
 		<div className={twMerge("mt-[58px] flex w-full flex-col gap-y-4 px-[5%] pb-[5%]", className)}>
-			<p className="text-off-white h-1 ">Welcome,</p>
+			<p className="h-1 text-off-white ">{address ? `Welcome, ${address.substring(36, 42)} 🐸` : "Welcome, mate"}</p>
 			<p className="text-primary-500 h-1 text-2xl">Create a new token</p>
 
 			<label className="mt-6">Token Name</label>
@@ -196,7 +198,7 @@ const HomePage = ({ className }: Props) => {
 							placeholder="Search"
 							className="py-2"
 						/>
-						<button className="bg-off-white hidden items-center rounded-lg bg-input px-2 py-0 md:flex">
+						<button className="hidden items-center rounded-lg bg-input bg-off-white px-2 py-0 md:flex">
 							<p className="whitespace-nowrap">Sort by date</p>
 							<ChevronDown />
 						</button>
