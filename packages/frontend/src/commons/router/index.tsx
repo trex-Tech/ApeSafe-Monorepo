@@ -15,18 +15,17 @@ export const usePathname = () => {
 
 export const useRouter = () => {
 	const navigate = useNavigate()
+	const location = window.location
 
-	const push = (path: string) => {
-		return navigate(path)
-	}
+	const push = (path: Path) => navigate(path)
+	const replace = (path: Path) => navigate(path, { replace: true })
 
-	const replace = (path: Path) => {
-		return navigate(path, { replace: true })
-	}
+	const query = Object.fromEntries(new URLSearchParams(location.search))
 
 	return {
 		push,
 		replace,
+		query,
 	}
 }
 

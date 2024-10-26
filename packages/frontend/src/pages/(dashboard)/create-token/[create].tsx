@@ -3,11 +3,12 @@ import FileUploader from "@/src/commons/components/FileUploader"
 import FormInput from "@/src/commons/components/FormInput"
 import { useRouter } from "@/src/commons/router"
 import React, { useState, useEffect } from "react"
-import { useWriteContract, useAccount, useWaitForTransactionReceipt } from 'wagmi'
+import { useWriteContract, useAccount, useWaitForTransactionReceipt } from "wagmi"
 import mockHubFactoryAbi from "@/src/commons/abi/MockHubFactory"
-import { useAppKitState } from '@reown/appkit/react'
+import { useAppKitState } from "@reown/appkit/react"
+import { useParams } from "@router"
 
-const index = () => {
+const CreateTokenPage = () => {
 	const [files, setFiles] = useState<File[]>([])
 	const router = useRouter()
 	const [tokenTicker, setTokenTicker] = useState<string>("")
@@ -16,10 +17,10 @@ const index = () => {
 	const [telegramLink, setTelegramLink] = useState<string>("")
 	const [websiteLink, setWebsiteLink] = useState<string>("")
 	const [imageBase64, setImageBase64] = useState<string | null>(null)
-	const [newTokenAddress, setNewTokenAddress] = useState(null);
+	const [newTokenAddress, setNewTokenAddress] = useState(null)
 	const { data: hash, writeContract } = useWriteContract()
 	const { address, isConnecting, isDisconnected, chain } = useAccount()
-
+	const { create } = useParams()
 
 	const handleFileChange = (file: File, base64?: string) => {
 		console.log("File changed:", file)
@@ -30,28 +31,43 @@ const index = () => {
 	}
 
 	const createToken = async () => {
-		writeContract({abi: mockHubFactoryAbi, address: '0xBc53B85fcB5aCBe82935418Ed96e9925bf569860', functionName: 'deploy', account: address, chain: chain, args: [tokenTicker, tokenTicker]});
+		if (create === "" || tokenTicker === "" || tokenDescription === "") {
+			alert("Please fill in needed fields.")
+			return
+		} else if (imageBase64 === null) {
+			alert("Token Image is required.")
+		} else {
+			writeContract({
+				abi: mockHubFactoryAbi,
+				address: "0xBc53B85fcB5aCBe82935418Ed96e9925bf569860",
+				functionName: "deploy",
+				account: address,
+				chain: chain,
+				args: [create, tokenTicker],
+			})
+		}
 	}
 
 	const {
 		isLoading: isConfirming,
 		isSuccess: isConfirmed,
 		data,
-	  } = useWaitForTransactionReceipt({
+	} = useWaitForTransactionReceipt({
 		hash,
-	  });
+	})
 
-	  useEffect(() => {
-		if (isConfirmed && data && data.logs) { 
-			setNewTokenAddress("0x" + data.logs[1].topics[1].slice(26));
+	useEffect(() => {
+		if (isConfirmed && data && data.logs) {
+			setNewTokenAddress("0x" + data.logs[1].topics[1].slice(26))
+			console.log("New token data:", data)
 		}
-	  }, [isConfirmed, data])
+	}, [isConfirmed, data])
 
 	return (
 		<div className={``}>
 			<div>
 				<p className={`mt-[7px] text-center text-[24px] text-[#C3C3C3] lg:text-left lg:text-[30px]`}>
-					Setup your HERITAGE token
+					Setup your {create} token
 				</p>
 			</div>
 
@@ -115,10 +131,25 @@ const index = () => {
 					/>
 				</div>
 				<div className={`my-[26px] flex lg:w-[50%] lg:justify-end`}>
+					<div>
+						<p>
+							{hash && (
+								<a
+									href={`https://sepolia.basescan.org/tx/${hash}`}
+									target="_blank"
+									rel="noopener noreferrer"
+									className={`text-blue-700 underline`}>
+									{" "}
+									{`$${create} Status Link`}
+								</a>
+							)}
+						</p>
+					</div>
 					<CustomButton
-						text="Launch HERITAGE"
+						text={`Launch ${create}`}
 						// onClick={() => router.push("/select-chain")}
-						onClick={() => createToken}
+						onClick={() => createToken()}
+						loading={isConfirming}
 					/>
 				</div>
 			</div>
@@ -126,4 +157,4 @@ const index = () => {
 	)
 }
 
-export default index
+export default CreateTokenPage

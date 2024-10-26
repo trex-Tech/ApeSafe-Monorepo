@@ -1,5 +1,5 @@
 import { twMerge } from "tailwind-merge"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useRouter } from "@router"
 import useUserStore from "@store/userStore"
 import FormInput from "@/src/commons/components/FormInput"
@@ -80,6 +80,8 @@ const HomePage = ({ className }: Props) => {
 	const { user } = useUserStore()
 	const { data } = useGetAllTokens()
 	const { address } = useAccount()
+	const [tokenName, setTokenName] = useState<string>("")
+	console.log("tokenName:", tokenName) // Add this line
 
 	useEffect(() => {
 		console.log(data)
@@ -95,12 +97,21 @@ const HomePage = ({ className }: Props) => {
 			<label className="mt-6">Token Name</label>
 			<div className="-mt-4 flex w-auto items-center justify-between gap-x-4 md:justify-start">
 				<div className="w-[55%] md:w-[45%]">
-					<FormInput className="py-2" />
+					<FormInput
+						className="py-2"
+						value={tokenName}
+						onChange={(e) => setTokenName(e.target.value)}
+					/>
 				</div>
 				<CustomButton
 					text="Create Token"
 					className="rounded-md"
-					onClick={() => router.push("/create-token")}
+					onClick={() =>
+						router.push({
+							pathname: `/create-token/${tokenName}`,
+							query: { tokenName },
+						} as any)
+					}
 				/>
 			</div>
 
@@ -139,7 +150,10 @@ const HomePage = ({ className }: Props) => {
 					data,
 					tHeadBorder: false,
 					onRowClick: (row) => {
-						router.push(`/tokens/${row.ticker}`)
+						router.push({
+							pathname: `/tokens/${row.ticker}`,
+							query: { ticker: row.ticker },
+						} as any)
 					},
 				})}
 			</div>

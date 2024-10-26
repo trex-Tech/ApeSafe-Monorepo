@@ -46,7 +46,9 @@ export default function TokenPage({}) {
 const BuyTab = () => {
 	const { ticker } = useParams()
 	const { data } = useGetToken(ticker)
-	const [selectedCoin, setSelectedCoin] = useState<ICryptoCoinData>(sample_crypto_coins.find((coin) => coin.symbol.toLowerCase() === "usdc"))
+	const [selectedCoin, setSelectedCoin] = useState<ICryptoCoinData>(
+		sample_crypto_coins.find((coin) => coin.symbol.toLowerCase() === "usdc"),
+	)
 
 	const schema = yup.object().shape({
 		amount: yup.string().matches(REGEX.number, "Amount must be a number").required(),
