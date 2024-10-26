@@ -18,7 +18,7 @@ const CreateTokenPage = () => {
 	const [websiteLink, setWebsiteLink] = useState<string>("")
 	const [imageBase64, setImageBase64] = useState<string | null>(null)
 	const [newTokenAddress, setNewTokenAddress] = useState(null)
-	const { data: hash, writeContract } = useWriteContract()
+	const { data: hash, writeContract, error } = useWriteContract()
 	const { address, isConnecting, isDisconnected, chain } = useAccount()
 	const { create } = useParams()
 
@@ -45,6 +45,11 @@ const CreateTokenPage = () => {
 				chain: chain,
 				args: [create, tokenTicker],
 			})
+
+			if (error) {
+				// error.message
+				// error.name
+			}
 		}
 	}
 
