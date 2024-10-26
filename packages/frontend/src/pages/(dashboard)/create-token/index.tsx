@@ -2,7 +2,10 @@ import CustomButton from "@/src/commons/components/CustomButton"
 import FileUploader from "@/src/commons/components/FileUploader"
 import FormInput from "@/src/commons/components/FormInput"
 import { useRouter } from "@/src/commons/router"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
+import { useWriteContract, useAccount, useWaitForTransactionReceipt } from 'wagmi'
+import mockHubFactoryAbi from "@/src/commons/abi/MockHubFactory"
+import { useAppKitState } from '@reown/appkit/react'
 
 const index = () => {
 	const [files, setFiles] = useState<File[]>([])
@@ -13,6 +16,10 @@ const index = () => {
 	const [telegramLink, setTelegramLink] = useState<string>("")
 	const [websiteLink, setWebsiteLink] = useState<string>("")
 	const [imageBase64, setImageBase64] = useState<string | null>(null)
+	const [newTokenAddress, setNewTokenAddress] = useState(null);
+	const { data: hash, writeContract } = useWriteContract()
+	const { address, isConnecting, isDisconnected, chain } = useAccount()
+
 
 	const handleFileChange = (file: File, base64?: string) => {
 		console.log("File changed:", file)
@@ -23,8 +30,22 @@ const index = () => {
 	}
 
 	const createToken = async () => {
-		// Logic to Launch token with needed fields
+		writeContract({abi: mockHubFactoryAbi, address: '0xBc53B85fcB5aCBe82935418Ed96e9925bf569860', functionName: 'deploy', account: address, chain: chain, args: [tokenTicker, tokenTicker]});
 	}
+
+	const {
+		isLoading: isConfirming,
+		isSuccess: isConfirmed,
+		data,
+	  } = useWaitForTransactionReceipt({
+		hash,
+	  });
+
+	  useEffect(() => {
+		if (isConfirmed && data && data.logs) { 
+			setNewTokenAddress("0x" + data.logs[1].topics[1].slice(26));
+		}
+	  }, [isConfirmed, data])
 
 	return (
 		<div className={`mt-[58px] px-[5%]`}>
@@ -96,7 +117,8 @@ const index = () => {
 				<div className={`my-[26px] flex lg:w-[50%] lg:justify-end`}>
 					<CustomButton
 						text="Launch HERITAGE"
-						onClick={() => router.push("/select-chain")}
+						// onClick={() => router.push("/select-chain")}
+						onClick={() => createToken}
 					/>
 				</div>
 			</div>
