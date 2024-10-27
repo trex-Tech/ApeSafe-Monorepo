@@ -81,7 +81,7 @@ const HomePage = ({ className }: Props) => {
 	const { data } = useGetAllTokens()
 	const { address } = useAccount()
 	const [tokenName, setTokenName] = useState<string>("")
-	console.log("tokenName:", tokenName) // Add this line
+	// console.log("tokenName:", tokenName) // Add this line
 
 	useEffect(() => {
 		console.log(data)
