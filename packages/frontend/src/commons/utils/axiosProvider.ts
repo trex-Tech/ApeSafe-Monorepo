@@ -2,9 +2,7 @@ import axios, { AxiosError } from "axios"
 import toast from "react-hot-toast"
 import Keys from "@utils/query-keys"
 
-
 let API_URL = import.meta.env.VITE_API_URL
-
 
 const axiosInstance = axios.create({
 	baseURL: API_URL,
@@ -35,7 +33,6 @@ export const updateAuthToken = async (new_token: string, save?: boolean) => {
 	axiosInstance.defaults.headers.Authorization = "Bearer " + new_token
 }
 
-
 axiosInstance.interceptors.request.use(
 	async (config) => {
 		/*const fetch_token = localStorage.getItem("access_token")
@@ -57,7 +54,6 @@ axiosInstance.interceptors.response.use(
 		return response
 	},
 	(error: AxiosError) => {
-
 		if (error.code === "ECONNABORTED") {
 			toast.error("Request timed out. Please check your network connection.")
 		} else if (error.message.includes("Network Error")) {
@@ -93,7 +89,6 @@ const makeRequest = async (
 		throw new Error("API request error: No endpoint provided")
 	}
 
-
 	let config: IAxiosRequestConfig = {
 		method: method,
 		url: endpoint,
@@ -104,7 +99,11 @@ const makeRequest = async (
 		},
 	}
 
-	console.debug(`🚀 Requesting Api: %c${config.method.toUpperCase()} ===> %c${config?.url}\n`, "color: yellow", "color: yellow")
+	console.debug(
+		`🚀 Requesting Api: %c${config.method.toUpperCase()} ===> %c${config?.url}\n`,
+		"color: yellow",
+		"color: yellow",
+	)
 
 	return await axiosInstance(config)
 		.then((res) => {
@@ -116,13 +115,17 @@ const makeRequest = async (
 }
 
 export const api = {
-	get: async (path: string, headers: any = {}, select?: boolean) => await makeRequest("get", path, null, headers, select),
-	post: async (path: string, data: any, headers: any = {}, select?: boolean) => await makeRequest("post", path, data, headers, select),
-	patch: async (path: string, data: any, headers: any = {}, select?: boolean) => await makeRequest("patch", path, data, headers, select),
-	put: async (path: string, data: any, headers: any = {}, select?: boolean) => await makeRequest("put", path, data, headers, select),
-	delete: async (path: string, data: any, headers: any = {}, select?: boolean) => await makeRequest("delete", path, data, headers, select),
+	get: async (path: string, headers: any = {}, select?: boolean) =>
+		await makeRequest("get", path, null, headers, select),
+	post: async (path: string, data: any, headers: any = {}, select?: boolean) =>
+		await makeRequest("post", path, data, headers, select),
+	patch: async (path: string, data: any, headers: any = {}, select?: boolean) =>
+		await makeRequest("patch", path, data, headers, select),
+	put: async (path: string, data: any, headers: any = {}, select?: boolean) =>
+		await makeRequest("put", path, data, headers, select),
+	delete: async (path: string, data: any, headers: any = {}, select?: boolean) =>
+		await makeRequest("delete", path, data, headers, select),
 }
-
 
 interface IAxiosRequestConfig {
 	method: "get" | "post" | "patch" | "put" | "delete"
@@ -130,7 +133,6 @@ interface IAxiosRequestConfig {
 	headers: any
 	data?: any
 }
-
 
 export const handleApiError = async (error: AxiosError) => {
 	let message = "An unexpected error occurred. Please try again later."
@@ -148,7 +150,6 @@ export const handleApiError = async (error: AxiosError) => {
 	if (error.response.status !== 401) toast.error(message)
 }
 
-
 export function mockApiCall<T>(data: T, time = 1000, status: number = 200): Promise<T> {
 	return new Promise((resolve, reject) => {
 		setTimeout(() => {
@@ -164,4 +165,3 @@ export function mockApiCall<T>(data: T, time = 1000, status: number = 200): Prom
 		}, time)
 	})
 }
-

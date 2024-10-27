@@ -1,4 +1,13 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, ThemeProvider } from "@mui/material"
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
+	ThemeProvider,
+	useMediaQuery,
+} from "@mui/material"
 import { getNestedProperty, MuiTheme, sortArrayByDate } from "@utils"
 import { TableRowType } from "@interfaces"
 
@@ -12,6 +21,7 @@ interface Props<T = any> {
 }
 
 export const renderTable = <T,>({ rows, data, filter, count, onRowClick, tHeadBorder = true }: Props<T>) => {
+	const isMobile = useMediaQuery("(max-width:768px)")
 	return (
 		<ThemeProvider theme={MuiTheme}>
 			<TableContainer>
@@ -29,6 +39,7 @@ export const renderTable = <T,>({ rows, data, filter, count, onRowClick, tHeadBo
 											borderTop: tHeadBorder ? 1 : 0,
 											borderBottom: tHeadBorder ? 1 : 0,
 											borderColor: "rgba(141,141,141,0.28)",
+											// width: field.value === "date" && isMobile ? "150px" : "auto",
 										}}
 										key={index}>
 										{field.label}
@@ -37,7 +48,8 @@ export const renderTable = <T,>({ rows, data, filter, count, onRowClick, tHeadBo
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{data?.filter((row) => {
+						{data
+							?.filter((row) => {
 								if (filter) {
 									if (filter?.type == "exclude") {
 										return (

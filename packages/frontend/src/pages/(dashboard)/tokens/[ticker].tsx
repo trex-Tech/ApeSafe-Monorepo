@@ -13,7 +13,9 @@ import { sample_crypto_coins } from "@utils/sample-data"
 
 export default function TokenPage({}) {
 	const { ticker } = useParams()
+
 	const { data } = useGetToken(ticker)
+	console.log({ ticker, data })
 
 	return (
 		<div className={"m"}>
