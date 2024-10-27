@@ -18,12 +18,13 @@ const index = () => {
 	return (
 		<div className={""}>
 			<div>
-				<p className={`text-center text-[24px] text-[#fff] lg:text-left`}>
-					Your Token is Live on Base Testnet!
-				</p>
-				<div className={`my-[20px] flex items-center space-x-[20px]`}>
+				<p className={` text-left text-[24px] text-[#fff]`}>Your Token is Live on Base Testnet!</p>
+				<div className={`my-[20px] items-center space-y-[10px] lg:flex lg:space-x-[20px] lg:space-y-0`}>
 					<p>
-						Base Testnet CA: <span className={`rounded-[10px] bg-[#181818] p-[10px]`}>{selectchain}</span>
+						Base Testnet CA: <br className={`lg:hidden`} />{" "}
+						<span className={`rounded-[10px] bg-[#181818] p-[10px] text-[12px] lg:text-[16px]`}>
+							{selectchain}
+						</span>
 					</p>
 					<button onClick={copyToClipboard}>
 						{copied ? (
@@ -35,7 +36,7 @@ const index = () => {
 						)}
 					</button>
 				</div>
-				<p className={`text-center text-[13px] text-[#fff] lg:w-[668px] lg:text-left`}>
+				<p className={`text-left text-[13px] text-[#fff] lg:w-[668px]`}>
 					Unlike traditional Signle Chain Tokens, yours can exist everywhere in one simple step. <br />
 					Select up to 5 chains to extend your token's reach.
 				</p>
