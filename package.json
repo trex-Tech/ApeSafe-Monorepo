@@ -21,6 +21,7 @@
     "deploy": "yarn workspace @apesafe-monorepo/foundry deploy",
     "foundry:test": "yarn workspace @apesafe-monorepo/foundry compile",
     "foundry:add-pkg": "yarn workspace @apesafe-monorepo/foundry forge-install --no-commit",
+    "foundry:rm-pkg": "yarn workspace @apesafe-monorepo/foundry forge-remove",
     "test": "forge foundry:test",
     "react:start": "yarn workspace @apesafe-monorepo/frontend start",
     "react:build": "yarn workspace @apesafe-monorepo/frontend build",
