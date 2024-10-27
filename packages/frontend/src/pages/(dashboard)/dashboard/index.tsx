@@ -106,12 +106,16 @@ const HomePage = ({ className }: Props) => {
 				<CustomButton
 					text="Create Token"
 					className="rounded-md"
-					onClick={() =>
-						router.push({
-							pathname: `/create-token/${tokenName}`,
-							query: { tokenName },
-						} as any)
-					}
+					onClick={() => {
+						if (tokenName === "") {
+							alert("Please enter a token name")
+						} else {
+							router.push({
+								pathname: `/create-token/${tokenName}`,
+								query: { create: tokenName },
+							} as any)
+						}
+					}}
 				/>
 			</div>
 

@@ -49,6 +49,10 @@ const CreateTokenPage = () => {
 			if (error) {
 				// error.message
 				// error.name
+				console.log("error:", error.message)
+				if (error.message.includes("Connector not connected.")) {
+					alert("Please connect your wallet.")
+				}
 			}
 		}
 	}
@@ -65,6 +69,11 @@ const CreateTokenPage = () => {
 		if (isConfirmed && data && data.logs) {
 			setNewTokenAddress("0x" + data.logs[1].topics[1].slice(26))
 			console.log("New token data:", data)
+			console.log("New token ca:", data.logs[0].address)
+			router.push({
+				pathname: `/select-chain/${data.logs[0].address}`,
+				query: { address: data.logs[0].address },
+			} as any)
 		}
 	}, [isConfirmed, data])
 
@@ -135,27 +144,29 @@ const CreateTokenPage = () => {
 						onChange={(e) => setWebsiteLink(e.target.value)}
 					/>
 				</div>
-				<div className={`my-[26px] flex lg:w-[50%] lg:justify-end`}>
-					<div>
-						<p>
-							{hash && (
-								<a
-									href={`https://sepolia.basescan.org/tx/${hash}`}
-									target="_blank"
-									rel="noopener noreferrer"
-									className={`text-blue-700 underline`}>
-									{" "}
-									{`$${create} Status Link`}
-								</a>
-							)}
-						</p>
+				<div className={`my-[26px] flex space-y-[10px] lg:w-[50%] lg:justify-end`}>
+					<div className={`space-y-[20px]`}>
+						<div>
+							<p>
+								{hash && (
+									<a
+										href={`https://sepolia.basescan.org/tx/${hash}`}
+										target="_blank"
+										rel="noopener noreferrer"
+										className={`text-blue-700 underline`}>
+										{" "}
+										{`Creating $${tokenTicker}, check status here`}
+									</a>
+								)}
+							</p>
+						</div>
+						<CustomButton
+							text={`Launch ${create}`}
+							// onClick={() => router.push("/select-chain")}
+							onClick={() => createToken()}
+							loading={isConfirming}
+						/>
 					</div>
-					<CustomButton
-						text={`Launch ${create}`}
-						// onClick={() => router.push("/select-chain")}
-						onClick={() => createToken()}
-						loading={isConfirming}
-					/>
 				</div>
 			</div>
 		</div>
