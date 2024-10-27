@@ -10,6 +10,10 @@ import CustomButton from "../CustomButton"
 import { useAppKit } from "@reown/appkit/react"
 import { useAccount, useBalance } from "wagmi"
 import LoadingSpinner from "../LoadingSpinner"
+import axios from "axios"
+
+const API_URL = "https://6dc1-102-89-69-234.ngrok-free.app/api/v1"
+
 type Props = {
 	className?: string
 } & React.PropsWithChildren
@@ -23,6 +27,17 @@ const Header = ({ className = "" }: Props) => {
 	})
 	const [showWalletInfo, setShowWalletInfo] = useState(false)
 
+	const connectWallet = async () => {
+		const data = {
+			wallet_id: address,
+		}
+		const res = await axios.post(`${API_URL}/auth/connect/`, data)
+		if (res.status === 200) {
+			console.log("Wallet connected successfully:::", res.data)
+			localStorage.setItem("apesafe_access_token", res.data.result.access)
+		}
+	}
+
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			setShowWalletInfo(true)
@@ -30,6 +45,12 @@ const Header = ({ className = "" }: Props) => {
 
 		return () => clearTimeout(timer)
 	}, [])
+
+	useEffect(() => {
+		if (isConnected) {
+			connectWallet()
+		}
+	}, [isConnected])
 
 	return (
 		<div

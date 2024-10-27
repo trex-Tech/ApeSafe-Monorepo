@@ -7,6 +7,9 @@ import { useWriteContract, useAccount, useWaitForTransactionReceipt } from "wagm
 import mockHubFactoryAbi from "@/src/commons/abi/MockHubFactory"
 import { useAppKitState } from "@reown/appkit/react"
 import { useParams } from "@router"
+import axios from "axios"
+
+const API_URL = "https://6dc1-102-89-69-234.ngrok-free.app/api/v1"
 
 const CreateTokenPage = () => {
 	const [files, setFiles] = useState<File[]>([])
@@ -57,6 +60,41 @@ const CreateTokenPage = () => {
 		}
 	}
 
+	const saveCreatedToken = async (address: string) => {
+		const data = {
+			name: create,
+			ticker: tokenTicker,
+			description: tokenDescription,
+			twitter_url: twitterLink, //OPTIONAL
+			telegram_url: telegramLink, //OPTIONAL
+			website_url: websiteLink, //OPTIONAL
+			chains: [{ name: "base", contract_address: address }],
+			image: imageBase64,
+		}
+
+		const token = localStorage.getItem("apesafe_access_token")
+
+		try {
+			const res = await axios.post(`${API_URL}/tokens/token/`, data, {
+				headers: {
+					Authorization: `Bearer ${token}`, // Add the authorization header
+					"Content-Type": "application/json",
+				},
+			})
+			console.log("Token saved successfully:", res.data)
+
+			if (res.status === 200) {
+				router.push({
+					pathname: `/select-chain/${address}`,
+					query: { address: address },
+				} as any)
+			}
+		} catch (error) {
+			console.error("Error saving token:", error)
+			// Handle the error appropriately (e.g., show an error message to the user)
+		}
+	}
+
 	const {
 		isLoading: isConfirming,
 		isSuccess: isConfirmed,
@@ -70,10 +108,9 @@ const CreateTokenPage = () => {
 			setNewTokenAddress("0x" + data.logs[1].topics[1].slice(26))
 			console.log("New token data:", data)
 			console.log("New token ca:", data.logs[0].address)
-			router.push({
-				pathname: `/select-chain/${data.logs[0].address}`,
-				query: { address: data.logs[0].address },
-			} as any)
+		}
+		if (isConfirmed && data && data.logs) {
+			saveCreatedToken(data.logs[0].address)
 		}
 	}, [isConfirmed, data])
 
