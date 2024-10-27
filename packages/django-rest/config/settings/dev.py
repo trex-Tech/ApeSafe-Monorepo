@@ -26,3 +26,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles/")
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 FILE_UPLOAD_PERMISSION = 0o64
+
+CSRF_TRUSTED_ORIGINS = ['https://6dc1-102-89-69-234.ngrok-free.app']

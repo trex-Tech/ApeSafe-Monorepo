@@ -52,6 +52,7 @@ THIRD_PARTY_APPS = [
 CUSTOM_APPS = ["apps.authentication", "apps.tokens"]
 INSTALLED_APPS = INSTALLED_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
+USE_SSL = True  
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
