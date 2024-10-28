@@ -23,6 +23,7 @@ const rows: TableRowType<TokenData>[] = [
 		label: "ID",
 		value: "id",
 		visible: true,
+		view: (row) => <div className="w-24 truncate">{row.id}</div>,
 	},
 	{
 		label: "Name",
@@ -35,7 +36,7 @@ const rows: TableRowType<TokenData>[] = [
 					alt={row.name}
 					className="h-6 w-6"
 				/>
-				<span>{row.name}</span>
+				<span className="w-36 truncate">{row.name}</span>
 			</div>
 		),
 	},
@@ -43,16 +44,19 @@ const rows: TableRowType<TokenData>[] = [
 		label: "Ticker",
 		value: "ticker",
 		visible: true,
+		view: (row) => <div className="w-24 truncate">{row.ticker}</div>,
 	},
 	{
 		label: "Description",
 		value: "description",
 		visible: true,
+		view: (row) => <div className="w-48 truncate">{row.description}</div>,
 	},
 	{
 		label: "Creator",
 		value: "name",
 		visible: true,
+		view: (row) => <div className="w-24 truncate">{row.creator}</div>,
 	},
 	// {
 	// 	label: "24h Change",
@@ -75,6 +79,7 @@ const rows: TableRowType<TokenData>[] = [
 		visible: true,
 		view: (row) => (
 			<a
+				className="w-24 truncate"
 				href={row.website_url}
 				target="_blank"
 				rel="noopener noreferrer">
@@ -87,6 +92,7 @@ const rows: TableRowType<TokenData>[] = [
 		value: "date_created",
 		visible: true,
 		format: (row) => new Date(row.date_created).toLocaleDateString(),
+		view: (row) => <div className="w-24 truncate">{new Date(row.date_created).toLocaleDateString()}</div>,
 	},
 ]
 
@@ -161,13 +167,13 @@ const HomePage = ({ className }: Props) => {
 			</div>
 
 			<div className="mt-4 flex flex-col items-start md:flex-row  md:items-center md:justify-between">
-				<div className=" flex w-full flex-row items-center border-b-2 md:mt-0 md:w-[25%]">
+				{/* <div className=" flex w-full flex-row items-center border-b-2 md:mt-0 md:w-[25%]">
 					<Search />
 					<input
 						className="border-none bg-inherit py-2 pl-2 outline-none"
 						placeholder="Search token..."
 					/>
-				</div>
+				</div> */}
 			</div>
 
 			{/* <div>
@@ -196,8 +202,8 @@ const HomePage = ({ className }: Props) => {
 					tHeadBorder: false,
 					onRowClick: (row) => {
 						router.push({
-							pathname: `/tokens/${"STKfddNso"}`,
-							query: { ticker: "STKfddNso" },
+							pathname: `/tokens/${"TREX is a bad boy"}`,
+							query: { ticker: "TREX is a bad boy" },
 						} as any)
 					},
 				})}
