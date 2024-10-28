@@ -3,6 +3,8 @@ import { Keys } from "@utils"
 import { api, mockApiCall } from "@utils/axiosProvider"
 import { sample_token_data, sample_tokens } from "@utils/sample-data"
 import { TokenData } from "../interfaces"
+import axios from "axios"
+import { useTokenStore } from "../store/tokensStore"
 
 export function useGetAllTokens(
 	page: number = 1,
@@ -11,69 +13,33 @@ export function useGetAllTokens(
 ) {
 	const query = useQuery({
 		queryKey: [Keys.tokens, "all", `page-${page},`, search, timeFilter],
-		//queryFn: () => mockApiCall({ data: sample_tokens, meta: { count: sample_tokens.length, limit: 10 } }),
-		// queryFn: async () => {
-		// 	const response = await api.get("api/v1/tokens")
-		// 	console.log({ response })
-		// 	return response
-		// },
-		placeholderData: keepPreviousData,
-		queryFn: () => {
-			let filteredTokens = [...sample_token_data]
-
-			// Apply search filter
-			if (search) {
-				filteredTokens = filteredTokens.filter(
-					(token) =>
-						token.name.toLowerCase().includes(search.toLowerCase()) ||
-						token.ticker.toLowerCase().includes(search.toLowerCase()),
-				)
-			}
-
-			// Apply time filter
-			if (timeFilter) {
-				const now = new Date()
-				const filterMap = {
-					"1h": 1 * 60 * 60 * 1000,
-					"24h": 24 * 60 * 60 * 1000,
-					"3d": 3 * 24 * 60 * 60 * 1000,
-					"7d": 7 * 24 * 60 * 60 * 1000,
-					"30d": 30 * 24 * 60 * 60 * 1000,
-					"1y": 366 * 24 * 60 * 60 * 1000,
-				}
-
-				const cutoffTime = now.getTime() - filterMap[timeFilter]
-				filteredTokens = filteredTokens.filter((token) => new Date(token.date_created).getTime() > cutoffTime)
-			}
-
-			const startIndex = (page - 1) * 10
-			const endIndex = startIndex + 10
-			const paginatedTokens = filteredTokens.slice(startIndex, endIndex)
-
-			return mockApiCall({
-				data: paginatedTokens,
-				meta: {
-					count: filteredTokens.length,
-					limit: 10,
-				},
-			})
+		queryFn: async () => {
+			const response = await axios.get(
+				`https://api.solgram.app/api/v1/tokens/token/?search=${search}&date=${timeFilter}`,
+			)
+			console.log({ response })
+			return response.data
 		},
+		placeholderData: keepPreviousData,
 
-		select: (data) => data,
+		// select: (data) => data,
 	})
 
 	//const tokens: TokenData[] = filteredD
-	// const tokens = query?.data?.data as IToken[]
-	const pages = Math.ceil((query.data?.meta?.count || 0) / 10) //Math.ceil((query.data?.meta?.count || 0) / (query.data?.meta?.limit || tokens?.length || 1))
+	const tokens = query?.data?.results as TokenData[]
+	const count = query?.data?.meta?.count
+	const page_size = query?.data?.meta?.page_size
+	const pages = Math.ceil((count || 0) / page_size || 1) //Math.ceil((query.data?.meta?.count || 0) / (query.data?.meta?.limit || tokens?.length || 1))
 
 	return {
 		...query,
-		data: query.data?.data,
+		data: tokens,
 		pages,
 	}
 }
 
 export function useGetToken(ticker: string) {
+	//const { tokens } = useTokenStore()
 	return useQuery<TokenData>({
 		queryKey: [Keys.tokens, ticker],
 		queryFn: () =>

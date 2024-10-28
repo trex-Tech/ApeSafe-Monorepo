@@ -1,6 +1,6 @@
 import TabView from "@components/TabView"
 import FormInput from "@components/FormInput"
-import { useGetToken } from "@commons/api/tokens"
+import { useGetAllTokens, useGetToken } from "@commons/api/tokens"
 import { useParams } from "@router"
 import { useForm } from "react-hook-form"
 import Config from "@utils/config"
@@ -13,12 +13,20 @@ import { sample_crypto_coins } from "@utils/sample-data"
 import { parseUnits } from "viem"
 import { useWriteContract, useAccount, useWaitForTransactionReceipt } from "wagmi"
 import mockHubAbi from "@/src/commons/abi/MockHub"
+import { useQueryClient } from "@tanstack/react-query"
+import { Keys } from "@/src/commons/utils"
 
 export default function TokenPage({}) {
 	const { ticker } = useParams()
 
+	// console.log(data?.chains[0]?.contract_address)
+	const queryClient = useQueryClient()
+	const tokens = queryClient.getQueriesData({
+		queryKey: [Keys.tokens],
+		exact: false,
+	})
 	const { data } = useGetToken(ticker)
-	console.log("data in token:::", { ticker, data })
+	console.log({ ticker, data })
 
 	return (
 		<div className={"m"}>
@@ -51,7 +59,6 @@ export default function TokenPage({}) {
 const BuyTab = () => {
 	const { ticker } = useParams()
 	const { data } = useGetToken(ticker)
-
 	// console.log(data?.chains[0]?.contract_address)
 	const [selectedCoin, setSelectedCoin] = useState<ICryptoCoinData>(
 		sample_crypto_coins.find((coin) => coin.symbol.toLowerCase() === "usdc"),

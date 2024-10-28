@@ -3182,4 +3182,42 @@ export const sample_token_data = [
 		date_created: "2024-10-27T16:33:49.353160Z",
 		creator: "9f916dd1-f00c-4a06-905b-811ca06c62ca",
 	},
+	{
+		id: "152a8f1f-78cd-40c8-9c7f-fe3195ab5ae3",
+		image: "https://api.solgram.app/media/tokens/e7890ac0-98e4-48b0-89bb-e8eee421a1cf.png",
+		chains: [
+			{
+				id: "081031e3-6617-42c6-9dfb-980225c25e43",
+				name: "base",
+				contract_address: "0xde85ac838a30cedfe8fb10dbba76dbda1d4d0fd1",
+			},
+		],
+		name: "Techies",
+		ticker: "TECHIES",
+		description: "Trex techies is the best",
+		website_url: "",
+		telegram_url: "",
+		twitter_url: "",
+		date_created: "2024-10-28T17:51:06.284312Z",
+		creator: "f086ef88-4fec-4ca4-9d46-b159f2e03230",
+	},
+	{
+		id: "f52fcbf7-fd5f-4660-b71c-453b78d8b2b7",
+		image: "https://api.solgram.app/media/tokens/2d89afff-d8bb-4cc0-bae0-71860d4cea12.png",
+		chains: [
+			{
+				id: "47d6aff4-38a5-42b2-a786-bd84420e948c",
+				name: "base",
+				contract_address: "0xd2f33569bdd54c63bbbe29a0f1466a3866e87b38",
+			},
+		],
+		name: "casa casa",
+		ticker: "cas",
+		description: "cas cas cas",
+		website_url: "",
+		telegram_url: "",
+		twitter_url: "",
+		date_created: "2024-10-28T18:35:07.941298Z",
+		creator: "d394fe21-458e-4f47-b5bc-c259b0020cf3",
+	},
 ]
