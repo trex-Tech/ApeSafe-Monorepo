@@ -13,10 +13,14 @@ import { Pagination, PaginationProps, useMediaQuery } from "@mui/material"
 import { COLORS } from "@/src/commons/utils"
 import { api } from "@/src/commons/utils/axiosProvider"
 import axios from "axios"
+import useDebounce from "@/src/commons/hooks/useDebounce"
+import DropdownSelect from "@/src/commons/components/DropdownSelect"
 
 interface Props {
 	className?: string
 }
+
+type DateFilter = "1h" | "24h" | "3d" | "7d" | "30d" | "1y"
 
 const rows: TableRowType<TokenData>[] = [
 	{
@@ -96,18 +100,41 @@ const rows: TableRowType<TokenData>[] = [
 	},
 ]
 
+const dateFilterOptions = [
+	{ value: "", label: "Clear Filter" },
+	{ value: "1h", label: "Last 1 hour" },
+	{ value: "24h", label: "Last 24 hours" },
+	{ value: "3d", label: "Last 3 days" },
+	{ value: "7d", label: "Last 7 days" },
+	{ value: "30d", label: "Last 30 days" },
+	{ value: "1y", label: "Last 1 year" },
+]
+
 const HomePage = ({ className }: Props) => {
 	const router = useRouter()
 	const { user } = useUserStore()
 	const [page, setPage] = useState(1)
-	const { data, error, pages } = useGetAllTokens(page)
 	const { address } = useAccount()
 	const [tokenName, setTokenName] = useState<string>("")
-	console.log("tokenName:", tokenName) // Add this line
+	const [searchQuery, setSearchQuery] = useState("")
+	const [dateFilter, setDateFilter] = useState<DateFilter | undefined>()
+	const debouncedSearchTerm = useDebounce(searchQuery, 500)
+	console.log("tokenName:", tokenName)
 	const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
 		setPage(value)
 	}
-	const isSmallScreen = useMediaQuery("(max-width:600px)")
+
+	const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setSearchQuery(e.target.value)
+		setPage(1)
+	}
+
+	const handleDateFilterChange = (value: string) => {
+		setDateFilter(value ? (value as DateFilter) : undefined)
+		setPage(1)
+	}
+
+	const { data, error, pages } = useGetAllTokens(page, debouncedSearchTerm, dateFilter)
 
 	useEffect(() => {
 		console.log({ data, error })
@@ -183,16 +210,26 @@ const HomePage = ({ className }: Props) => {
 			<div className="mt-4 flex flex-col rounded-lg border p-4">
 				<div className="mb-6 flex flex-col justify-between md:flex-row md:items-center">
 					<h3 className="text-[20px]">Tokens</h3>
-					<div className="flex gap-x-4">
+					<div className="flex flex-col gap-x-4 md:flex-row md:items-center">
 						<FormInput
 							startIcon={<Search />}
 							placeholder="Search"
 							className="py-2"
+							value={searchQuery}
+							onChange={handleSearch}
 						/>
-						<button className="hidden items-center rounded-lg bg-input px-2 py-0 md:flex">
+						<DropdownSelect
+							className="w-[150px] py-2"
+							prompt="Filter by date"
+							items={dateFilterOptions}
+							selected={dateFilterOptions.find((opt) => opt.value === dateFilter) || null}
+							setSelected={(item) => handleDateFilterChange(item.value)}
+							menuItemWidth="w-[150px]"
+						/>
+						{/* <button className="hidden items-center rounded-lg bg-input px-2 py-0 md:flex">
 							<p className="whitespace-nowrap">Sort by date</p>
 							<ChevronDown />
-						</button>
+						</button> */}
 					</div>
 				</div>
 
@@ -211,7 +248,7 @@ const HomePage = ({ className }: Props) => {
 				{data && data.length > 0 && (
 					<div className="mt-4 flex h-12 justify-center ">
 						<Pagination
-							count={2}
+							count={pages}
 							page={page}
 							onChange={handlePageChange}
 							color="primary"
