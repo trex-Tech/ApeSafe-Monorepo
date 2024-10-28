@@ -15,7 +15,7 @@ export default function TokenPage({}) {
 	const { ticker } = useParams()
 
 	const { data } = useGetToken(ticker)
-	console.log({ ticker, data })
+	console.log("data in token:::", { ticker, data })
 
 	return (
 		<div className={"m"}>
@@ -53,27 +53,31 @@ const BuyTab = () => {
 		sample_crypto_coins.find((coin) => coin.symbol.toLowerCase() === "usdc"),
 	)
 
+	const baseChain = data?.chains?.find((chain) => chain.name === "base")
+	const contractAddress = baseChain?.contract_address
+
+
 	const schema = yup.object().shape({
 		amount: yup.string().matches(REGEX.number, "Amount must be a number").required(),
 	})
 
 	const { register, formState, setValue } = useForm(Config.useForm({}, schema))
 
+	const [amount, setAmount] = useState<any>()
+
 	return (
 		<div className={"py-[5%]"}>
 			<p className={"text-xl"}>
 				Purchase {data?.name} ({ticker})
 			</p>
-			<CryptoCoinSelect
+			{/* <CryptoCoinSelect
 				setSelected={setSelectedCoin}
 				selected={selectedCoin}
-			/>
+			/> */}
 			<div className="relative flex h-fit w-full flex-col">
 				<p className="absolute left-[2%] top-[30%] z-20 text-xs text-gray-500">You buy</p>
 				<FormInput
-					type="number"
-					errors={formState.errors.amount}
-					register={register("amount")}
+					type="text"
 					className="mt-4 w-full pt-[4%]"
 					placeholder="Enter amount"
 					endIcon={
@@ -83,6 +87,8 @@ const BuyTab = () => {
 							src={selectedCoin?.image}
 						/>
 					}
+					value={amount}
+					onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1"))}
 				/>
 			</div>
 
