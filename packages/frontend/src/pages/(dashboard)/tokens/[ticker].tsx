@@ -16,6 +16,7 @@ export default function TokenPage({}) {
 
 	const { data } = useGetToken(ticker)
 	console.log({ ticker, data })
+	// console.log(data?.chains[0]?.contract_address)
 
 	return (
 		<div className={"m"}>
@@ -48,6 +49,7 @@ export default function TokenPage({}) {
 const BuyTab = () => {
 	const { ticker } = useParams()
 	const { data } = useGetToken(ticker)
+	console.log("ticker", ticker)
 	// console.log(data?.chains[0]?.contract_address)
 	const [selectedCoin, setSelectedCoin] = useState<ICryptoCoinData>(
 		sample_crypto_coins.find((coin) => coin.symbol.toLowerCase() === "usdc"),

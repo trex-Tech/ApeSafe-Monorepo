@@ -15,6 +15,7 @@ import { api } from "@/src/commons/utils/axiosProvider"
 import axios from "axios"
 import useDebounce from "@/src/commons/hooks/useDebounce"
 import DropdownSelect from "@/src/commons/components/DropdownSelect"
+import { useTokenStore } from "@/src/commons/store/tokensStore"
 
 interface Props {
 	className?: string
@@ -119,6 +120,7 @@ const HomePage = ({ className }: Props) => {
 	const [searchQuery, setSearchQuery] = useState("")
 	const [dateFilter, setDateFilter] = useState<DateFilter | undefined>()
 	const debouncedSearchTerm = useDebounce(searchQuery, 500)
+	const { setTokens } = useTokenStore()
 	console.log("tokenName:", tokenName)
 	const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
 		setPage(value)
@@ -134,32 +136,10 @@ const HomePage = ({ className }: Props) => {
 		setPage(1)
 	}
 
-	const { data, error, pages } = useGetAllTokens(page, debouncedSearchTerm, dateFilter)
-
-	useEffect(() => {
-		console.log({ data, error })
-	}, [data])
-
-	const fetchTokens = async () => {
-		const response = await axios.get("https://6dc1-102-89-69-234.ngrok-free.app/api/v1/tokens/token", {
-			headers: {
-				// "ngrok-skip-browser-warning": true,
-				// "User-Agent": "MyCustomApp/1.0",
-				"Content-Type": "application/json",
-				Accept: "application/json",
-			},
-		})
-		console.log("response3", response)
-
-		// const res = await fetch("https://6dc1-102-89-69-234.ngrok-free.app/api/v1/tokens/token")
-		// console.log("response2", await res.json())
-	}
-
+	const { data, isFetching, error, pages } = useGetAllTokens(page, debouncedSearchTerm, dateFilter)
 	// useEffect(() => {
-	// 	fetchTokens()
-	// }, [])
-
-	console.log("env", import.meta.env.VITE_API_URL)
+	// 	setTokens(data)
+	// }, [data])
 
 	return (
 		<div className={twMerge("flex w-full flex-col gap-y-4", className)}>
@@ -239,8 +219,8 @@ const HomePage = ({ className }: Props) => {
 					tHeadBorder: false,
 					onRowClick: (row) => {
 						router.push({
-							pathname: `/tokens/${"TREX is a bad boy"}`,
-							query: { ticker: "TREX is a bad boy" },
+							pathname: `/tokens/${"TECHIES"}`,
+							query: { ...row },
 						} as any)
 					},
 				})}
