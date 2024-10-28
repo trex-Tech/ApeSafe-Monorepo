@@ -10,6 +10,7 @@ import "./ERC20HubDeployment.sol";
 import "../interfaces/IWormholeDeployment.sol";
 import {IManagerBase} from "@wormhole-ntt/interfaces/IManagerBase.sol";
 import {INttManager} from "@wormhole-ntt/interfaces/INttManager.sol";
+import {WormholeTransceiver} from "@wormhole-ntt/Transceiver/WormholeTransceiver/WormholeTransceiver.sol";
 
 contract SetupHub is ERC20HubDeployment, NttHubDeployment, TransceiverHubDeployment {
     event Deployments(address indexed token, address indexed nttManager, address indexed transceiver);
@@ -37,9 +38,16 @@ contract SetupHub is ERC20HubDeployment, NttHubDeployment, TransceiverHubDeploym
 
         emit Deployments(token, nttProxy, transceiver);
     }
-
-    function setPeers(address _nttMgr1,) external {
-
+    
+    function setPeers(
+        uint16 chainId, 
+        address nttManager, 
+        address transceiver,
+        address _ccNttManager, 
+        address ccTransceiver
+        ) external payable {
+        INttManager(nttManager).setPeer(chainId, bytes32(uint256(uint160(address(_ccNttManager)))), 18, type(uint64).max);
+        WormholeTransceiver(transceiver).setWormholePeer(chainId, bytes32(uint256(uint160(address(ccTransceiver)))));
     }
 }
 

@@ -37,6 +37,13 @@ contract SetupPeer is ERC20PeerDeployment, NttPeerDeployment, TransceiverHubDepl
 
         emit Deployments(token, nttProxy, transceiver);
     }
+
+
+// re - write ;
+    function setPeers(uint16 chainId, address _ccNttManager, address ccTransceiver) external payable {
+        nttManager.setPeer(chainId, bytes32(uint256(uint160(address(_ccNttManager)))), 18, type(uint64).max);
+        transceiverState.setWormholePeer(chainId, bytes32(uint256(uint160(address(ccTransceiver)))));
+    }
 }
 
 // Deployer: 0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80

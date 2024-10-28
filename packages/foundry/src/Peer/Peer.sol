@@ -44,11 +44,6 @@ contract Peer is ERC20 {
         nttManager = INttManager(_nttManager);
         transceiverState = IWormholeTransceiverState(transceiver);
     }
-
-    function setPeers(uint16 chainId, address _ccNttManager, address ccTransceiver) external payable {
-        nttManager.setPeer(chainId, bytes32(uint256(uint160(address(_ccNttManager)))), 18, type(uint64).max);
-        transceiverState.setWormholePeer(chainId, bytes32(uint256(uint160(address(ccTransceiver)))));
-    }
 }
 // export BASE_RPC_URL=https://base-sepolia.g.alchemy.com/v2/I5HW3RWZVtn-T4QEUy91sMraurcSl3d-
 // export OP_RPC_URL=https://opt-sepolia.g.alchemy.com/v2/I5HW3RWZVtn-T4QEUy91sMraurcSl3d-
