@@ -65,7 +65,6 @@ const FormInput = (props: FormInputProps) => {
 					type={showPassword ? "text" : type}
 					{...rest}
 					{...register}
-
 					required
 					className={twMerge(`${textFieldClass} ${className}`)}
 				/>
@@ -73,26 +72,24 @@ const FormInput = (props: FormInputProps) => {
 					<div className={`absolute right-1.5 flex h-fit w-fit items-center text-gray-400 transition `}>
 						{embeddedComponent}
 					</div>
+				) : type === "password" ? (
+					<div
+						className={twMerge(
+							`absolute right-4 flex h-6 w-6 cursor-pointer  items-center text-gray-400 transition`,
+						)}
+						onClick={() => setShowPassword(!showPassword)}>
+						{showPassword ? <ViewIcon /> : <ViewOffIcon />}
+					</div>
 				) : (
-					(type === "password") ? (
-						<div
-							className={twMerge(
-								`absolute right-4 flex h-6 w-6 items-center  text-gray-400 transition cursor-pointer`,
-							)}
-							onClick={() => setShowPassword(!showPassword)}>
-							{showPassword ? <ViewIcon /> : <ViewOffIcon />}
-						</div>
-					) : (
-						<div
-							className={twMerge(
-								`absolute right-4 flex h-6 w-6 items-center  text-gray-400 transition ${
-									iconClick && "cursor-pointer hover:text-primary"
-								} ${endIconClassName}`,
-							)}
-							onClick={iconClick}>
-							{endIcon}
-						</div>
-					)
+					<div
+						className={twMerge(
+							`absolute right-4 flex h-6 w-6 items-center  text-gray-400 transition ${
+								iconClick && "cursor-pointer hover:text-primary"
+							} ${endIconClassName}`,
+						)}
+						onClick={iconClick}>
+						{endIcon}
+					</div>
 				)}
 			</div>
 			<p className={"w-full text-sm text-red-400"}>{Object.keys(errors)?.length > 0 && errors.message}</p>

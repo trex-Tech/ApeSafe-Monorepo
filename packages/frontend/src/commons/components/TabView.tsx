@@ -1,12 +1,11 @@
 import Tabs from "@mui/material/Tabs"
 import Tab from "@mui/material/Tab"
-import Box from "@mui/material/Box"
 import { ReactNode, useState } from "react"
 import { twMerge } from "tailwind-merge"
 import { ThemeProvider } from "@mui/material"
 import { MuiTheme } from "@utils"
 
-function TabPanel(props: { children: ReactNode, index: number, value: number }) {
+function TabPanel(props: { children: ReactNode; index: number; value: number }) {
 	const { children, value, index, ...other } = props
 
 	return (
@@ -17,7 +16,7 @@ function TabPanel(props: { children: ReactNode, index: number, value: number }) 
 			id={`simple-tabpanel-${index}`}
 			aria-labelledby={`simple-tab-${index}`}
 			{...other}>
-			{value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+			{value === index && children}
 		</div>
 	)
 }
@@ -45,15 +44,15 @@ function a11yProps(index) {
 }
 
 type TabViewProps = {
-	className?: string;
-	center?: boolean;
-	tabs: typeof defaultTabList;
-	sticky?: boolean;
-	stickyOffset?: string | number;
-	currentTab?: string;
-	onChange?: (index: number) => void;
-	uppercaseLabels?: boolean;
-};
+	className?: string
+	center?: boolean
+	tabs: { name: string; component: ReactNode }[]
+	sticky?: boolean
+	stickyOffset?: string | number
+	currentTab?: string
+	onChange?: (index: number) => void
+	uppercaseLabels?: boolean
+}
 
 function TabView(props: TabViewProps) {
 	const {
@@ -69,8 +68,8 @@ function TabView(props: TabViewProps) {
 
 	const findCurrentTab = currentTab
 		? tabList.findIndex((object) => {
-			return object.name.toLowerCase() === currentTab.toLowerCase()
-		})
+				return object.name.toLowerCase() === currentTab.toLowerCase()
+			})
 		: 0
 
 	const [value, setValue] = useState(findCurrentTab)
@@ -88,7 +87,7 @@ function TabView(props: TabViewProps) {
 				<div
 					className={`${
 						sticky && `sticky top-0`
-					} bg-white dark:bg-bg-dark border-outline dark:border-outline-dark z-[1000] flex border-b capitalize ${
+					} z-[1000] flex border-b border-outline capitalize dark:border-outline-dark ${
 						center && "justify-center"
 					}`}
 					style={{ top: stickyOffset }}>
@@ -116,7 +115,10 @@ function TabView(props: TabViewProps) {
 
 				{tabList.map((tab, index) => {
 					return (
-						<TabPanel key={index} value={value} index={index}>
+						<TabPanel
+							key={index}
+							value={value}
+							index={index}>
 							{tab.component}
 						</TabPanel>
 					)

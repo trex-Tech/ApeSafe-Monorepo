@@ -1,95 +1,20 @@
 import { twMerge } from "tailwind-merge"
-import React, { useState } from "react"
-import CustomText from "@components/CustomText"
+import React, { useEffect, useState } from "react"
 import { useRouter } from "@router"
 import useUserStore from "@store/userStore"
-import AvatarImage from "@components/AvatarImage"
-import { StarIcon } from "@heroicons/react/24/solid"
-import { useGetDashboardStats } from "@commons/api/general"
 import FormInput from "@/src/commons/components/FormInput"
 import CustomButton from "@/src/commons/components/CustomButton"
-import TabView from "@/src/commons/components/TabView"
-import { LucideChevronDown, LucideSearch } from "lucide-react"
-import NFTList from "@/src/commons/components/NftList"
+import { ArrowDown, ArrowUp, ChevronDown, Search } from "lucide-react"
 import { renderTable } from "@/src/commons/components/Table"
+import { useAccount } from "wagmi"
+import { TableRowType } from "@interfaces"
+import { useGetAllTokens } from "@commons/api/tokens"
 
 interface Props {
 	className?: string
 }
 
-const items = [
-	{
-		id: 1,
-		image: "https://media.mkpcdn.com/prod/1000x/d41d8cd98f00b204e9800998ecf8427e_656731.jpg",
-		createdBy: "heritage",
-		timeAgo: "10h ago",
-		marketCap: "4.9K",
-		replies: "13",
-		token: "TKN",
-	},
-	{
-		id: 2,
-		image: "https://media.mkpcdn.com/prod/1000x/d41d8cd98f00b204e9800998ecf8427e_656731.jpg",
-		createdBy: "heritage",
-		timeAgo: "10h ago",
-		marketCap: "4.9K",
-		replies: "13",
-		token: "TKN",
-	},
-	{
-		id: 3,
-		image: "https://media.mkpcdn.com/prod/1000x/d41d8cd98f00b204e9800998ecf8427e_656731.jpg",
-		createdBy: "heritage",
-		timeAgo: "10h ago",
-		marketCap: "4.9K",
-		replies: "13",
-		token: "TKN",
-	},
-	{
-		id: 4,
-		image: "https://media.mkpcdn.com/prod/1000x/d41d8cd98f00b204e9800998ecf8427e_656731.jpg",
-		createdBy: "heritage",
-		timeAgo: "10h ago",
-		marketCap: "4.9K",
-		replies: "13",
-		token: "TKN",
-	},
-]
-
-const data = [
-	{
-		rank: 1,
-		name: "TOKEN",
-		ticker: "TKN",
-		creator: "Heritage",
-		change: "+26%",
-		date: "04/09/24",
-		logo: "path/to/bitcoin.png",
-		changeType: "positive", // This can be used to determine the color of the change bubble
-	},
-	{
-		rank: 2,
-		name: "Ethereum",
-		ticker: "$1,850",
-		creator: "Txnt",
-		change: "+12%",
-		date: "01/06/24",
-		logo: "path/to/ethereum.png",
-		changeType: "positive",
-	},
-	{
-		rank: 3,
-		name: "Solana",
-		ticker: "$25.6",
-		creator: "Crypto_m",
-		change: "-18%",
-		date: "02/04/24",
-		logo: "path/to/solana.png",
-		changeType: "negative",
-	},
-]
-
-const rows = [
+const rows: TableRowType<IToken>[] = [
 	{
 		label: "Rank",
 		value: "rank",
@@ -99,10 +24,10 @@ const rows = [
 		label: "Name",
 		value: "name",
 		visible: true,
-		view: (row: any) => (
+		view: (row) => (
 			<div className="flex items-center gap-2">
 				<img
-					src={row.logo}
+					src={"/b-icon.png"}
 					alt={row.name}
 					className="h-6 w-6"
 				/>{" "}
@@ -117,7 +42,7 @@ const rows = [
 	},
 	{
 		label: "Creator",
-		value: "creator",
+		value: "creator.username" as any,
 		visible: true,
 	},
 	{
@@ -125,15 +50,27 @@ const rows = [
 		value: "change",
 		visible: true,
 		view: (row: any) => (
-			<span
-				className={`rounded-full p-2 text-white ${row.changeType === "positive" ? "bg-green-500" : "bg-red-500"}`}>
-				{row.change}
-			</span>
+			<div className="flex items-center gap-1">
+				<p>{row.change}</p>
+				{row.change > 0 ? (
+					<ArrowUp
+						size={20}
+						color="green"
+						strokeWidth={3}
+					/>
+				) : (
+					<ArrowDown
+						size={20}
+						color="red"
+						strokeWidth={3}
+					/>
+				)}
+			</div>
 		),
 	},
 	{
 		label: "Date",
-		value: "date",
+		format: (row) => new Date(row.date).toDateString(),
 		visible: true,
 	},
 ]
@@ -141,53 +78,50 @@ const rows = [
 const HomePage = ({ className }: Props) => {
 	const router = useRouter()
 	const { user } = useUserStore()
-	const { data: stats } = useGetDashboardStats()
-	const [activeTab, setActiveTab] = useState<"following" | "terminal">("following")
+	const { data } = useGetAllTokens()
+	const { address } = useAccount()
+	const [tokenName, setTokenName] = useState<string>("")
+	// console.log("tokenName:", tokenName) // Add this line
+
+	useEffect(() => {
+		console.log(data)
+	}, [data])
 
 	return (
-		<div className={twMerge("mt-[58px] flex w-full flex-col gap-y-4 px-[5%] pb-[5%]", className)}>
-			<p className="h-1 text-off-white ">Welcome,</p>
+		<div className={twMerge("flex w-full flex-col gap-y-4", className)}>
+			<p className="h-1 text-off-white ">
+				{address ? `Welcome, ${address.substring(36, 42)} 🐸` : "Welcome, mate"}
+			</p>
 			<p className="text-primary-500 h-1 text-2xl">Create a new token</p>
 
-			{/* <label className="mb-0 mt-6">Token Name</label> */}
-			<div className="mt-[33px] lg:flex items-end">
-				<FormInput
-					className={`py-2 w-[100%] lg:w-[576px]`}
-					label={"Token Name"}
-				/>
+			<label className="mt-6">Token Name</label>
+			<div className="-mt-4 flex w-auto items-center justify-between gap-x-4 md:justify-start">
+				<div className="w-[55%] md:w-[45%]">
+					<FormInput
+						className="py-2"
+						value={tokenName}
+						onChange={(e) => setTokenName(e.target.value)}
+					/>
+				</div>
 				<CustomButton
 					text="Create Token"
-					className="w-full lg:w-36 mt-[20px] lg:mt-0"
-					onClick={() => router.push("/create-token")}
+					className="rounded-md"
+					onClick={() => {
+						if (tokenName === "") {
+							alert("Please enter a token name")
+						} else {
+							router.push({
+								pathname: `/create-token/${tokenName}`,
+								query: { create: tokenName },
+							} as any)
+						}
+					}}
 				/>
 			</div>
 
-			<div className="mt-8 flex flex-row items-center justify-between">
-				{/* <TabView
-					tabs={[
-						{ name: "Following", component: <div className="w-full border">asd</div> },
-						{ name: "Terminal", component: <div>asd</div> },
-					]}
-				/> */}
-				{/* <div className="flex flex-row gap-x-2"> */}
-				{/* <button
-						onClick={() => setActiveTab("following")}
-						className={`text-custom-grey ${activeTab === "following" && "border-b-2 border-black dark:border-white"}`}>
-						Following
-					</button>
-					<button
-						onClick={() => setActiveTab("terminal")}
-						className={`text-custom-grey ${activeTab === "terminal" && "border-b-2 border-black dark:border-white"}`}>
-						Terminal
-					</button> */}
-				{/* <div
-						className={`relative bottom-0 left-0 h-1 w-full bg-red-500 transition-transform duration-300 ease-in-out ${
-							activeTab === "following" ? "translate-x-0" : "translate-x-1/2"
-						}`}
-					/> */}
-				{/* </div> */}
-				<div className="flex flex-row items-center border-b-2">
-					<LucideSearch />
+			<div className="mt-4 flex flex-col items-start md:flex-row  md:items-center md:justify-between">
+				<div className=" flex w-full flex-row items-center border-b-2 md:mt-0 md:w-[25%]">
+					<Search />
 					<input
 						className="border-none bg-inherit py-2 pl-2 outline-none"
 						placeholder="Search token..."
@@ -199,23 +133,33 @@ const HomePage = ({ className }: Props) => {
 				<NFTList items={items} />
 			</div> */}
 
-			<div className="mt-12 flex flex-col rounded-lg border p-4">
-				<div className="mb-6 flex items-center justify-between">
+			<div className="mt-4 flex flex-col rounded-lg border p-4">
+				<div className="mb-6 flex flex-col justify-between md:flex-row md:items-center">
 					<h3 className="text-[20px]">Tokens</h3>
 					<div className="flex gap-x-4">
 						<FormInput
-							startIcon={<LucideSearch />}
+							startIcon={<Search />}
 							placeholder="Search"
 							className="py-2"
 						/>
-						<button className="flex items-center rounded-lg bg-input bg-off-white px-2 py-0">
+						<button className="hidden items-center rounded-lg bg-input bg-off-white px-2 py-0 md:flex">
 							<p className="whitespace-nowrap">Sort by date</p>
-							<LucideChevronDown />
+							<ChevronDown />
 						</button>
 					</div>
 				</div>
 
-				{renderTable({ rows, data, tHeadBorder: false })}
+				{renderTable<IToken>({
+					rows,
+					data,
+					tHeadBorder: false,
+					onRowClick: (row) => {
+						router.push({
+							pathname: `/tokens/${row.ticker}`,
+							query: { ticker: row.ticker },
+						} as any)
+					},
+				})}
 			</div>
 		</div>
 	)

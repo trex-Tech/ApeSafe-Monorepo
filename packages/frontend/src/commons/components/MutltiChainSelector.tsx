@@ -20,7 +20,7 @@ const MultiChainSelector: React.FC = () => {
 	return (
 		<div className="mt-5 flex">
 			<div>
-				<p>Chains (Max 3)</p>
+				<p>Chains (Max 5)</p>
 				<div className="flex flex-wrap items-center rounded-md border border-gray-300 p-2 lg:flex-nowrap mt-[8px]">
 					<div className={`flex flex-wrap items-center`}>
 						{selectedChains.map((chain, index) => (

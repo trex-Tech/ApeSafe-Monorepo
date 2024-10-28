@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import useUserStore from "@store/userStore"
 import { usePathname, useRouter } from "@router"
 import { api, handleApiError } from "@utils/axiosProvider"
@@ -7,27 +7,50 @@ import ThemeSwitch from "@components/ThemeSwitch"
 import DynamicBreadcrumb from "@components/DynamicBreadcrumb"
 import ApeSafeLogo from "@assets/images/apesafe-logo.svg"
 import CustomButton from "../CustomButton"
+import { useAppKit } from "@reown/appkit/react"
+import { useAccount, useBalance } from "wagmi"
+import LoadingSpinner from "../LoadingSpinner"
+import axios from "axios"
+
+const API_URL = "https://6dc1-102-89-69-234.ngrok-free.app/api/v1"
 
 type Props = {
 	className?: string
 } & React.PropsWithChildren
 
 const Header = ({ className = "" }: Props) => {
-	const { user } = useUserStore()
-	const { loading } = useGlobalStore()
+	const { open } = useAppKit()
 	const router = useRouter()
-	const pathname = usePathname()
+	const { address, isConnected } = useAccount()
+	const { data: balanceData, isLoading } = useBalance({
+		address,
+	})
+	const [showWalletInfo, setShowWalletInfo] = useState(false)
 
-	let logOut = () => {
-		loading.start()
-
-		api.post("/auth/logout", {})
-			.then(() => {
-				router.push("/login")
-			})
-			.catch(handleApiError)
-			.finally(loading.reset)
+	const connectWallet = async () => {
+		const data = {
+			wallet_id: address,
+		}
+		const res = await axios.post(`${API_URL}/auth/connect/`, data)
+		if (res.status === 200) {
+			console.log("Wallet connected successfully:::", res.data)
+			localStorage.setItem("apesafe_access_token", res.data.result.access)
+		}
 	}
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setShowWalletInfo(true)
+		}, 2000)
+
+		return () => clearTimeout(timer)
+	}, [])
+
+	useEffect(() => {
+		if (isConnected) {
+			connectWallet()
+		}
+	}, [isConnected])
 
 	return (
 		<div
@@ -60,10 +83,27 @@ const Header = ({ className = "" }: Props) => {
 				</div>
 			</div>
 			<div className={`flex flex-row items-center gap-x-10`}>
-				<CustomButton
-					text="Connect Wallet"
-					className="w-[155px]"
-				/>
+				<div className={"flex cursor-pointer text-white"}>
+					{!isLoading ? (
+						<>
+							{isConnected && balanceData ? (
+								<CustomButton
+									text={`${address.substring(36, 42)} 🐸 ${balanceData.formatted.substring(0, 4)} ETH `}
+									className="w-[200px]"
+									onClick={() => open()}
+								/>
+							) : (
+								<CustomButton
+									text="Connect Wallet"
+									className="w-[155px]"
+									onClick={() => open()}
+								/>
+							)}
+						</>
+					) : (
+						<LoadingSpinner />
+					)}
+				</div>
 			</div>
 		</div>
 	)

@@ -3,10 +3,18 @@
 
 import { components, hooks, utils } from "@generouted/react-router/client"
 
-export type Path = `/` | `/create-token` | `/dashboard` | `/login` | `/posts/:id` | `/select-chain`
+export type Path =
+	| `/`
+	| `/create-token/:create`
+	| `/dashboard`
+	| `/login`
+	| `/select-chain/:selectchain`
+	| `/tokens/:ticker`
 
 export type Params = {
-	"/posts/:id": { id: string }
+	"/create-token/:create": { create: string }
+	"/select-chain/:selectchain": { selectchain: string }
+	"/tokens/:ticker": { ticker: string }
 }
 
 export type ModalPath = never

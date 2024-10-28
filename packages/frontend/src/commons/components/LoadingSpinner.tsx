@@ -9,15 +9,20 @@ type LoadingSpinnerProps = {
 }
 
 function LoadingSpinner({ color = "black", className = "dark:text-white", logo }: LoadingSpinnerProps) {
-
-	if (logo) return (
-		<div
-			className={twMerge(
-				`flex flex-col justify-center rounded-lg p-10 border-2 border-outline dark:border-outline-dark aspect-square items-center gap-3 bg-bg-50 dark:bg-bg-dark-50 min-h-0 w-fit min-w-0`,
-				className)}>
-			<Logo iconSize={32} icon className={"animate-pulse"} />
-		</div>
-	)
+	if (logo)
+		return (
+			<div
+				className={twMerge(
+					`flex aspect-square min-h-0 w-fit min-w-0 flex-col items-center justify-center gap-3 rounded-lg border-2 border-outline bg-bg-50 p-10 dark:border-outline-dark dark:bg-bg-dark-50`,
+					className,
+				)}>
+				<Logo
+					iconSize={32}
+					icon
+					className={"animate-pulse"}
+				/>
+			</div>
+		)
 
 	return (
 		<>
@@ -26,7 +31,13 @@ function LoadingSpinner({ color = "black", className = "dark:text-white", logo }
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
 				viewBox="0 0 24 24">
-				<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+				<circle
+					className="opacity-25"
+					cx="12"
+					cy="12"
+					r="10"
+					stroke="currentColor"
+					strokeWidth="4"></circle>
 				<path
 					className="opacity-75"
 					fill="currentColor"
