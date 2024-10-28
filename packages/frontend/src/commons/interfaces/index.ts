@@ -87,3 +87,23 @@ declare global {
 		last_updated: string
 	}
 }
+
+export interface TokenData {
+	id: string
+	image: string
+	chains: Chain[]
+	name: string
+	ticker: string
+	description: string
+	website_url: string
+	telegram_url: string
+	twitter_url: string
+	date_created: string
+	creator: string
+}
+
+export interface Chain {
+	id: string
+	name: string
+	contract_address: string
+}

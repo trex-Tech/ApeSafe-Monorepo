@@ -5,7 +5,7 @@ export const sample_tokens: IToken[] = [
 		name: "TOKEN",
 		ticker: "TKN",
 		creator: {
-			username: "heritage"
+			username: "heritage",
 		},
 		change: 26,
 		date: new Date().toISOString(),
@@ -17,7 +17,7 @@ export const sample_tokens: IToken[] = [
 		name: "SOLANA",
 		ticker: "SOL",
 		creator: {
-			username: "heritage"
+			username: "heritage",
 		},
 		change: -2,
 		date: new Date().toISOString(),
@@ -29,7 +29,7 @@ export const sample_tokens: IToken[] = [
 		name: "SOLANA",
 		ticker: "SOL",
 		creator: {
-			username: "heritage"
+			username: "heritage",
 		},
 		change: 96,
 		date: new Date().toISOString(),
@@ -37,11 +37,11 @@ export const sample_tokens: IToken[] = [
 	},
 	{
 		id: "1",
-		rank: 1,
+		rank: 4,
 		name: "TOKEN",
 		ticker: "TKN",
 		creator: {
-			username: "heritage"
+			username: "heritage",
 		},
 		change: 26,
 		date: new Date().toISOString(),
@@ -49,11 +49,11 @@ export const sample_tokens: IToken[] = [
 	},
 	{
 		id: "2",
-		rank: 2,
+		rank: 5,
 		name: "SOLANA",
 		ticker: "SOL",
 		creator: {
-			username: "heritage"
+			username: "heritage",
 		},
 		change: -2,
 		date: new Date().toISOString(),
@@ -61,11 +61,11 @@ export const sample_tokens: IToken[] = [
 	},
 	{
 		id: "2",
-		rank: 3,
+		rank: 6,
 		name: "SOLANA",
 		ticker: "SOL",
 		creator: {
-			username: "heritage"
+			username: "heritage",
 		},
 		change: 96,
 		date: new Date().toISOString(),
@@ -73,11 +73,11 @@ export const sample_tokens: IToken[] = [
 	},
 	{
 		id: "1",
-		rank: 1,
+		rank: 7,
 		name: "TOKEN",
 		ticker: "TKN",
 		creator: {
-			username: "heritage"
+			username: "heritage",
 		},
 		change: 26,
 		date: new Date().toISOString(),
@@ -85,11 +85,11 @@ export const sample_tokens: IToken[] = [
 	},
 	{
 		id: "2",
-		rank: 2,
+		rank: 8,
 		name: "SOLANA",
 		ticker: "SOL",
 		creator: {
-			username: "heritage"
+			username: "heritage",
 		},
 		change: -2,
 		date: new Date().toISOString(),
@@ -97,11 +97,11 @@ export const sample_tokens: IToken[] = [
 	},
 	{
 		id: "2",
-		rank: 3,
+		rank: 9,
 		name: "SOLANA",
 		ticker: "SOL",
 		creator: {
-			username: "heritage"
+			username: "heritage",
 		},
 		change: 96,
 		date: new Date().toISOString(),
@@ -2981,5 +2981,205 @@ export const sample_crypto_coins: ICryptoCoinData[] = [
 			percentage: 4514.178901649818,
 		},
 		last_updated: "2024-06-06T13:36:03.788Z",
+	},
+]
+
+export const sample_token_data = [
+	{
+		id: "97d4d0ec-f484-4a3f-8627-b1d27144d685",
+		image: "http://6dc1-102-89-69-234.ngrok-free.app/media/tokens/ecf8f990-61cc-40c1-a109-ed1b2538bc53.jpg",
+		chains: [],
+		name: "Sample Token",
+		ticker: "STK",
+		description: "This is a sample token for demonstration purposes.",
+		website_url: null,
+		telegram_url: null,
+		twitter_url: null,
+		date_created: "2024-10-23T21:12:39.315716Z",
+		creator: "0cc073a7-dfb5-4c25-af17-3b21d1db2b9c",
+	},
+	{
+		id: "fd48b7bc-00b8-4173-a3ae-924a6c09b54a",
+		image: "http://6dc1-102-89-69-234.ngrok-free.app/media/tokens/b8bec243-94e3-4bfc-8eb1-df75190fec13.jpg",
+		chains: [],
+		name: "Sample Token",
+		ticker: "STKY",
+		description: "This is a sample token for demonstration purposes.",
+		website_url: null,
+		telegram_url: null,
+		twitter_url: null,
+		date_created: "2024-10-23T21:39:27.827360Z",
+		creator: "0cc073a7-dfb5-4c25-af17-3b21d1db2b9c",
+	},
+	{
+		id: "27bd4d73-6a5b-475f-86f3-fc82035a4618",
+		image: "http://6dc1-102-89-69-234.ngrok-free.app/media/tokens/fee8007d-e488-4ec2-9f1a-683c8e14df94.jpg",
+		chains: [],
+		name: "Sample Token",
+		ticker: "STKYI",
+		description: "This is a sample token for demonstration purposes.",
+		website_url: null,
+		telegram_url: null,
+		twitter_url: "https://twitter.com/sample_token",
+		date_created: "2024-10-23T21:41:43.556796Z",
+		creator: "0cc073a7-dfb5-4c25-af17-3b21d1db2b9c",
+	},
+	{
+		id: "42d705b2-c207-4888-8e8a-828a57a32d26",
+		image: "http://6dc1-102-89-69-234.ngrok-free.app/media/tokens/b93a9468-e737-45cd-9397-54762b05046c.jpg",
+		chains: [],
+		name: "Sample Token2",
+		ticker: "STKYIN",
+		description: "This is a sample token for demonstration purposes.",
+		website_url: "https://example.com",
+		telegram_url: "https://t.me/sample_token",
+		twitter_url: "https://twitter.com/sample_token",
+		date_created: "2024-10-23T21:45:05.367079Z",
+		creator: "0cc073a7-dfb5-4c25-af17-3b21d1db2b9c",
+	},
+	{
+		id: "6ad3538d-9a73-4286-bfe6-74f39393797b",
+		image: "http://6dc1-102-89-69-234.ngrok-free.app/media/tokens/05eb5a20-2892-4167-9f88-35deb08aa564.jpg",
+		chains: [],
+		name: "Sample Token3",
+		ticker: "STKYINo",
+		description: "This is a sample token for demonstration purposes.",
+		website_url: "https://example.com",
+		telegram_url: "https://t.me/sample_token",
+		twitter_url: "https://twitter.com/sample_token",
+		date_created: "2024-10-24T18:16:16.096726Z",
+		creator: "0cc073a7-dfb5-4c25-af17-3b21d1db2b9c",
+	},
+	{
+		id: "b41afb65-0754-418b-819d-63d655224087",
+		image: "http://6dc1-102-89-69-234.ngrok-free.app/media/tokens/0987c414-5f8c-4919-bc6b-9f38affe7a54.jpg",
+		chains: [
+			{
+				id: "67ebcfaf-da68-48c1-9e9d-f31aca6e6079",
+				name: "base",
+				contract_address: "736bdb8bd",
+			},
+		],
+		name: "Sample Token3",
+		ticker: "STKYIsjNo",
+		description: "This is a sample token for demonstration purposes.",
+		website_url: "https://example.com",
+		telegram_url: "https://t.me/sample_token",
+		twitter_url: "https://twitter.com/sample_token",
+		date_created: "2024-10-24T18:17:25.223196Z",
+		creator: "0cc073a7-dfb5-4c25-af17-3b21d1db2b9c",
+	},
+	{
+		id: "33b46536-e7bb-4ad8-b1d2-b7e7e784dffb",
+		image: "http://6dc1-102-89-69-234.ngrok-free.app/media/tokens/5010d97b-4bd3-4593-a44c-6eb1e9104da5.jpg",
+		chains: [],
+		name: "Sample Token3",
+		ticker: "STKYIsjNso",
+		description: "This is a sample token for demonstration purposes.",
+		website_url: "https://example.com",
+		telegram_url: "https://t.me/sample_token",
+		twitter_url: "https://twitter.com/sample_token",
+		date_created: "2024-10-25T10:12:00.280128Z",
+		creator: "0cc073a7-dfb5-4c25-af17-3b21d1db2b9c",
+	},
+	{
+		id: "61025511-8d79-4664-8e80-397378a043c4",
+		image: "http://6dc1-102-89-69-234.ngrok-free.app/media/tokens/65867ebe-f85b-4354-9d02-94cc395eac4b.jpg",
+		chains: [
+			{
+				id: "2d6e9a8e-fca2-4a50-9bef-c90250e9599f",
+				name: "base",
+				contract_address: "736b73xdb8bd",
+			},
+			{
+				id: "19ae5a91-de55-46ec-8a82-ccf7dac62f8b",
+				name: "ETH",
+				contract_address: "736b73xdDDBb8bd",
+			},
+		],
+		name: "Sample Token3",
+		ticker: "STKddNso",
+		description: "This is a sample token for demonstration purposes.",
+		website_url: "https://example.com",
+		telegram_url: "https://t.me/sample_token",
+		twitter_url: "https://twitter.com/sample_token",
+		date_created: "2024-10-25T10:16:24.812459Z",
+		creator: "0cc073a7-dfb5-4c25-af17-3b21d1db2b9c",
+	},
+	{
+		id: "10614401-2ebf-4ccd-a1ca-8f3f2161959e",
+		image: "http://6dc1-102-89-69-234.ngrok-free.app/media/tokens/798d8839-bce7-48e1-bc4a-e65c12c99b4a.jpg",
+		chains: [
+			{
+				id: "2d6e9a8e-fca2-4a50-9bef-c90250e9599f",
+				name: "base",
+				contract_address: "736b73xdb8bd",
+			},
+		],
+		name: "Sample Tokeen3",
+		ticker: "STKfddNso",
+		description: "This is a sample token for demonstration purposes.",
+		website_url: "https://example.com",
+		telegram_url: "https://t.me/sample_token",
+		twitter_url: "https://twitter.com/sample_token",
+		date_created: "2024-10-27T15:26:47.339606Z",
+		creator: "0cc073a7-dfb5-4c25-af17-3b21d1db2b9c",
+	},
+	{
+		id: "b97b6ed6-b3d0-4da8-ad34-63486547619c",
+		image: "http://6dc1-102-89-69-234.ngrok-free.app/media/tokens/95540467-ccc8-4147-9325-eaa1d13599c0.png",
+		chains: [
+			{
+				id: "3b3e783f-0219-486a-b4b9-704147a4047b",
+				name: "base",
+				contract_address: "0x4c11efbd5fefc1bac1d1fbb50d8ee0b6e624574c",
+			},
+		],
+		name: "Trex",
+		ticker: "TREX is a bad boy",
+		description: "TREX is a bad boy",
+		website_url: "",
+		telegram_url: "",
+		twitter_url: "",
+		date_created: "2024-10-27T16:26:47.174638Z",
+		creator: "9f916dd1-f00c-4a06-905b-811ca06c62ca",
+	},
+	{
+		id: "14320b07-c0ef-4916-a826-a3eda1957e55",
+		image: "http://6dc1-102-89-69-234.ngrok-free.app/media/tokens/8143f4ab-087a-4ffb-bba3-a0a305c308e8.png",
+		chains: [
+			{
+				id: "537f1364-c5dd-400d-88d2-9b917822bf8f",
+				name: "base",
+				contract_address: "0x9b91a26cce9acaa8661e8d0e306109a108b6a670",
+			},
+		],
+		name: "Hjhjhjhj",
+		ticker: "edbdvdbvdvb",
+		description: "dbvdvdvdvdvvbd",
+		website_url: "",
+		telegram_url: "",
+		twitter_url: "",
+		date_created: "2024-10-27T16:32:06.386031Z",
+		creator: "9f916dd1-f00c-4a06-905b-811ca06c62ca",
+	},
+	{
+		id: "1a01d47e-f6cb-4abb-a581-245ebf10dec9",
+		image: "http://6dc1-102-89-69-234.ngrok-free.app/media/tokens/c39156d4-9e14-4049-a41c-33d908210966.png",
+		chains: [
+			{
+				id: "730c673b-2a83-41c4-a1c5-ea055a430b60",
+				name: "base",
+				contract_address: "0x17018a90c704a4aebaee01b56ade23b7818b0272",
+			},
+		],
+		name: "Hjhjhjhj",
+		ticker: "dgdgdgd",
+		description: "dndghcdgcdg",
+		website_url: "",
+		telegram_url: "",
+		twitter_url: "",
+		date_created: "2024-10-27T16:33:49.353160Z",
+		creator: "9f916dd1-f00c-4a06-905b-811ca06c62ca",
 	},
 ]
