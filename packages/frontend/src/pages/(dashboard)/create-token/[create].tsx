@@ -9,7 +9,7 @@ import { useAppKitState } from "@reown/appkit/react"
 import { useParams } from "@router"
 import axios from "axios"
 
-const API_URL = "https://6dc1-102-89-69-234.ngrok-free.app/api/v1"
+const API_URL = "https://api.solgram.app/api/v1"
 
 const CreateTokenPage = () => {
 	const [files, setFiles] = useState<File[]>([])
