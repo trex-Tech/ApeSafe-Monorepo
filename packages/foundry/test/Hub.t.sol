@@ -2,8 +2,6 @@
 pragma solidity ^0.8.13;
 
 import {Test, console} from "forge-std/Test.sol";
-import {Hub} from "../src/Hub.sol";
+import {Hub} from "../src/Hub/Hub.sol";
 
-contract HubTest is Test {
-
-}
+contract HubTest is Test {}
