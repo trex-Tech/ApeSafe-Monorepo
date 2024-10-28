@@ -219,7 +219,7 @@ const HomePage = ({ className }: Props) => {
 					tHeadBorder: false,
 					onRowClick: (row) => {
 						router.push({
-							pathname: `/tokens/${"TECHIES"}`,
+							pathname: `/tokens/${row.ticker}`,
 							query: { ...row },
 						} as any)
 					},
