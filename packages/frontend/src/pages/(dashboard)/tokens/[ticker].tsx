@@ -26,7 +26,7 @@ export default function TokenPage({}) {
 		exact: false,
 	})
 	const { data } = useGetToken(ticker)
-	console.log({ ticker, data })
+	console.log("ticker:::", { ticker, data })
 
 	return (
 		<div className={"m"}>
