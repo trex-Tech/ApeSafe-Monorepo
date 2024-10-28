@@ -9,6 +9,9 @@ import { renderTable } from "@/src/commons/components/Table"
 import { useAccount } from "wagmi"
 import { TableRowType } from "@interfaces"
 import { useGetAllTokens } from "@commons/api/tokens"
+import axios from "axios"
+
+const API_URL = "https://6dc1-102-89-69-234.ngrok-free.app/api/v1"
 
 interface Props {
 	className?: string
