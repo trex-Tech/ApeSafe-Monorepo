@@ -10,9 +10,13 @@ import CustomButton from "@components/CustomButton"
 import CryptoCoinSelect from "@components/project/CryptoCoinSelect"
 import { useState } from "react"
 import { sample_crypto_coins } from "@utils/sample-data"
+import { parseUnits } from "viem"
+import { useWriteContract, useAccount, useWaitForTransactionReceipt } from "wagmi"
+import mockHubAbi from "@/src/commons/abi/MockHub"
 
 export default function TokenPage({}) {
 	const { ticker } = useParams()
+	
 
 	const { data } = useGetToken(ticker)
 	console.log("data in token:::", { ticker, data })
@@ -44,10 +48,11 @@ export default function TokenPage({}) {
 		</div>
 	)
 }
-
+       
 const BuyTab = () => {
 	const { ticker } = useParams()
 	const { data } = useGetToken(ticker)
+	
 	// console.log(data?.chains[0]?.contract_address)
 	const [selectedCoin, setSelectedCoin] = useState<ICryptoCoinData>(
 		sample_crypto_coins.find((coin) => coin.symbol.toLowerCase() === "usdc"),
@@ -63,7 +68,36 @@ const BuyTab = () => {
 
 	const { register, formState, setValue } = useForm(Config.useForm({}, schema))
 
-	const [amount, setAmount] = useState<any>()
+	const [amount, setAmount] = useState("")
+
+	const {address, chain} = useAccount()
+
+	const {writeContract, error } = useWriteContract();
+
+	const buyFn = () =>  {
+		if (amount !== "") {
+			writeContract({
+				abi: mockHubAbi,
+				address: `0x${contractAddress.slice(2)}`,
+				functionName: "buy",
+				account: address,
+				chain: chain,
+				args: [parseUnits(amount, 18)],
+			})
+
+			if (error) {
+				// error.message
+				// error.name
+				console.log("error:", error.message)
+				if (error.message.includes("Connector not connected.")) {
+					alert("Please connect your wallet.")
+				}
+			}
+		}
+
+	
+
+	}
 
 	return (
 		<div className={"py-[5%]"}>
@@ -80,6 +114,7 @@ const BuyTab = () => {
 					type="text"
 					className="mt-4 w-full pt-[4%]"
 					placeholder="Enter amount"
+					value={amount}
 					endIcon={
 						<img
 							className={"aspect-square h-full  rounded-full"}
@@ -87,7 +122,6 @@ const BuyTab = () => {
 							src={selectedCoin?.image}
 						/>
 					}
-					value={amount}
 					onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1"))}
 				/>
 			</div>
@@ -114,6 +148,7 @@ const BuyTab = () => {
 				<CustomButton
 					text={"Buy Now"}
 					className={"mt-[5%] self-end px-[5%] py-3"}
+					onClick={() => buyFn()}
 				/>
 			</div>
 		</div>
