@@ -30,7 +30,7 @@ interface DropdownSelectProps {
 const DropdownSelect: React.FC<DropdownSelectProps> = ({
 	className = "",
 	noItemMessage = "No items",
-														   menuItemWidth = "w-[100vw]",
+	menuItemWidth = "w-[100vw]",
 	selector = null,
 	disabled = false,
 	label,
@@ -61,13 +61,15 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
 	}
 
 	const getSelectedItemLabel = (): string => {
-		return selected ? selected[itemLabelKey] ?? selected?.value : prompt
+		return selected ? (selected[itemLabelKey] ?? selected?.value) : prompt
 	}
 
 	const renderSelector = () => {
 		if (selector) {
 			return (
-				<div className="w-full cursor-pointer" onClick={handleClick}>
+				<div
+					className="w-full cursor-pointer"
+					onClick={handleClick}>
 					{selector}
 				</div>
 			)
@@ -76,7 +78,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
 		return (
 			<div
 				className={twMerge(
-					`${textFieldStyle} my-0 z-[7000]  flex cursor-pointer flex-row items-center justify-between text-gray-700 dark:text-gray-300`,
+					`${textFieldStyle} z-[400] my-0  flex cursor-pointer flex-row items-center justify-between text-gray-700 dark:text-gray-300`,
 					className,
 				)}
 				onClick={handleClick}>
@@ -93,21 +95,33 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
 	const renderMenuItem = (item: string | DropdownSelectItem, i: number) => {
 		if (itemLabelKey) {
 			return (
-				<MenuItem className={menuItemWidth} key={i} onClick={() => handleItemClick(item)}>
+				<MenuItem
+					className={menuItemWidth}
+					key={i}
+					onClick={() => handleItemClick(item)}>
 					{item[itemLabelKey]}
 				</MenuItem>
 			)
 		} else if (typeof item === "string") {
 			return (
-				<MenuItem className={menuItemWidth} key={i} onClick={() => handleItemClick(item)}>
+				<MenuItem
+					className={menuItemWidth}
+					key={i}
+					onClick={() => handleItemClick(item)}>
 					{item}
 				</MenuItem>
 			)
 		} else if (item?.label) {
 			return (
-				<MenuItem className={menuItemWidth} key={i} onClick={() => handleItemClick(item)}>
+				<MenuItem
+					className={menuItemWidth}
+					key={i}
+					onClick={() => handleItemClick(item)}>
 					{item?.icon && typeof item?.icon === "string" ? (
-						<Avatar src={item?.icon} sx={{ width: 20, height: 20, marginRight: "0.5rem" }} />
+						<Avatar
+							src={item?.icon}
+							sx={{ width: 20, height: 20, marginRight: "0.5rem" }}
+						/>
 					) : item?.icon && React.isValidElement(item?.icon) ? (
 						<div className="mr-2">{item?.icon}</div>
 					) : null}
@@ -118,7 +132,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
 	}
 
 	return (
-		<div className={"relative"}>
+		<div className={"relative "}>
 			<div className="my-2 flex w-full flex-col gap-2">
 				{label && (
 					<p className={twMerge("font-heading font-medium text-gray-700 dark:text-gray-500", labelClassName)}>
@@ -128,7 +142,11 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
 				{renderSelector()}
 			</div>
 
-			<Menu id="basic-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+			<Menu
+				id="basic-menu"
+				anchorEl={anchorEl}
+				open={Boolean(anchorEl)}
+				onClose={handleClose}>
 				{items?.length > 0 ? (
 					items.map((item, i) => renderMenuItem(item, i))
 				) : (
