@@ -81,9 +81,10 @@ const CreateTokenPage = () => {
 					"Content-Type": "application/json",
 				},
 			})
-			console.log("Token saved successfully:", res.data)
+			// console.log("Token saved successfully:", res.data)
+			console.log("Token saved successfully:", res)
 
-			if (res.status === 200) {
+			if (res.status === 201) {
 				router.push({
 					pathname: `/select-chain/${address}`,
 					query: { address: address },
