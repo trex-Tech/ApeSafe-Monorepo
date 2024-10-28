@@ -10,9 +10,12 @@ import CustomButton from "@components/CustomButton"
 import CryptoCoinSelect from "@components/project/CryptoCoinSelect"
 import { useState } from "react"
 import { sample_crypto_coins } from "@utils/sample-data"
+import { useWriteContract, useAccount, useWaitForTransactionReceipt } from "wagmi"
+import mockHubAbi from "@/src/commons/abi/MockHub"
 
 export default function TokenPage({}) {
 	const { ticker } = useParams()
+	
 
 	const { data } = useGetToken(ticker)
 	console.log({ ticker, data })
@@ -48,6 +51,7 @@ export default function TokenPage({}) {
 const BuyTab = () => {
 	const { ticker } = useParams()
 	const { data } = useGetToken(ticker)
+	const { amount, setAmount } = useState<any>(0);
 	// console.log(data?.chains[0]?.contract_address)
 	const [selectedCoin, setSelectedCoin] = useState<ICryptoCoinData>(
 		sample_crypto_coins.find((coin) => coin.symbol.toLowerCase() === "usdc"),
@@ -71,11 +75,13 @@ const BuyTab = () => {
 			<div className="relative flex h-fit w-full flex-col">
 				<p className="absolute left-[2%] top-[30%] z-20 text-xs text-gray-500">You buy</p>
 				<FormInput
-					type="number"
+					type="text"
 					errors={formState.errors.amount}
 					register={register("amount")}
 					className="mt-4 w-full pt-[4%]"
 					placeholder="Enter amount"
+					value={amount}
+					// onChange={(e) => setAmo}
 					endIcon={
 						<img
 							className={"aspect-square h-full  rounded-full"}
