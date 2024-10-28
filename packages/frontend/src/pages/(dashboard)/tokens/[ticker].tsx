@@ -1,6 +1,6 @@
 import TabView from "@components/TabView"
 import FormInput from "@components/FormInput"
-import { useGetToken } from "@commons/api/tokens"
+import { useGetAllTokens, useGetToken } from "@commons/api/tokens"
 import { useParams } from "@router"
 import { useForm } from "react-hook-form"
 import Config from "@utils/config"
@@ -10,13 +10,21 @@ import CustomButton from "@components/CustomButton"
 import CryptoCoinSelect from "@components/project/CryptoCoinSelect"
 import { useState } from "react"
 import { sample_crypto_coins } from "@utils/sample-data"
+import { useQueryClient } from "@tanstack/react-query"
+import { Keys } from "@/src/commons/utils"
 
 export default function TokenPage({}) {
 	const { ticker } = useParams()
 
-	const { data } = useGetToken(ticker)
-	console.log({ ticker, data })
 	// console.log(data?.chains[0]?.contract_address)
+	const queryClient = useQueryClient()
+	const tokens = queryClient.getQueriesData({
+		queryKey: [Keys.tokens],
+		exact: false,
+	})
+	const { data } = useGetToken(ticker, tokens)
+	console.log("tokensss", tokens[0][1])
+	console.log({ ticker, data })
 
 	return (
 		<div className={"m"}>
