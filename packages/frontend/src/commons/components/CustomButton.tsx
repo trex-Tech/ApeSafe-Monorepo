@@ -35,7 +35,6 @@ const CustomButton = (props: CustomButtonProps) => {
 
 	const { isLoading: globalLoading } = useGlobalStore()
 
-
 	const styling = {
 		gradient: `${border && "border"} bg-gradient-to-r from-primary via-blue-400 to-secondary text-primary-dark hover:ring-2 px-4`,
 		primary: `${border && "border"} bg-primary text-white hover:ring-2 px-4`,
@@ -52,25 +51,38 @@ const CustomButton = (props: CustomButtonProps) => {
 	}
 
 	const classes = twMerge(
-		`${styling} py-2 font-[500]  h-fit flex justify-center items-center gap-1 cursor-pointer rounded-md font-heading relative overflow-hidden transition duration-500 ${className} ${(disabled === true) && "cursor-not-allowed bg-gray-700 text-white opacity-50"}`,
+		`${styling} py-2 font-[500]  h-fit flex justify-center items-center gap-1 cursor-pointer rounded-md font-heading relative overflow-hidden transition duration-500 ${className} ${disabled === true && "cursor-not-allowed bg-gray-700 text-white opacity-50"}`,
 	)
 
 	return (
-		<button disabled={disabled || loading} onClick={handleClick} className={classes} style={style} {...rest}>
+		<button
+			disabled={disabled || loading}
+			onClick={handleClick}
+			className={classes}
+			style={style}
+			{...rest}>
 			{!loading && (
 				<div className="flex items-center justify-center">
 					{startIcon && <span className="mr-2 flex h-5 w-5 items-center justify-center">{startIcon}</span>}
 
-					{
-						variant === "text-gradient" ? <span
-							className="text-transparent bg-gradient-to-b from-primary via-blue-400 to-secondary bg-clip-text">{text || children}</span> : (text || children)
-					}
+					{variant === "text-gradient" ? (
+						<span className="bg-gradient-to-b from-primary via-blue-400 to-secondary bg-clip-text text-transparent">
+							{text || children}
+						</span>
+					) : (
+						text || children
+					)}
 					{endIcon && (
 						<span className="ml-2 flex h-5 w-5 items-center justify-center">{endIcon && endIcon}</span>
 					)}
 				</div>
 			)}
-			{loading || globalLoading ? <LoadingSpinner color={"white"} className="dark:text-white" /> : null}
+			{loading || globalLoading ? (
+				<LoadingSpinner
+					color={"white"}
+					className="dark:text-white"
+				/>
+			) : null}
 		</button>
 	)
 }
