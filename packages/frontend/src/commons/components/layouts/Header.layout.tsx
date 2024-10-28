@@ -12,7 +12,7 @@ import { useAccount, useBalance } from "wagmi"
 import LoadingSpinner from "../LoadingSpinner"
 import axios from "axios"
 
-const API_URL = "https://6dc1-102-89-69-234.ngrok-free.app/api/v1"
+const API_URL = "https://api.solgram.app/api/v1"
 
 type Props = {
 	className?: string
