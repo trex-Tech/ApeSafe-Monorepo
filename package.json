@@ -1,28 +1,9 @@
 {
   "name": "apesafe-monorepo",
   "version": "0.0.1",
-  "private": true,
-  "workspaces": {
-    "packages": [
-      "packages/foundry",
-      "packages/frontend"
-    ]
-  },
   "devDependencies": {
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10"
-  },
-  "scripts": {
-    "postinstall": "husky install",
-    "compile": "yarn workspace @apesafe-monorepo/foundry compile",
-    "deploy": "yarn workspace @apesafe-monorepo/foundry deploy",
-    "foundry:test": "yarn workspace @apesafe-monorepo/foundry compile",
-    "foundry:add-pkg": "yarn workspace @apesafe-monorepo/foundry forge-install --no-commit",
-    "test": "forge foundry:test",
-    "react:start": "yarn workspace @apesafe-monorepo/frontend start",
-    "react:build": "yarn workspace @apesafe-monorepo/frontend build",
-    "react:lint": "yarn workspace @apesafe-monorepo/frontend prettier",
-    "react:preview": "yarn workspace @apesafe-monorepo/frontend preview"
   },
   "husky": {
     "hooks": {
@@ -32,5 +13,25 @@
   "lint-staged": {
     "**/*.sol": "forge fmt"
   },
-  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610",
+  "private": true,
+  "scripts": {
+    "postinstall": "husky install",
+    "compile": "yarn workspace @apesafe-monorepo/foundry compile",
+    "deploy": "yarn workspace @apesafe-monorepo/foundry deploy",
+    "foundry:test": "yarn workspace @apesafe-monorepo/foundry compile",
+    "foundry:add-pkg": "yarn workspace @apesafe-monorepo/foundry forge-install --no-commit",
+    "foundry:rm-pkg": "yarn workspace @apesafe-monorepo/foundry forge-remove",
+    "test": "forge foundry:test",
+    "react:start": "yarn workspace @apesafe-monorepo/frontend start",
+    "react:build": "yarn workspace @apesafe-monorepo/frontend build",
+    "react:lint": "yarn workspace @apesafe-monorepo/frontend prettier",
+    "react:preview": "yarn workspace @apesafe-monorepo/frontend preview"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/foundry",
+      "packages/frontend"
+    ]
+  }
 }

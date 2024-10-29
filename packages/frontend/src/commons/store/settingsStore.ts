@@ -13,7 +13,7 @@ interface SettingsState {
 
 
 export const useSettingsStore = create<SettingsState>((set) => ({
-	darkMode: false,
+	darkMode: true,
 	setDarkMode: (value) => set({ darkMode: value }),
 	biometricAuthEnabled: false,
 	setBiometricAuthEnabled: (value) => set((state) => ({ biometricAuthEnabled: value })),
@@ -31,7 +31,7 @@ export enum SETTINGS {
 
 export async function retrieveSettings() {
 	const darkMode = localStorage.getItem(SETTINGS.DARK_MODE)
-	useSettingsStore.getState().setDarkMode(JSON.parse(darkMode) ?? false)
+	useSettingsStore.getState().setDarkMode(true)
 
 	const biometricAuth = localStorage.getItem(SETTINGS.BIOMETRIC_AUTH)
 	useSettingsStore.getState().setBiometricAuthEnabled(JSON.parse(biometricAuth) ?? false)

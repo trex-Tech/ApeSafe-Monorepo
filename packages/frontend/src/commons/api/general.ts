@@ -6,12 +6,6 @@ export function useGetDashboardStats() {
 	return useQuery({
 		queryKey: [Keys.users, "stats"],
 		queryFn: () => api.get(`/admin/dashboard/stats`),
-		select: (data) =>
-			data as {
-				active_users: number
-				total_transactions: number
-				total_posts: number
-				recent_transactions: ITransaction[]
-			},
+		select: (data) => data
 	})
 }

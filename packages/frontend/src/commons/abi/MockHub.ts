@@ -1,0 +1,46 @@
+const mockHubAbi = [
+    {
+        "type":"constructor",
+        "inputs":[
+            {
+                "name":"_name",
+                "type":"string",
+                "internalType":"string"
+            },
+            {
+                "name":"_symbol",
+                "type":"string",
+                "internalType":"string"
+            }
+        ],
+        "stateMutability":"nonpayable"
+    },
+    {
+        "type":"function",
+        "name":"buy",
+        "inputs":[
+            {
+                "name":"_amount",
+                "type":"uint256",
+                "internalType":"uint256"
+            }
+        ],
+        "outputs":[],
+        "stateMutability":"nonpayable"
+    },
+    {
+        "type":"function",
+        "name":"sell",
+        "inputs":[
+            {
+                "name":"amount",
+                "type":"uint256",
+                "internalType":"uint256"
+            }
+        ],
+        "outputs":[],
+        "stateMutability":"nonpayable"
+    }
+]
+
+export default mockHubAbi;
