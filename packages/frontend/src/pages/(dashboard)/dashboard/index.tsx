@@ -1,21 +1,20 @@
 import { twMerge } from "tailwind-merge"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useState } from "react"
 import { useRouter } from "@router"
 import useUserStore from "@store/userStore"
 import FormInput from "@/src/commons/components/FormInput"
 import CustomButton from "@/src/commons/components/CustomButton"
-import { ArrowDown, ArrowUp, ChevronDown, Search } from "lucide-react"
+import { Search } from "lucide-react"
 import { renderTable } from "@/src/commons/components/Table"
 import { useAccount } from "wagmi"
 import { TableRowType, TokenData } from "@interfaces"
 import { useGetAllTokens } from "@commons/api/tokens"
-import { Pagination, PaginationProps, useMediaQuery } from "@mui/material"
+import { Pagination, PaginationProps, Tooltip, useMediaQuery } from "@mui/material"
 import { COLORS } from "@/src/commons/utils"
-import { api } from "@/src/commons/utils/axiosProvider"
-import axios from "axios"
 import useDebounce from "@/src/commons/hooks/useDebounce"
 import DropdownSelect from "@/src/commons/components/DropdownSelect"
-import { useTokenStore } from "@/src/commons/store/tokensStore"
+import LoadingSpinner from "@/src/commons/components/LoadingSpinner"
+import DynamicPagination from "@/src/commons/components/DynamicPagination"
 
 interface Props {
 	className?: string
@@ -39,7 +38,7 @@ const rows: TableRowType<TokenData>[] = [
 				<img
 					src={row.image}
 					alt={row.name}
-					className="h-6 w-6"
+					className="h-10 w-10 rounded-full"
 				/>
 				<span className="w-36 truncate">{row.name}</span>
 			</div>
@@ -120,7 +119,6 @@ const HomePage = ({ className }: Props) => {
 	const [searchQuery, setSearchQuery] = useState("")
 	const [dateFilter, setDateFilter] = useState<DateFilter | undefined>()
 	const debouncedSearchTerm = useDebounce(searchQuery, 500)
-	const { setTokens } = useTokenStore()
 	console.log("tokenName:", tokenName)
 	const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
 		setPage(value)
@@ -137,26 +135,30 @@ const HomePage = ({ className }: Props) => {
 	}
 
 	const { data, isFetching, error, pages } = useGetAllTokens(page, debouncedSearchTerm, dateFilter)
-	// useEffect(() => {
-	// 	setTokens(data)
-	// }, [data])
 
 	return (
 		<div className={twMerge("flex w-full flex-col gap-y-4", className)}>
 			<p className="h-1 text-off-white ">
 				{address ? `Welcome, ${address.substring(36, 42)} 🐸` : "Welcome, mate"}
 			</p>
-			<p className="text-primary-500 h-1 text-2xl">Create a new token</p>
+			<p className="text-primary-500 h-1 text-2xl">Create a New Token</p>
 
 			<label className="mt-6">Token Name</label>
 			<div className="-mt-2 flex h-[32px] w-auto items-center justify-between gap-x-4 md:justify-start">
-				<div className=" w-[55%] md:w-[45%]">
-					<FormInput
-						className="py-[8px] "
-						value={tokenName}
-						onChange={(e) => setTokenName(e.target.value)}
-					/>
-				</div>
+				<Tooltip
+					title="This will be your token's permanent name and cannot be changed later"
+					arrow
+					leaveTouchDelay={3000}>
+					<div className=" w-[58%] md:w-[45%]">
+						<FormInput
+							className="py-[8px] "
+							value={tokenName}
+							placeholder="Enter token name (max 32 characters)"
+							onChange={(e) => setTokenName(e.target.value)}
+						/>
+					</div>
+				</Tooltip>
+
 				<CustomButton
 					text="Create Token"
 					className=" rounded-md py-[12px] text-xs md:py-[10px] md:text-sm"
@@ -225,28 +227,19 @@ const HomePage = ({ className }: Props) => {
 					},
 				})}
 
-				{data && data.length > 0 && (
-					<div className="mt-4 flex h-12 justify-center ">
-						<Pagination
-							count={pages}
-							page={page}
-							onChange={handlePageChange}
-							color="primary"
-							shape="rounded"
-							variant="outlined"
-							// siblingCount={isSmallScreen ? 0 : 1}
-							// boundaryCount={isSmallScreen ? 1 : 2}
-							sx={{
-								"& .MuiPaginationItem-root": {
-									color: COLORS.primary,
-								},
-								"& .MuiPaginationItem-root.Mui-selected": {
-									backgroundColor: COLORS.primary,
-									color: "white",
-								},
-							}}
-						/>
+				{!data && isFetching && (
+					<div className="flex h-48 w-full items-center justify-center">
+						<LoadingSpinner color={COLORS.primary} />
 					</div>
+				)}
+
+				{data && data.length > 10 && (
+					<DynamicPagination
+						activePage={page}
+						setActivePage={setPage}
+						pages={pages}
+						className="mt-2"
+					/>
 				)}
 			</div>
 		</div>
