@@ -9,11 +9,12 @@ import { renderTable } from "@/src/commons/components/Table"
 import { useAccount } from "wagmi"
 import { TableRowType, TokenData } from "@interfaces"
 import { useGetAllTokens } from "@commons/api/tokens"
-import { Pagination, PaginationProps, useMediaQuery } from "@mui/material"
+import { Pagination, PaginationProps, Tooltip, useMediaQuery } from "@mui/material"
 import { COLORS } from "@/src/commons/utils"
 import useDebounce from "@/src/commons/hooks/useDebounce"
 import DropdownSelect from "@/src/commons/components/DropdownSelect"
 import LoadingSpinner from "@/src/commons/components/LoadingSpinner"
+import DynamicPagination from "@/src/commons/components/DynamicPagination"
 
 interface Props {
 	className?: string
@@ -144,14 +145,20 @@ const HomePage = ({ className }: Props) => {
 
 			<label className="mt-6">Token Name</label>
 			<div className="-mt-2 flex h-[32px] w-auto items-center justify-between gap-x-4 md:justify-start">
-				<div className=" w-[55%] md:w-[45%]">
-					<FormInput
-						className="py-[8px] "
-						value={tokenName}
-						placeholder="Enter token name (max 32 characters)"
-						onChange={(e) => setTokenName(e.target.value)}
-					/>
-				</div>
+				<Tooltip
+					title="This will be your token's permanent name and cannot be changed later"
+					arrow
+					leaveTouchDelay={3000}>
+					<div className=" w-[58%] md:w-[45%]">
+						<FormInput
+							className="py-[8px] "
+							value={tokenName}
+							placeholder="Enter token name (max 32 characters)"
+							onChange={(e) => setTokenName(e.target.value)}
+						/>
+					</div>
+				</Tooltip>
+
 				<CustomButton
 					text="Create Token"
 					className=" rounded-md py-[12px] text-xs md:py-[10px] md:text-sm"
@@ -227,27 +234,12 @@ const HomePage = ({ className }: Props) => {
 				)}
 
 				{data && data.length > 10 && (
-					<div className="mt-4 flex h-12 justify-center ">
-						<Pagination
-							count={pages}
-							page={page}
-							onChange={handlePageChange}
-							color="primary"
-							shape="rounded"
-							variant="outlined"
-							// siblingCount={isSmallScreen ? 0 : 1}
-							// boundaryCount={isSmallScreen ? 1 : 2}
-							sx={{
-								"& .MuiPaginationItem-root": {
-									color: COLORS.primary,
-								},
-								"& .MuiPaginationItem-root.Mui-selected": {
-									backgroundColor: COLORS.primary,
-									color: "white",
-								},
-							}}
-						/>
-					</div>
+					<DynamicPagination
+						activePage={page}
+						setActivePage={setPage}
+						pages={pages}
+						className="mt-2"
+					/>
 				)}
 			</div>
 		</div>

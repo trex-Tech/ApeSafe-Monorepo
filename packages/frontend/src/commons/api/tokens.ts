@@ -17,7 +17,7 @@ export function useGetAllTokens(
 		queryKey: [Keys.tokens, "all", `page-${page},`, search, timeFilter],
 		queryFn: async () => {
 			const response = await axios.get(
-				`https://api.solgram.app/api/v1/tokens/token/?search=${search}&date=${timeFilter}`,
+				`https://api.solgram.app/api/v1/tokens/token/?page=${page}&search=${search}&date=${timeFilter}`,
 			)
 			console.log({ response })
 			console.log("time", new Date())

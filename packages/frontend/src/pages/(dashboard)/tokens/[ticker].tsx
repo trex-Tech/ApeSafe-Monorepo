@@ -23,8 +23,8 @@ export default function TokenPage({}) {
 				<div className="my-4 flex flex-col">
 					<p className="font-heading text-3xl">Purchase / Sell {data?.name}</p>
 					<p className="text-gray-700 dark:text-gray-400">
-						Enter the amount you want to buy or sell and get instant pricing. Confirm your transaction in
-						just a few clicks and enjoy seamless token management.
+						Enter an amount to see real-time pricing. Complete your transaction in seconds — it's that
+						simple.
 					</p>
 				</div>
 				<TabView
