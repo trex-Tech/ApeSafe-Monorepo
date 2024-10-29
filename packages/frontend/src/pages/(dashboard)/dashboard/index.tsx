@@ -1,21 +1,19 @@
 import { twMerge } from "tailwind-merge"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useState } from "react"
 import { useRouter } from "@router"
 import useUserStore from "@store/userStore"
 import FormInput from "@/src/commons/components/FormInput"
 import CustomButton from "@/src/commons/components/CustomButton"
-import { ArrowDown, ArrowUp, ChevronDown, Search } from "lucide-react"
+import { Search } from "lucide-react"
 import { renderTable } from "@/src/commons/components/Table"
 import { useAccount } from "wagmi"
 import { TableRowType, TokenData } from "@interfaces"
 import { useGetAllTokens } from "@commons/api/tokens"
 import { Pagination, PaginationProps, useMediaQuery } from "@mui/material"
 import { COLORS } from "@/src/commons/utils"
-import { api } from "@/src/commons/utils/axiosProvider"
-import axios from "axios"
 import useDebounce from "@/src/commons/hooks/useDebounce"
 import DropdownSelect from "@/src/commons/components/DropdownSelect"
-import { useTokenStore } from "@/src/commons/store/tokensStore"
+import LoadingSpinner from "@/src/commons/components/LoadingSpinner"
 
 interface Props {
 	className?: string
@@ -120,7 +118,6 @@ const HomePage = ({ className }: Props) => {
 	const [searchQuery, setSearchQuery] = useState("")
 	const [dateFilter, setDateFilter] = useState<DateFilter | undefined>()
 	const debouncedSearchTerm = useDebounce(searchQuery, 500)
-	const { setTokens } = useTokenStore()
 	console.log("tokenName:", tokenName)
 	const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
 		setPage(value)
@@ -137,16 +134,13 @@ const HomePage = ({ className }: Props) => {
 	}
 
 	const { data, isFetching, error, pages } = useGetAllTokens(page, debouncedSearchTerm, dateFilter)
-	// useEffect(() => {
-	// 	setTokens(data)
-	// }, [data])
 
 	return (
 		<div className={twMerge("flex w-full flex-col gap-y-4", className)}>
 			<p className="h-1 text-off-white ">
 				{address ? `Welcome, ${address.substring(36, 42)} 🐸` : "Welcome, mate"}
 			</p>
-			<p className="text-primary-500 h-1 text-2xl">Create a new token</p>
+			<p className="text-primary-500 h-1 text-2xl">Create a New Token</p>
 
 			<label className="mt-6">Token Name</label>
 			<div className="-mt-2 flex h-[32px] w-auto items-center justify-between gap-x-4 md:justify-start">
@@ -154,6 +148,7 @@ const HomePage = ({ className }: Props) => {
 					<FormInput
 						className="py-[8px] "
 						value={tokenName}
+						placeholder="Enter token name (max 32 characters)"
 						onChange={(e) => setTokenName(e.target.value)}
 					/>
 				</div>
@@ -225,7 +220,13 @@ const HomePage = ({ className }: Props) => {
 					},
 				})}
 
-				{data && data.length > 0 && (
+				{!data && isFetching && (
+					<div className="flex h-48 w-full items-center justify-center">
+						<LoadingSpinner color={COLORS.primary} />
+					</div>
+				)}
+
+				{data && data.length > 10 && (
 					<div className="mt-4 flex h-12 justify-center ">
 						<Pagination
 							count={pages}

@@ -10,20 +10,11 @@ import CustomButton from "@components/CustomButton"
 import CryptoCoinSelect from "@components/project/CryptoCoinSelect"
 import { useState } from "react"
 import { sample_crypto_coins } from "@utils/sample-data"
-import { useQueryClient } from "@tanstack/react-query"
-import { Keys } from "@/src/commons/utils"
 
 export default function TokenPage({}) {
 	const { ticker } = useParams()
 
-	// console.log(data?.chains[0]?.contract_address)
-	const queryClient = useQueryClient()
-	const tokens = queryClient.getQueriesData({
-		queryKey: [Keys.tokens],
-		exact: false,
-	})
-	const { data } = useGetToken(ticker, tokens)
-	console.log("tokensss", tokens[0][1])
+	const { data } = useGetToken(ticker)
 	console.log({ ticker, data })
 
 	return (
