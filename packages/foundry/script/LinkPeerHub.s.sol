@@ -1,35 +1,24 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-
 import {Vm} from "forge-std/Vm.sol";
 import {Script, console2} from "forge-std/Script.sol";
-import {Peer} from "../src/Peer/Peer.sol";
+import {SetupPeer} from "../src/Peer/SetupPeer.sol";
 import "../src/interfaces/IWormholeDeployment.sol";
 import {NttManager} from "@wormhole-ntt/NttManager/NttManager.sol";
 
-
-
-
 contract LinkPeerHubScript is Script {
-
     function run() public {
         uint256 deployPrivateKey = vm.envUint("PRV_KEY");
         vm.startBroadcast(deployPrivateKey);
-        IWormholeDeployment wh = IWormholeDeployment(0x31377888146f3253211EFEf5c676D41ECe7D58Fe);
+        // confirm this is optimism chain id
+        uint16 chainId = 10004;
 
-        
-
-        address hubNttMgr = 0x5690D19b14CAb9dB3981340a8c0763382dba91e4;
-        address transceiver = 0xDA0629B800337641C9e2fBAa6B8D67D7FB5E7482;
-        // Peer peer = Peer(0x1376ceA20359F8E036C725BE978B3c5D8144FF28);
-        // peer.setPeers(, hubNttMgr, transceiver);
-        // NttManager(0x1e05EcD3AAa4E51199777BB5E48F83BF3CCA4eDE).setPeer(
-        //     wh.chainId(), 
-        //     bytes32(uint256(uint160(address(hubNttMgr)))),
-        //     18,
-        //     type(uint64).max
-        //     );
+        address nttMgrPeer = 0xE0D5517ddf0fa8B21E5C0f023bF315121A6D97C0;
+        address transceiverPeer = 0xf0E38908465de8e7818934Ce89D814D36EdCD9b8;
+        address nttMgr = 0x9d5F30B785e80E669cc8F9A66798Eb1017AA45b2;
+        address transceiver = 0xB9A85Da4BB98472c1305b86fAEc8825b2BaeF5a4;
+        SetupPeer(0x9B5D2C2B5a3b8F68D357D8951110ffDA47fB2832).setPeers(chainId, nttMgrPeer, transceiverPeer, nttMgr, transceiver);
         vm.stopBroadcast();
     }
 }

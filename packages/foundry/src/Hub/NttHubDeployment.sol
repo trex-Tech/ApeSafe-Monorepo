@@ -33,4 +33,3 @@ abstract contract NttHubDeployment {
         return address(nttManagerProxy);
     }
 }
-   

@@ -27,32 +27,26 @@ contract SetupPeerScript is Script {
             outboundLimit: uint256(type(uint64).max)
         });
 
-        SetupPeer setupPeer = SetupPeer(0xd4C7D6Ba9Aa8c48ef91C7B583228A32F37DCFDBa);
-        
+        SetupPeer setupPeer = SetupPeer(0x9B5D2C2B5a3b8F68D357D8951110ffDA47fB2832);
+
         // Record all logs before the call
         vm.recordLogs();
-        
-        setupPeer.setupPeerDeployments(
-            deploymentParams,
-            "Bobn",
-            "sks",
-            nttManagerCode,
-            transceiverCode
-        );
+
+        setupPeer.setupPeerDeployments(deploymentParams, "Bobn", "sks", nttManagerCode, transceiverCode);
 
         vm.stopBroadcast();
 
         // Get and process logs
         Vm.Log[] memory entries = vm.getRecordedLogs();
         bool found = false;
-        for (uint i = 0; i < entries.length; i++) {
+        for (uint256 i = 0; i < entries.length; i++) {
             bytes32 eventSignature = keccak256("Deployments(address,address,address)");
             if (entries[i].topics[0] == eventSignature) {
                 found = true;
                 address token = address(uint160(uint256(entries[i].topics[1])));
                 address nttManager = address(uint160(uint256(entries[i].topics[2])));
                 address transceiver = address(uint160(uint256(entries[i].topics[3])));
-                
+
                 console2.log("=== Deployment Addresses ===");
                 console2.log("Token Address:", token);
                 console2.log("NTT Manager Address:", nttManager);
@@ -67,8 +61,6 @@ contract SetupPeerScript is Script {
     }
 }
 
-
-
-//   Token Address: 0x1376ceA20359F8E036C725BE978B3c5D8144FF28
-//   NTT Manager Address: 0x1e05EcD3AAa4E51199777BB5E48F83BF3CCA4eDE
-//   Transceiver Address: 0x018CAc486aadd2098a2876595b2eD74AB39318d1
+//   Token Address: 0x322b9f62d9d23B02Db45fd86593198164B7d6CFE
+//   NTT Manager Address: 0xE0D5517ddf0fa8B21E5C0f023bF315121A6D97C0
+//   Transceiver Address: 0xf0E38908465de8e7818934Ce89D814D36EdCD9b8

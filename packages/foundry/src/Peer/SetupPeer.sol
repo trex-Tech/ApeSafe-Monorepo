@@ -10,6 +10,7 @@ import "./ERC20PeerDeployment.sol";
 import "../interfaces/IWormholeDeployment.sol";
 import {IManagerBase} from "@wormhole-ntt/interfaces/IManagerBase.sol";
 import {INttManager} from "@wormhole-ntt/interfaces/INttManager.sol";
+import {WormholeTransceiver} from "@wormhole-ntt/Transceiver/WormholeTransceiver/WormholeTransceiver.sol";
 
 contract SetupPeer is ERC20PeerDeployment, NttPeerDeployment, TransceiverHubDeployment {
     event Deployments(address indexed token, address indexed nttManager, address indexed transceiver);
@@ -38,20 +39,20 @@ contract SetupPeer is ERC20PeerDeployment, NttPeerDeployment, TransceiverHubDepl
         emit Deployments(token, nttProxy, transceiver);
     }
 
-
-// re - write ;
-    function setPeers(uint16 chainId, address _ccNttManager, address ccTransceiver) external payable {
-        nttManager.setPeer(chainId, bytes32(uint256(uint160(address(_ccNttManager)))), 18, type(uint64).max);
-        transceiverState.setWormholePeer(chainId, bytes32(uint256(uint160(address(ccTransceiver)))));
+    function setPeers(
+        uint16 chainId,
+        address nttManager,
+        address transceiver,
+        address _ccNttManager,
+        address ccTransceiver
+    ) external payable {
+        INttManager(nttManager).setPeer(
+            chainId, bytes32(uint256(uint160(address(_ccNttManager)))), 18, type(uint64).max
+        );
+        WormholeTransceiver(transceiver).setWormholePeer(chainId, bytes32(uint256(uint160(address(ccTransceiver)))));
     }
 }
 
 // Deployer: 0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80
-// Deployed to: 0x907Fa7421002f9D9F11354f1C09BFa9aa5BDeB25
-// Transaction hash: 0x7298521027bb6af7a4fd2adeae3a9d23a27b14082d6ddc0c479681909cd7a10f
-
-
-
-//   Token Address: 0x1376ceA20359F8E036C725BE978B3c5D8144FF28
-//   NTT Manager Address: 0x1e05EcD3AAa4E51199777BB5E48F83BF3CCA4eDE
-//   Transceiver Address: 0x018CAc486aadd2098a2876595b2eD74AB39318d1
+// Deployed to: 0x9B5D2C2B5a3b8F68D357D8951110ffDA47fB2832
+// Transaction hash: 0x3672f1562006befa3c53e3787e3d8ba4a3365f482902ef4f8f1cd18114d64e4d

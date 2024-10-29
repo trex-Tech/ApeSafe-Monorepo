@@ -45,9 +45,6 @@ contract Peer is ERC20 {
         transceiverState = IWormholeTransceiverState(transceiver);
     }
 }
-// export BASE_RPC_URL=https://base-sepolia.g.alchemy.com/v2/I5HW3RWZVtn-T4QEUy91sMraurcSl3d-
-// export OP_RPC_URL=https://opt-sepolia.g.alchemy.com/v2/I5HW3RWZVtn-T4QEUy91sMraurcSl3d-
-
 
 // Deployer: 0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80
 // Deployed to: 0x9B5D2C2B5a3b8F68D357D8951110ffDA47fB2832

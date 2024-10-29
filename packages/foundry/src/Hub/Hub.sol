@@ -26,14 +26,4 @@ contract Hub is ERC20 {
         nttManager = INttManager(_nttManager);
         transceiverState = IWormholeTransceiverState(transceiver);
     }
-
-    function setPeers(uint16 chainId, address _ccNttManager, address ccTransceiver) external payable {
-        nttManager.setPeer(chainId, bytes32(uint256(uint160(address(_ccNttManager)))), 18, type(uint64).max);
-        transceiverState.setWormholePeer(chainId, bytes32(uint256(uint160(address(ccTransceiver)))));
-    }
 }
-
-
-// Deployer: 0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80
-// Deployed to: 0xc572Df295FdC1c284b58719D3d9617ED348Ba802
-// Transaction hash: 0xd1c113513c3ebdb6db1b4d612054498d50135c30dc5faeb689977ca979a85412

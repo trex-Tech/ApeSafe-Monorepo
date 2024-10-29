@@ -38,19 +38,21 @@ contract SetupHub is ERC20HubDeployment, NttHubDeployment, TransceiverHubDeploym
 
         emit Deployments(token, nttProxy, transceiver);
     }
-    
+
     function setPeers(
-        uint16 chainId, 
-        address nttManager, 
+        uint16 chainId,
+        address nttManager,
         address transceiver,
-        address _ccNttManager, 
+        address _ccNttManager,
         address ccTransceiver
-        ) external payable {
-        INttManager(nttManager).setPeer(chainId, bytes32(uint256(uint160(address(_ccNttManager)))), 18, type(uint64).max);
+    ) external payable {
+        INttManager(nttManager).setPeer(
+            chainId, bytes32(uint256(uint160(address(_ccNttManager)))), 18, type(uint64).max
+        );
         WormholeTransceiver(transceiver).setWormholePeer(chainId, bytes32(uint256(uint160(address(ccTransceiver)))));
     }
 }
 
 // Deployer: 0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80
-// Deployed to: 0xd4C7D6Ba9Aa8c48ef91C7B583228A32F37DCFDBa
-// Transaction hash: 0xcca698733abfe83605471f2d91b1d423f44f65ebfe673c8ad419fea5a653a8fb
+// Deployed to: 0x498180D1F0Bda6485393F45e0d5B0805488e851A
+// Transaction hash: 0xd12445e72f90dc75e6bd80d5023f45153e82f4911721eecefda0a540790caf42
