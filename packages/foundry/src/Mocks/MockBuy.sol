@@ -53,21 +53,31 @@ contract MockBuy {
 }
 
 /**
+* Optimism Seploia: 
+*    usdc: "0x5fd84259d66Cd46123540766Be93DFE6D43130D7", 
+    protocctp: "0x4285e806D4F6047C8FbD3A106131E482B4C9B4C3",
 *
 *
 *
 *
 *
-*
-*
-*Deployer: 0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80
-Deployed to: 0x65904DE3408216d0E8C18dfdE7198AFBCd3cC5ca
-Transaction hash: 0x14331be90333b4ab28a0ccdff721322334295c154dc89747f9f793dde1800729
 *
 *
 *
 */
+
+/**
+* arb-sepolia: 0xA336A3a70fAE2E24eF009C751b416853f6d872ab mock buy
+* op-sepolia: 0xe40B1a18fAA40E629d32785f502D4971B73302A1
+*
+*
+**/
       
 
 
     //  cast send 0x65904DE3408216d0E8C18dfdE7198AFBCd3cC5ca "send(uint,address,uint256)" 84532 0xd688C5b0eBF10b6f568c571Aa99D342eDfA095E9 2000000 --rpc-url ${OP_RPC_URL} --private-key ${PRV_KEY} 
+
+
+    // ARB_RPC_SEPOLIA=https://arb-sepolia.g.alchemy.com/v2/I5HW3RWZVtn-T4QEUy91sMraurcSl3d-
+
+    // forge create src/Mocks/MockBuy.sol:MockBuy  --rpc-url ${ARB_RPC_SEPOLIA} --private-key ${PRV_KEY} --constructor-args "0x5abA6886778DDEB3a34ea4C58CD9BeEa264026c7"

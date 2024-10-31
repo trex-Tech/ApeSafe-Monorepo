@@ -15,8 +15,6 @@ contract Hub is ERC20  {
        creator = msg.sender;
     }
 
-    // send usdc 
-
     function buy(uint256 usdcAmount) external {
         require(usdcAmount > 0, "Amount must be greater than 0");
 
@@ -24,13 +22,25 @@ contract Hub is ERC20  {
         require(ERC20(0x036CbD53842c5426634e7929541eC2318f3dCF7e).transferFrom(msg.sender, address(this), usdcAmount), "USDC transfer failed");
 
         uint256 tokens = usdcAmount / currentPrice;
-        currentPrice = (INITIAL_SUPPLY * 1 * 10**6) / (INITIAL_SUPPLY - totalSupply());
+        require(totalSupply() + tokens <= INITIAL_SUPPLY, "Exceeds initial supply");
+
+        // Update the price based on remaining supply
+        uint256 remainingSupply = INITIAL_SUPPLY - totalSupply();
+        if (remainingSupply > 0) {
+            currentPrice = (INITIAL_SUPPLY * 10**6) / remainingSupply;
+        }
+
         _mint(msg.sender, tokens);
     }
 
     function buyCC(uint usdcAmount, address sender) private {
         uint256 tokens = usdcAmount / currentPrice;
-        currentPrice = (INITIAL_SUPPLY * 1 * 10**6) / (INITIAL_SUPPLY - totalSupply());
+        require(totalSupply() + tokens <= INITIAL_SUPPLY, "Exceeds initial supply");
+        uint256 remainingSupply = INITIAL_SUPPLY - totalSupply();
+        if (remainingSupply > 0) {
+            currentPrice = (INITIAL_SUPPLY * 10**6) / remainingSupply;
+        }
+
         
         _mint(sender, tokens);
     }
@@ -45,7 +55,6 @@ contract Hub is ERC20  {
     }
 }
       
-
 // Deployer: 0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80
-// Deployed to: 0xd688C5b0eBF10b6f568c571Aa99D342eDfA095E9
-// Transaction hash: 0x1c2b459a462436263834c4d3f3fad571a8203c21edfcce31d690881b298d9a90
+// Deployed to: 0x5c2d2fCE53834c6129e46b748773D686d0d98F5D
+// Transaction hash: 0xbbe9462058aa1bc33611a00db295262816af57766ce9596b17a39597131c4fa1

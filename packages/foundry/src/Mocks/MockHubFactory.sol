@@ -37,24 +37,24 @@ contract HubFactory {
         return address(hub);
     }
 
-        /// @notice Sends USDC to another chain
-    /// @param _destChainId The destination chain ID
-    /// @param _recipient The recipient address on the destination chain
-    /// @param _amount The amount of USDC to send
-    function send(uint _destChainId, address _recipient, uint256 _amount, address _protoCCTPGateway, address _tokenAddr) private  {
-        require(_amount > 0, "Amount must be greater than 0");
+    //     /// @notice Sends USDC to another chain
+    // /// @param _destChainId The destination chain ID
+    // /// @param _recipient The recipient address on the destination chain
+    // /// @param _amount The amount of USDC to send
+    // function send(uint _destChainId, address _recipient, uint256 _amount, address _protoCCTPGateway, address _tokenAddr) private  {
+    //     require(_amount > 0, "Amount must be greater than 0");
 
-        // Transfer USDC to this contract
+    //     // Transfer USDC to this contract
         
 
-        usdc.approve(address(protoCCTPGateway), _amount);
+    //     usdc.approve(address(protoCCTPGateway), _amount);
 
-        bytes memory _customData = abi.encode(_protoCCTPGateway, _tokenAddr);
+    //     bytes memory _customData = abi.encode(_protoCCTPGateway, _tokenAddr);
         
-        protoCCTPGateway.send(_destChainId, _recipient, _amount, _customData); // @dev 4th param can be arbitrary encoded bytes with abi.encode()
+    //     protoCCTPGateway.send(_destChainId, _recipient, _amount, _customData); // @dev 4th param can be arbitrary encoded bytes with abi.encode()
 
-        emit Transfer(_destChainId, msg.sender, _recipient, _amount);
-    }
+    //     emit Transfer(_destChainId, msg.sender, _recipient, _amount);
+    // }
 
 // Deployer: 0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80
 // Deployed to: 0xDa894BBc8Fce2Ee4D204Bb2EE7ed856D6400bc2f
