@@ -23,7 +23,7 @@ contract HubFactory {
 
     event NewToken(address indexed token);
 
-// op protocctp
+// op protocctp    
     function deploy(string memory name, string memory symbol, address _BaseprotoCCTPGateway, address _protoCCTPGateway) external returns (address) {
         Hub hub = new Hub(name, symbol);
         emit NewToken(address(hub));

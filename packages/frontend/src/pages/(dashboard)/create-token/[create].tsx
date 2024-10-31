@@ -32,7 +32,7 @@ const CreateTokenPage = () => {
 
 		// Add any additional logic you need when a file changes
 	}
-
+           
 	const createToken = async () => {
 		if (create === "" || tokenTicker === "" || tokenDescription === "") {
 			alert("Please fill in needed fields.")
@@ -42,11 +42,11 @@ const CreateTokenPage = () => {
 		} else {
 			writeContract({
 				abi: mockHubFactoryAbi,
-				address: "0xBc53B85fcB5aCBe82935418Ed96e9925bf569860",
+				address: "0xDa894BBc8Fce2Ee4D204Bb2EE7ed856D6400bc2f",
 				functionName: "deploy",
 				account: address,
 				chain: chain,
-				args: [create, tokenTicker],
+				args: [create, tokenTicker, "0x1124401c258653847Ea35de2cEe31c753629D1cB", "0x1124401c258653847Ea35de2cEe31c753629D1cB"],
 			})
 
 			if (error) {
@@ -106,7 +106,7 @@ const CreateTokenPage = () => {
 
 	useEffect(() => {
 		if (isConfirmed && data && data.logs) {
-			setNewTokenAddress("0x" + data.logs[1].topics[1].slice(26))
+			setNewTokenAddress(data?.logs[0].topics[1].slice(26))
 			console.log("New token data:", data)
 			console.log("New token ca:", data.logs[0].address)
 		}

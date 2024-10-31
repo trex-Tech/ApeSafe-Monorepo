@@ -79,6 +79,27 @@ const BuyTab = () => {
 
 	const { writeContract, data: hash, error } = useWriteContract()
 
+	let approveAddr = chain?.id === 8453 
+		?
+		 "0x036CbD53842c5426634e7929541eC2318f3dCF7e"
+		: 
+		chain?.id === 80002 
+		?
+		"0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582"
+		:
+		chain?.id === 421614
+		?
+		"0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"
+		:
+		chain?.id === 11155420
+		?
+		"0x5fd84259d66Cd46123540766Be93DFE6D43130D7"
+		:
+		""
+	if (approveAddr.length === 0) {
+		return
+	}
+
 	const {
 		isLoading: isConfirming,
 		isSuccess: isConfirmed,
@@ -96,6 +117,16 @@ const BuyTab = () => {
 
 	const buyFn = () => {
 		if (amount !== "") {
+			writeContract({
+				abi: [
+					"function approve(address spender, uint256 amount) public returns (bool)"
+				],
+				address: `0x${approveAddr.slice(2)}`,
+				functionName: "approve",
+				account: address,
+				chain: chain,
+				args: [parseUnits(amount, 6)],
+			})
 			writeContract({
 				abi: mockHubAbi,
 				address: `0x${contractAddress.slice(2)}`,
