@@ -152,7 +152,7 @@ const CreateTokenPage = () => {
 						onFileChange={handleFileChange}
 						multi={true}
 						maxFiles={1}
-						prompt="Upload your file here"
+						prompt="Upload your files here"
 						allowedFileTypes={["PNG", "JPG", "PDF"]}
 						className={`h-[300px]`}
 					/>
@@ -182,7 +182,7 @@ const CreateTokenPage = () => {
 						onChange={(e) => setWebsiteLink(e.target.value)}
 					/>
 				</div>
-				<div className={`my-[26px] flex space-y-[10px] lg:w-[50%] lg:justify-start`}>
+				<div className={`my-[26px] flex space-y-[10px] lg:w-[50%] lg:justify-end`}>
 					<div className={`space-y-[20px]`}>
 						<div>
 							<p>

@@ -15,7 +15,6 @@ interface Props {
 	multi?: boolean
 	prompt?: string
 	allowedFileTypes?: string[]
-	helperText?: string[]
 }
 
 const FileUploader = (props: Props) => {
@@ -29,7 +28,6 @@ const FileUploader = (props: Props) => {
 		maxFiles = 3,
 		prompt = "Drag or Upload media files",
 		allowedFileTypes = ["PNG", "JPG", "JPEG", "SVG"],
-		helperText = ["2MB, 800x800px"],
 	} = props
 
 	const convertToBase64 = (file: File): Promise<string> => {
@@ -108,9 +106,6 @@ const FileUploader = (props: Props) => {
 								{allowedFileTypes.map(
 									(type, i) => `${type}${i + 1 < allowedFileTypes.length ? ", " : ""}`,
 								)}
-							</p>
-							<p className="text-center font-heading text-sm text-gray-500">
-								{helperText.map((type, i) => `${type}`)}
 							</p>
 
 							<input
