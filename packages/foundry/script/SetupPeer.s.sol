@@ -43,12 +43,12 @@ contract SetupPeerScript is Script {
             bytes32 eventSignature = keccak256("Deployments(address,address,address)");
             if (entries[i].topics[0] == eventSignature) {
                 found = true;
-                address token = address(uint160(uint256(entries[i].topics[1])));
+                // address token = address(uint160(uint256(entries[i].topics[1])));
                 address nttManager = address(uint160(uint256(entries[i].topics[2])));
                 address transceiver = address(uint160(uint256(entries[i].topics[3])));
 
                 console2.log("=== Deployment Addresses ===");
-                console2.log("Token Address:", token);
+                // console2.log("Token Address:", token);
                 console2.log("NTT Manager Address:", nttManager);
                 console2.log("Transceiver Address:", transceiver);
                 break;

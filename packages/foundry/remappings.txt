@@ -1,9 +1,8 @@
 @openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/
 
-
-
 @wormhole-ntt/=lib/example-native-token-transfers/evm/src/
 
-
 openzeppelin-contracts/contracts=lib/example-native-token-transfers/evm/lib/openzeppelin-contracts/contracts
+
+@vialabs-io/contracts/=lib/contracts/
 

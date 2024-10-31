@@ -34,7 +34,7 @@ contract SetupPeer is ERC20PeerDeployment, NttPeerDeployment, TransceiverHubDepl
 
         INttManager(nttProxy).setThreshold(1);
 
-        Peer(token).peerDeployment(nttProxy, transceiver);
+        // Peer(token).peerDeployment(nttProxy, transceiver);
 
         emit Deployments(token, nttProxy, transceiver);
     }

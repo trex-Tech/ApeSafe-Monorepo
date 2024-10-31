@@ -7,22 +7,19 @@ import {Hub} from "../src/Hub/Hub.sol";
 import {Peer} from "../src/Peer/Peer.sol";
 import {INttManager} from "@wormhole-ntt/interfaces/INttManager.sol";
 
-/**
-    TokenMessenger: 0x9f3B8679c73C2Fef8b59B4f3444d4e156fb70AA5
-
-    MessageTransmitter: 0x7865fAfC2db2093669d92c0F33AeEF291086BEFD
-
-    TokenMinter: 0xE997d7d2F6E065a9A93Fa2175E878Fb9081F1f0A
-*/
 
 
-contract cTransferScript is Script {
+// No files changed, compilation skipped
+// Deployer: 0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80
+// Deployed to: 0x2B3CC4582072B24d87B81E1920f2694aeFC20560
+// Transaction hash: 0x0831a130b8e50f5385c91192365edae3fa6b05c93aa4ebba91d7fe694a0c47c3
+contract depositScript is Script {
     function run() public {
         uint256 deployPrivateKey = vm.envUint("PRV_KEY");
         vm.startBroadcast(deployPrivateKey);
         // alternating this first approve the ntt manager as spender b4 transfer
-        // Hub(0x04BB910f008C1DF1f2BeFF29D98b744a7D35D531).approve(0x9d5F30B785e80E669cc8F9A66798Eb1017AA45b2, 3 * 1e18);
-        INttManager(0x9d5F30B785e80E669cc8F9A66798Eb1017AA45b2).transfer(3 * 1e18, 10005, bytes32(uint256(uint160(address(0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80)))));
+        Hub(0x5fd84259d66Cd46123540766Be93DFE6D43130D7).approve(0x65904DE3408216d0E8C18dfdE7198AFBCd3cC5ca, 2 * 10**5);
+        // Peer(0x2B3CC4582072B24d87B81E1920f2694aeFC20560).makeDeposit(3 * 1e18, 10005, bytes32(uint256(uint160(address(0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80)))));
     
         vm.stopBroadcast();
     }
