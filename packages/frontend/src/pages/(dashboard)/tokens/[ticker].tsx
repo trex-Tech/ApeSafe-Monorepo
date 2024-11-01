@@ -78,10 +78,11 @@ const BuyTab = () => {
 	const { address, chain } = useAccount()
 
 	let approveAddr;
-	let buyAddr; 
+	let marketAddr; 
 
 	if (chain?.id === 84532) {
 		approveAddr = "0x036CbD53842c5426634e7929541eC2318f3dCF7e";
+		marketAddr = `0x${contractAddress?.slice(2)}`;
 	}
 
 	if (chain?.id === 80002) {
@@ -129,7 +130,39 @@ const BuyTab = () => {
 		}
 	}, [isConfirmed, buyData])
 
-	const buyContract = (string) => {console.log(6356356)}
+	const buyContract = (amount: string) => {
+			writeContract({
+				abi: [
+					{
+						name: "buy",
+						type: "function",
+						inputs: [
+							{
+								name: "_amountUsdc",
+								type: "uint256",
+							},
+						],
+						outputs: [],
+						stateMutability: "public",
+					},
+				],
+				address: marketAddr,
+				functionName: "buy",
+				account: address,
+				chain: chain,
+				args: [parseUnits(amount, 6)],
+			})
+
+			if (error) {
+				// error.message
+				// error.name
+				console.log("error:", error.message)
+				if (error.message.includes("Connector not connected.")) {
+					alert("Please connect your wallet.")
+				}
+			}
+		
+	}
 
 	const transferContract = () => {}
 
@@ -163,8 +196,30 @@ const BuyTab = () => {
 				functionName: "approve",
 				account: address,
 				chain: chain,
-				args: [`0x${contractAddress?.slice(2)}`, parseUnits(amount, 6)],
+				args: [marketAddr, parseUnits(amount, 6)],
 			})
+
+			// writeContract({
+			// 	abi: [
+			// 		{
+			// 			name: "buy",
+			// 			type: "function",
+			// 			inputs: [
+			// 				{
+			// 					name: "_amountUsdc",
+			// 					type: "uint256",
+			// 				},
+			// 			],
+			// 			outputs: [],
+			// 			stateMutability: "public",
+			// 		},
+			// 	],
+			// 	address: marketAddr,
+			// 	functionName: "buy",
+			// 	account: address,
+			// 	chain: chain,
+			// 	args: [parseUnits(amount, 6)],
+			// })
 
 			if (error) {
 				// error.message
@@ -281,6 +336,21 @@ const SellTab = () => {
 
 	const { address, chain } = useAccount()
 
+	let marketAddr; 
+
+	if (chain?.id === 84532) {
+			marketAddr = `0x${contractAddress?.slice(2)}`;
+	}
+
+	if (chain?.id === 80002) {
+	}
+
+	if (chain?.id === 421614) {
+	}
+
+	if (chain?.id === 11155420) {
+	}
+
 	const { writeContract, data: hash, error } = useWriteContract()
 
 	const {
@@ -299,10 +369,24 @@ const SellTab = () => {
 	}, [isConfirmed, buyData])
 
 	const sellFn = () => {
+		console.log(amount)
 		if (amount !== "") {
 			writeContract({
-				abi: mockHubAbi,
-				address: `0x${contractAddress.slice(2)}`,
+				abi: [
+					{
+						name: "sell",
+						type: "function",
+						inputs: [
+							{
+								name: "_amountTokens",
+								type: "uint256",
+							},
+						],
+						outputs: [],
+						stateMutability: "public",
+					},
+				],
+				address: marketAddr,
 				functionName: "sell",
 				account: address,
 				chain: chain,

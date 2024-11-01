@@ -10,3 +10,6 @@
 [submodule "packages/foundry/lib/wormhole-solidity-sdk"]
 	path = packages/foundry/lib/wormhole-solidity-sdk
 	url = https://github.com/wormhole-foundation/wormhole-solidity-sdk.git
+[submodule "packages/foundry/lib/prb-math"]
+	path = packages/foundry/lib/prb-math
+	url = https://github.com/hifi-finance/prb-math
