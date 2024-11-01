@@ -77,20 +77,31 @@ const BuyTab = () => {
 
 	const { address, chain } = useAccount()
 
-	let approveAddr =
-		chain?.id === 84532
-			? "0x036CbD53842c5426634e7929541eC2318f3dCF7e"
-			: chain?.id === 80002
-				? "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582"
-				: chain?.id === 421614
-					? "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"
-					: chain?.id === 11155420
-						? "0x5fd84259d66Cd46123540766Be93DFE6D43130D7"
-						: null
+	let approveAddr;
+	let buyAddr; 
+
+	if (chain?.id === 84532) {
+		approveAddr = "0x036CbD53842c5426634e7929541eC2318f3dCF7e";
+	}
+
+	if (chain?.id === 80002) {
+		approveAddr = "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582";
+	}
+
+	if (chain?.id === 421614) {
+		approveAddr = "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d";
+	}
+
+	if (chain?.id === 11155420) {
+		approveAddr = "0x5fd84259d66Cd46123540766Be93DFE6D43130D7"
+	}
 
 	if (approveAddr?.length === 0) {
 		return
 	}
+
+
+	
 
 	const { writeContract, data: hash, error } = useWriteContract()
 
@@ -107,18 +118,18 @@ const BuyTab = () => {
 			console.log("New token buyData:", buyData)
 			console.log("New token ca:", buyData.logs[0].address)
 			if (approveAddr === "0x036CbD53842c5426634e7929541eC2318f3dCF7e") {
-				buyContract()
+				buyContract(amount)
 			} else {
-				buyContract()
+				buyContract(amount)
 
-				if ("buyContractIsConfrimed") {
-					transferContract()
-				}
+				// if ("buyContractIsConfrimed" === "") {
+				// 	transferContract()
+				// }
 			}
 		}
 	}, [isConfirmed, buyData])
 
-	const buyContract = () => {}
+	const buyContract = (string) => {console.log(6356356)}
 
 	const transferContract = () => {}
 
@@ -154,10 +165,6 @@ const BuyTab = () => {
 				chain: chain,
 				args: [`0x${contractAddress?.slice(2)}`, parseUnits(amount, 6)],
 			})
-
-			buyContract()
-
-			transferContract()
 
 			if (error) {
 				// error.message
