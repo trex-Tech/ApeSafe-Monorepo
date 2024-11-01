@@ -49,3 +49,4 @@ const mockHubFactoryAbi = [
 ]
 
 export default mockHubFactoryAbi
+

@@ -106,12 +106,12 @@ const CreateTokenPage = () => {
 
 	useEffect(() => {
 		if (isConfirmed && data && data.logs) {
-			setNewTokenAddress("0x" + data.logs[1].topics[1].slice(26))
+			setNewTokenAddress("0x" + data.logs[0]?.topics[1].slice(26))
 			console.log("New token data:", data)
-			console.log("New token ca:", data.logs[0].address)
+			console.log("New token ca:", "0x" + data.logs[0]?.topics[1].slice(26))
 		}
 		if (isConfirmed && data && data.logs) {
-			saveCreatedToken(data.logs[0].address)
+			saveCreatedToken("0x" + data.logs[0]?.topics[1].slice(26))
 		}
 	}, [isConfirmed, data])
 
