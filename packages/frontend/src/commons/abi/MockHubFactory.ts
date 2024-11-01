@@ -13,6 +13,16 @@ const mockHubFactoryAbi = [
 				type: "string",
 				internalType: "string",
 			},
+			{
+				name: "_BaseprotoCCTPGateway",
+				type: "address",
+				internalType: "address",
+			},
+			{
+				name: "_protoCCTPGateway",
+				type: "address",
+				internalType: "address",
+			},
 		],
 		outputs: [
 			{
