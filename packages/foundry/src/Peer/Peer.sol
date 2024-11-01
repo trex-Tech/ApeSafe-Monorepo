@@ -2,7 +2,8 @@
 pragma solidity ^0.8.13;
 
 import {ERC20} from "openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
-
+import {IWormholeTransceiverState} from "@wormhole-ntt/interfaces/IWormholeTransceiverState.sol";
+import {INttManager} from "@wormhole-ntt/interfaces/INttManager.sol";
 
 contract Peer is ERC20 {
     error CallerNotMinterOrNTTManager(address caller);
@@ -10,19 +11,21 @@ contract Peer is ERC20 {
 
     event NewMinter(address newMinter);
 
-    address public minterOrNTTManager;
+    INttManager internal nttManager;
+
+    IWormholeTransceiverState internal transceiverState;
 
     address public immutable creator;
 
     modifier onlyMinterOrNTTManager() {
-        if (msg.sender != minterOrNTTManager) {
+        if (msg.sender != address(nttManager)) {
             revert CallerNotMinterOrNTTManager(msg.sender);
         }
         _;
     }
 
     constructor(string memory _name, string memory _symbol) ERC20(_name, _symbol) {
-       creator = msg.sender;
+        creator = msg.sender;
     }
 
     function mint(address _account, uint256 _amount) external onlyMinterOrNTTManager {
@@ -33,14 +36,16 @@ contract Peer is ERC20 {
         if (newMinter == address(0)) {
             revert InvalidMinterZeroAddress();
         }
-        minterOrNTTManager = newMinter;
+        nttManager = INttManager(newMinter);
         emit NewMinter(newMinter);
     }
-}
-      
 
-// No files changed, compilation skipped
+    function peerDeployment(address _nttManager, address transceiver) external {
+        nttManager = INttManager(_nttManager);
+        transceiverState = IWormholeTransceiverState(transceiver);
+    }
+}
+
 // Deployer: 0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80
-// Deployed to: 0x8Ae42e26767CC2e5363457992658b4d0dE31C103
-// Transaction hash: 0xc52747339e76d085f0e66ba62b3d7075557634ef4fd7c69b4ce070990ed4d748
-// Done in 12.09s.      
+// Deployed to: 0x9B5D2C2B5a3b8F68D357D8951110ffDA47fB2832
+// Transaction hash: 0x18ebe2aca64c59fa671abc5ef498397b41dca6ddeedb75d07e3d22745a98c073

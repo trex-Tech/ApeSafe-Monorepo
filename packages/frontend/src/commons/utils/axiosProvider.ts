@@ -3,6 +3,7 @@ import toast from "react-hot-toast"
 import Keys from "@utils/query-keys"
 
 let API_URL = import.meta.env.VITE_API_URL
+// let API_URL = "https://6dc1-102-89-69-234.ngrok-free.app/api/v1"
 
 const axiosInstance = axios.create({
 	baseURL: API_URL,

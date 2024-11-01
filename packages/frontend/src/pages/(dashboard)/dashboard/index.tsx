@@ -38,7 +38,7 @@ const rows: TableRowType<TokenData>[] = [
 				<img
 					src={row.image}
 					alt={row.name}
-					className="h-6 w-6"
+					className="h-10 w-10 rounded-full"
 				/>
 				<span className="w-36 truncate">{row.name}</span>
 			</div>
