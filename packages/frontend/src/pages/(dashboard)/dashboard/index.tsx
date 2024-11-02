@@ -233,7 +233,7 @@ const HomePage = ({ className }: Props) => {
 					</div>
 				)}
 
-				{data && data.length > 10 && (
+				{data && (
 					<DynamicPagination
 						activePage={page}
 						setActivePage={setPage}
