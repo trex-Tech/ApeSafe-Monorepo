@@ -24,6 +24,14 @@ contract PeerERC20 is ERC20 {
         _mint(user, amount);
     }
 
+    function crossChainBurn(address user, uint256 amount) external {
+        require(
+            msg.sender == market,
+            "Only the Market can call this function"
+        );
+        _burn(user, amount);
+    }
+
 
 
 

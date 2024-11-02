@@ -6,6 +6,8 @@ import {IERC20} from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import {PeerERC20} from "./PeerERC20.sol";
 import "lib/wormhole-solidity-sdk/src/interfaces/IWormholeRelayer.sol";
 import "lib/wormhole-solidity-sdk/src/interfaces/IWormholeReceiver.sol";
+import "./_wMessenger.sol";
+
 
 
 interface IProtoCCTPGateway {
@@ -15,8 +17,7 @@ interface IProtoCCTPGateway {
 }
 
 
-contract PeerERC20Factory {
-    IWormholeRelayer public wormholeRelayer;
+contract PeerERC20Factory is _wMessenger {
     IProtoCCTPGateway public protoCCTPGateway;
     ERC20 public usdc;
 
@@ -60,6 +61,18 @@ contract PeerERC20Factory {
         protoCCTPGateway.send(84532, _baseERC20, _amountUsdc, payload);
     }
 
+    function sell(uint256 _amountTokens, address _baseERC20, uint256 currPCCTPChainID) external payable {
+        require(base2peer[_baseERC20] != address(0), "NON EXISTENT BASE");
+
+        require(_amountTokens <= PeerERC20(base2peer[_baseERC20]).balanceOf(msg.sender), "Token Amount > Balance ");
+
+        PeerERC20(base2peer[_baseERC20]).crossChainBurn(msg.sender, _amountTokens);
+
+        bytes memory payload = abi.encode(protoCCTPId2Wormhole[currPCCTPChainID] , base2peer[_baseERC20], msg.sender, _amountTokens);
+
+        sendMessage(10004, _baseERC20, payload);
+    }
+
         // To-Limit strict check to be called by baseerc20
     function receiveWormholeMessages(
         bytes memory payload,
@@ -81,5 +94,5 @@ contract PeerERC20Factory {
 }
 
 // Deployer: 0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80
-// Deployed to: 0xb48F1E15c21A643fd6C47542EdD097ea5f0aece0
-// Transaction hash: 0x5666b535d0eb6351b62f37294530867bd1258a448c70a81bbb2077c5a209a55e
+// Deployed to: 0x3b8A768eDfb3823dB7f6753BB706068aa2b56425
+// Transaction hash: 0xfdd819e38db1ac25843a002043f3c4c13d4eecaa543aeb65cab8ec2c8845c061

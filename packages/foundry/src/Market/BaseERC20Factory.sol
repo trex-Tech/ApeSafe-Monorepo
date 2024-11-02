@@ -57,12 +57,12 @@ contract BaseERC20Factory is ReentrancyGuard, _wMessenger  {
 
     function forwardCCToken(uint16 _chainId, address _market, bytes memory payload) external {
         require(I_DEPLOYED_YOU[msg.sender] == true, "I DIDN'T CREATE YOU");
-        sendMessage2(_chainId, _market, payload);
+        // sendMessage2(_chainId, _market, payload);
     }
 
 
 }
 
 // Deployer: 0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80
-// Deployed to: 0x999F9BB7172ED55e74c732ee364B39430AFeBd91
-// Transaction hash: 0x0b849ccd7ce7d4375dae86d1bff2e57a7e1967ca6cb200627325d6e1ea308152
+// Deployed to: 0xE10643929f474B89eB857012964f31F9Dcf1d818
+// Transaction hash: 0x34b186bda6eabd9978b77fdd3745953a1cde2b886526abf6b364f8b57fae1363
