@@ -10,7 +10,7 @@ import CustomButton from "@components/CustomButton"
 import CryptoCoinSelect from "@components/project/CryptoCoinSelect"
 import { useEffect, useState } from "react"
 import { sample_crypto_coins } from "@utils/sample-data"
-import { parseUnits } from "viem"
+import { parseUnits, parseEther } from "viem"
 import { useWriteContract, useAccount, useWaitForTransactionReceipt } from "wagmi"
 import mockHubAbi from "@/src/commons/abi/MockHub"
 import { useQueryClient } from "@tanstack/react-query"
@@ -79,10 +79,13 @@ const BuyTab = () => {
 
 	let approveAddr;
 	let marketAddr; 
+	let mintAddr; 
 
 	if (chain?.id === 84532) {
 		approveAddr = "0x036CbD53842c5426634e7929541eC2318f3dCF7e";
+
 		marketAddr = `0x${contractAddress?.slice(2)}`;
+		mintAddr = marketAddr;
 	}
 
 	if (chain?.id === 80002) {
@@ -94,7 +97,8 @@ const BuyTab = () => {
 	}
 
 	if (chain?.id === 11155420) {
-		approveAddr = "0x5fd84259d66Cd46123540766Be93DFE6D43130D7"
+		approveAddr = "0x5fd84259d66Cd46123540766Be93DFE6D43130D7";
+		marketAddr = "0xb48F1E15c21A643fd6C47542EdD097ea5f0aece0";
 	}
 
 	if (approveAddr?.length === 0) {
@@ -131,6 +135,8 @@ const BuyTab = () => {
 	}, [isConfirmed, buyData])
 
 	const buyContract = (amount: string) => {
+		
+		if (approveAddr === "0x036CbD53842c5426634e7929541eC2318f3dCF7e") { 
 			writeContract({
 				abi: [
 					{
@@ -152,6 +158,40 @@ const BuyTab = () => {
 				chain: chain,
 				args: [parseUnits(amount, 6)],
 			})
+		} else {
+			// buy(uint256 _amountUsdc, address _baseERC20, uint256 currPCCTPChainID) 
+			
+			writeContract({
+				abi: [
+					{
+						name: "buy",
+						type: "function",
+						inputs: [
+							{
+								name: "_amountUsdc",
+								type: "uint256",
+							},
+							{
+								name: "_baseERC20",
+								type: "address",
+							},
+							{
+								name: "currPCCTPChainID",
+								type: "uint256",
+							},
+						],
+						outputs: [],
+						stateMutability: "public",
+					},
+				],
+				address: marketAddr,
+				functionName: "buy",
+				account: address,
+				chain: chain,
+				args: [parseUnits(amount, 6), `0x${contractAddress?.slice(2)}`,11155420],
+			})
+		}
+
 
 			if (error) {
 				// error.message
@@ -168,58 +208,74 @@ const BuyTab = () => {
 
 	const buyFn = () => {
 		if (amount !== "") {
-			writeContract({
-				abi: [
-					{
-						name: "approve",
-						type: "function",
-						inputs: [
-							{
-								name: "spender",
-								type: "address",
-							},
-							{
-								name: "amount",
-								type: "uint256",
-							},
-						],
-						outputs: [
-							{
-								name: "",
-								type: "bool",
-							},
-						],
-						stateMutability: "public",
-					},
-				],
-				address: `0x${approveAddr.slice(2)}`,
-				functionName: "approve",
-				account: address,
-				chain: chain,
-				args: [marketAddr, parseUnits(amount, 6)],
-			})
-
 			// writeContract({
 			// 	abi: [
 			// 		{
-			// 			name: "buy",
+			// 			name: "approve",
 			// 			type: "function",
 			// 			inputs: [
 			// 				{
-			// 					name: "_amountUsdc",
+			// 					name: "spender",
+			// 					type: "address",
+			// 				},
+			// 				{
+			// 					name: "amount",
 			// 					type: "uint256",
 			// 				},
 			// 			],
-			// 			outputs: [],
+			// 			outputs: [
+			// 				{
+			// 					name: "",
+			// 					type: "bool",
+			// 				},
+			// 			],
 			// 			stateMutability: "public",
 			// 		},
 			// 	],
-			// 	address: marketAddr,
-			// 	functionName: "buy",
+			// 	address: `0x${approveAddr.slice(2)}`,
+			// 	functionName: "approve",
 			// 	account: address,
 			// 	chain: chain,
-			// 	args: [parseUnits(amount, 6)],
+			// 	args: [marketAddr, parseUnits(amount, 6)],
 			// })
+
+			
+				
+
+			writeContract({
+				abi: [
+					{
+						name: "handleCrossChainMint",
+						type: "function",
+						inputs: [
+							{
+								name: "_chainId",
+								type: "uint16",
+							},
+							{
+								name: "_user",
+								type: "address",
+							},
+							{
+								name: "_tokens",
+								type: "uint256",
+							},
+							{
+								name: "_market",
+								type: "address",
+							},
+						],
+						outputs: [],
+						stateMutability: "public",
+					},
+				],
+				address: marketAddr,
+				functionName: "handleCrossChainMint",
+				account: address,
+				chain: chain,
+				args: [10005, address, parseUnits(amount, 18), "0xb48F1E15c21A643fd6C47542EdD097ea5f0aece0"],
+				value: parseEther('0.05') ,
+			})
 
 			if (error) {
 				// error.message

@@ -7,7 +7,7 @@ import "lib/wormhole-solidity-sdk/src/interfaces/IWormholeRelayer.sol";
 abstract contract _wMessenger  {
     IWormholeRelayer public wormholeRelayer = IWormholeRelayer(0x93BAD53DDfB6132b0aC8E37f6029163E63372cEE);
 
-    uint256 constant GAS_LIMIT = 250_000;
+    uint256 constant GAS_LIMIT = 150_000;
 
     function quoteCrossChainCost(
         uint16 targetChain

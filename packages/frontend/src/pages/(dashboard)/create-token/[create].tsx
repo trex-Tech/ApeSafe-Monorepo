@@ -8,6 +8,7 @@ import mockHubFactoryAbi from "@/src/commons/abi/MockHubFactory"
 import { useAppKitState } from "@reown/appkit/react"
 import { useParams } from "@router"
 import axios from "axios"
+import { parseUnits } from "viem"
 
 const API_URL = "https://api.solgram.app/api/v1"
 
@@ -24,6 +25,7 @@ const CreateTokenPage = () => {
 	const { data: hash, writeContract, error } = useWriteContract()
 	const { address, isConnecting, isDisconnected, chain } = useAccount()
 	const { create } = useParams()
+	let approveAddr = "0x036CbD53842c5426634e7929541eC2318f3dCF7e";
 
 	const handleFileChange = (file: File, base64?: string) => {
 		console.log("File changed:", file)
@@ -40,13 +42,43 @@ const CreateTokenPage = () => {
 		} else if (imageBase64 === null) {
 			alert("Token Image is required.")
 		} else {
+			// writeContract({
+			// 	abi: [
+			// 		{
+			// 			name: "approve",
+			// 			type: "function",
+			// 			inputs: [
+			// 				{
+			// 					name: "spender",
+			// 					type: "address",
+			// 				},
+			// 				{
+			// 					name: "amount",
+			// 					type: "uint256",
+			// 				},
+			// 			],
+			// 			outputs: [
+			// 				{
+			// 					name: "",
+			// 					type: "bool",
+			// 				},
+			// 			],
+			// 			stateMutability: "public",
+			// 		},
+			// 	],
+			// 	address: `0x${approveAddr.slice(2)}`,
+			// 	functionName: "approve",
+			// 	account: address,
+			// 	chain: chain,
+			// 	args: ["0xc5C5bEd29FFd8631b548172772bB0208256BD2D7", parseUnits("2.0", 6)],
+			// })
 			writeContract({
 				abi: mockHubFactoryAbi,
-				address: "0x10DfC741fFdfF34A3Fd3fA2B0165cCa25c476ba3",
+				address: "0xc5C5bEd29FFd8631b548172772bB0208256BD2D7",
 				functionName: "deploy",
 				account: address,
 				chain: chain,
-				args: [create, tokenTicker, "0x1124401c258653847Ea35de2cEe31c753629D1cB"],
+				args: [create, tokenTicker, "0x1124401c258653847Ea35de2cEe31c753629D1cB", "0xb48F1E15c21A643fd6C47542EdD097ea5f0aece0", "0xb48F1E15c21A643fd6C47542EdD097ea5f0aece0", "0x061593E9Af7f6D73B4C8C6DEAFff7E4aE46A850D"],
 			})
 
 			if (error) {
