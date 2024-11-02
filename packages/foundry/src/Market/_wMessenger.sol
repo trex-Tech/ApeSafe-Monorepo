@@ -40,4 +40,25 @@ abstract contract _wMessenger  {
         );
     }
 
+    function sendMessage2(
+        uint16 targetChain,
+        address targetAddress,
+        bytes memory data
+    ) public {
+        uint256 cost = quoteCrossChainCost(targetChain);
+
+        require(
+            address(this).balance >= cost,
+            "Insufficient funds for cross-chain delivery"
+        );
+
+        wormholeRelayer.sendPayloadToEvm{value: cost}(
+            targetChain,
+            targetAddress,
+            data,
+            0,
+            GAS_LIMIT
+        );
+    }
+
 }

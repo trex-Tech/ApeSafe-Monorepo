@@ -34,7 +34,7 @@ contract PeerERC20Factory {
     }
 
     function deploy(string memory name, string memory symbol, address _baseERC20, address creator, address wRelayer) private {
-        PeerERC20 peerERC20 = new PeerERC20(name, symbol, creator, wRelayer);
+        PeerERC20 peerERC20 = new PeerERC20(name, symbol, creator);
 
         wormholeRelayer = IWormholeRelayer(wRelayer);
 
@@ -55,7 +55,7 @@ contract PeerERC20Factory {
 
         usdc.approve(address(protoCCTPGateway), _amountUsdc);
 
-        bytes memory payload = abi.encode(protoCCTPId2Wormhole[currPCCTPChainID] , base2peer[_baseERC20], msg.sender, _amountUsdc);
+        bytes memory payload = abi.encode(protoCCTPId2Wormhole[currPCCTPChainID] , base2peer[_baseERC20], msg.sender, address(this));
 
         protoCCTPGateway.send(84532, _baseERC20, _amountUsdc, payload);
     }

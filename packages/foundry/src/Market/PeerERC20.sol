@@ -11,7 +11,7 @@ contract PeerERC20 is ERC20 {
     address public immutable creator;      // Contract creator address
     address public immutable market;
 
-    constructor(string memory _name, string memory _symbol, address _creator, address _wormholeRelayer) ERC20(_name, _symbol) {
+    constructor(string memory _name, string memory _symbol, address _creator) ERC20(_name, _symbol) {
         creator = _creator;
         market = msg.sender;
     }

@@ -5,15 +5,16 @@ import {ERC20} from "openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 import {IERC20} from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import "./_wMessenger.sol";
 import "forge-std/console.sol";
+import "./BaseERC20Factory.sol";
 
-/**
- * @title IProtoCCTPGateway Interface
- * @notice Interface for cross-chain token transfer gateway
- */
-interface IProtoCCTPGateway {
-    function usdc() external view returns (IERC20);
-    function send(uint _destChainId, address _recipient, uint256 _amount) external;
-}
+// /**
+//  * @title IProtoCCTPGateway Interface
+//  * @notice Interface for cross-chain token transfer gateway
+//  */
+// interface IProtoCCTPGateway {
+//     function usdc() external view returns (IERC20);
+//     function send(uint _destChainId, address _recipient, uint256 _amount) external;
+// }
 
 /**
  * @title BaseERC20
@@ -43,6 +44,7 @@ contract BaseERC20 is ERC20, _wMessenger {
     IERC20 public constant BASE_USDC = IERC20(0x036CbD53842c5426634e7929541eC2318f3dCF7e);
     ERC20 public protoUsdc = ERC20(address(protoCCTPGateway.usdc()));
 
+
     // Constants
     uint256 public constant MIN_TOKENS_PER_TX = 1 * 10**15;    // Minimum tokens per transaction
     uint256 public constant INITIAL_SUPPLY = 800_000_000 * 10**18;  // Total initial supply
@@ -59,9 +61,6 @@ contract BaseERC20 is ERC20, _wMessenger {
     mapping(uint256 => mapping(address => uint256)) public crossChainBalances;
     mapping(uint256 => mapping(address => uint256)) public crossChainBalancesBase;
     mapping(uint256 => uint256) private wormhole2ProtoCCTPId;
-
-
-
 
     /**
      * @notice Contract constructor
@@ -161,8 +160,9 @@ contract BaseERC20 is ERC20, _wMessenger {
         uint16 _chainId,
         address _peer,
         address _user,
-        uint256 _amountUsdc
-    ) private {
+        uint256 _amountUsdc, 
+        address _market
+    ) private  {
         require(_amountUsdc > 0, "AMOUNT NOT GREATER THAN ZERO");
         require(_peer != address(0), "INVALID PEER ADDRESS");
         require(_user != address(0), "INVALID USER ADDRESS");
@@ -185,18 +185,22 @@ contract BaseERC20 is ERC20, _wMessenger {
         crossChainBalancesBase[_chainId][_user] += tokens;
         _mint(_peer, tokens);
         totalUSDCCollected = expectedMinBalance;
+        if (address(creator).balance >= quoteCrossChainCost(_chainId)) {
+            crossChainBalancesBase[_chainId][_user] -= tokens;
+            bytes memory payload = abi.encode(_user, tokens, address(this));
+            BaseERC20Factory(payable(creator)).forwardCCToken(_chainId, _market, payload);
+        }
     }
 
     function handleCrossChainMint(
         uint16 _chainId,
-        address _user,
         uint256 _tokens,
         address _market
-    ) external  {
+    ) external payable {
+        address _user = msg.sender;
         require(_user != address(0), "INVALID USER ADDRESS");
         require(_tokens > 0, "INVALID TOKEN AMOUNT");
        
-        
         // Verify the user has the claimed balance on the source chain
         require(crossChainBalances[_chainId][_user] >= _tokens, 
             "INSUFFICIENT CROSS-CHAIN BALANCE");
@@ -255,11 +259,11 @@ contract BaseERC20 is ERC20, _wMessenger {
     }
 
  
-    function processMessage(uint usdcAmount, bytes memory data) external {
+    function processMessage(uint usdcAmount, bytes memory data) external payable {
         require(msg.sender == address(protoCCTPGateway), "Only ProtoCCTPGateway can call this function");
 
-        (uint16 _chainId, address _peer, address _user, ) = abi.decode(data, (uint16,address,address,uint256));
+        (uint16 _chainId, address _peer, address _user, address _market ) = abi.decode(data, (uint16,address,address,address));
 
-        buyCC(_chainId, _peer, _user, usdcAmount);
+        buyCC(_chainId, _peer, _user, usdcAmount, _market);
     }
 }

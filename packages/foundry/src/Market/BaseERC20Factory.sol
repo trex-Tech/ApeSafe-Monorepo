@@ -5,6 +5,8 @@ import {BaseERC20} from "./BaseERC20.sol";
 import {IERC20} from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import {ERC20} from "openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-contracts/contracts/security/ReentrancyGuard.sol";
+import "./_wMessenger.sol";
+
 
 interface IProtoCCTPGateway {
     function usdc() external view returns (IERC20);
@@ -17,11 +19,14 @@ interface IProtoCCTPClient {
 }
 
 
-contract BaseERC20Factory is ReentrancyGuard  { 
+contract BaseERC20Factory is ReentrancyGuard, _wMessenger  { 
+    receive() external payable {}
     IProtoCCTPGateway public protoCCTPGateway;
     ERC20 public usdc;
 
     event NewToken(address indexed token);
+
+    mapping (address => bool) private I_DEPLOYED_YOU;
 
     function deploy(
         string memory name,
@@ -30,7 +35,7 @@ contract BaseERC20Factory is ReentrancyGuard  {
         address opFactory,
         address arbFactory,
         address pFactory
-        ) external nonReentrant  returns (address) {
+    ) external nonReentrant  returns (address) {
         BaseERC20 baseERC20 = new BaseERC20(name, symbol);
 
         emit NewToken(address(baseERC20));
@@ -50,8 +55,14 @@ contract BaseERC20Factory is ReentrancyGuard  {
         return address(baseERC20);
     }
 
+    function forwardCCToken(uint16 _chainId, address _market, bytes memory payload) external {
+        require(I_DEPLOYED_YOU[msg.sender] == true, "I DIDN'T CREATE YOU");
+        sendMessage2(_chainId, _market, payload);
+    }
+
+
 }
 
 // Deployer: 0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80
-// Deployed to: 0xc5C5bEd29FFd8631b548172772bB0208256BD2D7
-// Transaction hash: 0xcc55f8ad173858d893c8c5bad6d1310add4d169dddccc99f6ccd5154bde40881
+// Deployed to: 0x999F9BB7172ED55e74c732ee364B39430AFeBd91
+// Transaction hash: 0x0b849ccd7ce7d4375dae86d1bff2e57a7e1967ca6cb200627325d6e1ea308152
