@@ -7,7 +7,7 @@ import CustomButton from "@/src/commons/components/CustomButton"
 import { Search } from "lucide-react"
 import { renderTable } from "@/src/commons/components/Table"
 import { useAccount } from "wagmi"
-import { TableRowType, TokenData } from "@interfaces"
+import { PendingToken, TableRowType, TokenData } from "@interfaces"
 import { useGetAllTokens } from "@commons/api/tokens"
 import { Pagination, PaginationProps, Tooltip, useMediaQuery } from "@mui/material"
 import { COLORS } from "@/src/commons/utils"
@@ -15,100 +15,12 @@ import useDebounce from "@/src/commons/hooks/useDebounce"
 import DropdownSelect from "@/src/commons/components/DropdownSelect"
 import LoadingSpinner from "@/src/commons/components/LoadingSpinner"
 import DynamicPagination from "@/src/commons/components/DynamicPagination"
+import { DateFilter, dateFilterOptions, rows } from "@/src/commons/utils/tokenTableRow"
+import { PendingTokensService } from "@/src/service/pendingTokensService"
 
 interface Props {
 	className?: string
 }
-
-type DateFilter = "1h" | "24h" | "3d" | "7d" | "30d" | "1y"
-
-const rows: TableRowType<TokenData>[] = [
-	{
-		label: "ID",
-		value: "id",
-		visible: true,
-		view: (row) => <div className="w-24 truncate">{row.id}</div>,
-	},
-	{
-		label: "Name",
-		value: "name",
-		visible: true,
-		view: (row) => (
-			<div className="flex items-center gap-2">
-				<img
-					src={row.image}
-					alt={row.name}
-					className="h-10 w-10 rounded-full"
-				/>
-				<span className="w-36 truncate">{row.name}</span>
-			</div>
-		),
-	},
-	{
-		label: "Ticker",
-		value: "ticker",
-		visible: true,
-		view: (row) => <div className="w-24 truncate">{row.ticker}</div>,
-	},
-	{
-		label: "Description",
-		value: "description",
-		visible: true,
-		view: (row) => <div className="w-48 truncate">{row.description}</div>,
-	},
-	{
-		label: "Creator",
-		value: "name",
-		visible: true,
-		view: (row) => <div className="w-24 truncate">{row.creator}</div>,
-	},
-	// {
-	// 	label: "24h Change",
-	// 	value: "change",
-	// 	visible: true,
-	// 	view: (row) => (
-	// 	  <div className="flex items-center gap-1">
-	// 		<p>{row.change}</p>
-	// 		{row.change > 0 ? (
-	// 		  <ArrowUp size={20} color="green" strokeWidth={3} />
-	// 		) : (
-	// 		  <ArrowDown size={20} color="red" strokeWidth={3} />
-	// 		)}
-	// 	  </div>
-	// 	),
-	//   },
-	{
-		label: "Website",
-		value: "website_url",
-		visible: true,
-		view: (row) => (
-			<a
-				className="w-24 truncate"
-				href={row.website_url}
-				target="_blank"
-				rel="noopener noreferrer">
-				{row.website_url}
-			</a>
-		),
-	},
-	{
-		label: "Date Created",
-		value: "date_created",
-		visible: true,
-		format: (row) => new Date(row.date_created).toLocaleDateString(),
-		view: (row) => <div className="w-24 truncate">{new Date(row.date_created).toLocaleDateString()}</div>,
-	},
-]
-
-const dateFilterOptions = [
-	{ value: "", label: "Clear Filter" },
-	{ value: "1h", label: "Last 1 hour" },
-	{ value: "24h", label: "Last 24 hours" },
-	{ value: "3d", label: "Last 3 days" },
-	{ value: "7d", label: "Last 7 days" },
-	{ value: "30d", label: "Last 30 days" },
-	{ value: "1y", label: "Last 1 year" },
-]
 
 const HomePage = ({ className }: Props) => {
 	const router = useRouter()
@@ -119,6 +31,7 @@ const HomePage = ({ className }: Props) => {
 	const [searchQuery, setSearchQuery] = useState("")
 	const [dateFilter, setDateFilter] = useState<DateFilter | undefined>()
 	const debouncedSearchTerm = useDebounce(searchQuery, 500)
+	const [pendingTokens, setPendingTokens] = useState<PendingToken[]>([])
 	console.log("tokenName:", tokenName)
 	const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
 		setPage(value)
@@ -242,6 +155,23 @@ const HomePage = ({ className }: Props) => {
 					/>
 				)}
 			</div>
+
+			{PendingTokensService.getPendingTokens().length > 0 && (
+				<div className="mt-4 flex flex-col rounded-lg border p-4">
+					<div className="mb-6 flex flex-col justify-between md:flex-row md:items-center">
+						<h3 className="mb-2 text-sm text-status-error">
+							Error saving your newly created token(s), view the pending token(s)
+						</h3>
+						<CustomButton
+							text="View Pending Tokens"
+							className="rounded-md border border-primary bg-inherit py-[12px] text-xs text-primary md:py-[10px] md:text-sm"
+							onClick={() => {
+								router.push("/pending-tokens")
+							}}
+						/>
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }
