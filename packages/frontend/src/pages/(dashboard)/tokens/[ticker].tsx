@@ -77,16 +77,25 @@ const BuyTab = () => {
 
 	const { address, chain } = useAccount()
 
-	let approveAddr =
-		chain?.id === 84532
-			? "0x036CbD53842c5426634e7929541eC2318f3dCF7e"
-			: chain?.id === 80002
-				? "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582"
-				: chain?.id === 421614
-					? "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"
-					: chain?.id === 11155420
-						? "0x5fd84259d66Cd46123540766Be93DFE6D43130D7"
-						: null
+	let approveAddr
+	let marketAddr
+
+	if (chain?.id === 84532) {
+		approveAddr = "0x036CbD53842c5426634e7929541eC2318f3dCF7e"
+		marketAddr = `0x${contractAddress?.slice(2)}`
+	}
+
+	if (chain?.id === 80002) {
+		approveAddr = "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582"
+	}
+
+	if (chain?.id === 421614) {
+		approveAddr = "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"
+	}
+
+	if (chain?.id === 11155420) {
+		approveAddr = "0x5fd84259d66Cd46123540766Be93DFE6D43130D7"
+	}
 
 	if (approveAddr?.length === 0) {
 		return
@@ -107,18 +116,49 @@ const BuyTab = () => {
 			console.log("New token buyData:", buyData)
 			console.log("New token ca:", buyData.logs[0].address)
 			if (approveAddr === "0x036CbD53842c5426634e7929541eC2318f3dCF7e") {
-				buyContract()
+				buyContract(amount)
 			} else {
-				buyContract()
+				buyContract(amount)
 
-				if ("buyContractIsConfrimed") {
-					transferContract()
-				}
+				// if ("buyContractIsConfrimed" === "") {
+				// 	transferContract()
+				// }
 			}
 		}
 	}, [isConfirmed, buyData])
 
-	const buyContract = () => {}
+	const buyContract = (amount: string) => {
+		writeContract({
+			abi: [
+				{
+					name: "buy",
+					type: "function",
+					inputs: [
+						{
+							name: "_amountUsdc",
+							type: "uint256",
+						},
+					],
+					outputs: [],
+					stateMutability: "public",
+				},
+			],
+			address: marketAddr,
+			functionName: "buy",
+			account: address,
+			chain: chain,
+			args: [parseUnits(amount, 6)],
+		})
+
+		if (error) {
+			// error.message
+			// error.name
+			console.log("error:", error.message)
+			if (error.message.includes("Connector not connected.")) {
+				alert("Please connect your wallet.")
+			}
+		}
+	}
 
 	const transferContract = () => {}
 
@@ -152,12 +192,8 @@ const BuyTab = () => {
 				functionName: "approve",
 				account: address,
 				chain: chain,
-				args: [`0x${contractAddress?.slice(2)}`, parseUnits(amount, 6)],
+				args: [marketAddr, parseUnits(amount, 6)],
 			})
-
-			buyContract()
-
-			transferContract()
 
 			if (error) {
 				// error.message
@@ -274,6 +310,21 @@ const SellTab = () => {
 
 	const { address, chain } = useAccount()
 
+	let marketAddr
+
+	if (chain?.id === 84532) {
+		marketAddr = `0x${contractAddress?.slice(2)}`
+	}
+
+	if (chain?.id === 80002) {
+	}
+
+	if (chain?.id === 421614) {
+	}
+
+	if (chain?.id === 11155420) {
+	}
+
 	const { writeContract, data: hash, error } = useWriteContract()
 
 	const {
@@ -292,10 +343,24 @@ const SellTab = () => {
 	}, [isConfirmed, buyData])
 
 	const sellFn = () => {
+		console.log(amount)
 		if (amount !== "") {
 			writeContract({
-				abi: mockHubAbi,
-				address: `0x${contractAddress.slice(2)}`,
+				abi: [
+					{
+						name: "sell",
+						type: "function",
+						inputs: [
+							{
+								name: "_amountTokens",
+								type: "uint256",
+							},
+						],
+						outputs: [],
+						stateMutability: "public",
+					},
+				],
+				address: marketAddr,
 				functionName: "sell",
 				account: address,
 				chain: chain,

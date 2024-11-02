@@ -42,11 +42,11 @@ const CreateTokenPage = () => {
 		} else {
 			writeContract({
 				abi: mockHubFactoryAbi,
-				address: "0xDa894BBc8Fce2Ee4D204Bb2EE7ed856D6400bc2f",
+				address: "0x10DfC741fFdfF34A3Fd3fA2B0165cCa25c476ba3",
 				functionName: "deploy",
 				account: address,
 				chain: chain,
-				args: [create, tokenTicker, "0x1124401c258653847Ea35de2cEe31c753629D1cB", "0x1124401c258653847Ea35de2cEe31c753629D1cB"],
+				args: [create, tokenTicker, "0x1124401c258653847Ea35de2cEe31c753629D1cB"],
 			})
 
 			if (error) {
@@ -61,6 +61,8 @@ const CreateTokenPage = () => {
 	}
 
 	const saveCreatedToken = async (address: string) => {
+
+		console.log(address);
 		const data = {
 			name: create,
 			ticker: tokenTicker,
