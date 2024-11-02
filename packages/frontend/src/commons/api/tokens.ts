@@ -19,8 +19,8 @@ export function useGetAllTokens(
 			const response = await axios.get(
 				`https://api.solgram.app/api/v1/tokens/token/?page=${page}&search=${search}&date=${timeFilter}`,
 			)
-			console.log({ response })
-			console.log("time", new Date())
+			//console.log({ response })
+			//console.log("time", new Date())
 
 			return response.data
 		},

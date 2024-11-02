@@ -42,11 +42,11 @@ const CreateTokenPage = () => {
 		} else {
 			writeContract({
 				abi: mockHubFactoryAbi,
-				address: "0xBc53B85fcB5aCBe82935418Ed96e9925bf569860",
+				address: "0x10DfC741fFdfF34A3Fd3fA2B0165cCa25c476ba3",
 				functionName: "deploy",
 				account: address,
 				chain: chain,
-				args: [create, tokenTicker],
+				args: [create, tokenTicker, "0x1124401c258653847Ea35de2cEe31c753629D1cB"],
 			})
 
 			if (error) {
@@ -61,6 +61,8 @@ const CreateTokenPage = () => {
 	}
 
 	const saveCreatedToken = async (address: string) => {
+
+		console.log(address);
 		const data = {
 			name: create,
 			ticker: tokenTicker,
@@ -106,12 +108,12 @@ const CreateTokenPage = () => {
 
 	useEffect(() => {
 		if (isConfirmed && data && data.logs) {
-			setNewTokenAddress("0x" + data.logs[1].topics[1].slice(26))
+			setNewTokenAddress("0x" + data.logs[0]?.topics[1].slice(26))
 			console.log("New token data:", data)
-			console.log("New token ca:", data.logs[0].address)
+			console.log("New token ca:", "0x" + data.logs[0]?.topics[1].slice(26))
 		}
 		if (isConfirmed && data && data.logs) {
-			saveCreatedToken(data.logs[0].address)
+			saveCreatedToken("0x" + data.logs[0]?.topics[1].slice(26))
 		}
 	}, [isConfirmed, data])
 

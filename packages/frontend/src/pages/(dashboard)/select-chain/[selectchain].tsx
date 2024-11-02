@@ -1,12 +1,14 @@
+import CustomButton from "@/src/commons/components/CustomButton"
 import MultiChainSelector from "@/src/commons/components/MutltiChainSelector"
 import { useParams } from "@router"
 import { useState } from "react"
 import { FaCopy } from "react-icons/fa"
 import { IoMdCheckmark } from "react-icons/io"
+import { useNavigate } from "react-router-dom"
 
 const index = () => {
 	const { selectchain } = useParams()
-
+	const navigate = useNavigate()
 	const [copied, setCopied] = useState(false)
 
 	const copyToClipboard = () => {
@@ -36,12 +38,23 @@ const index = () => {
 						)}
 					</button>
 				</div>
-				<p className={`text-left text-[13px] text-[#fff] lg:w-[668px]`}>
+				{/* <p className={`text-left text-[13px] text-[#fff] lg:w-[668px]`}>
 					Unlike traditional Signle Chain Tokens, yours can exist everywhere in one simple step. <br />
 					Select up to 5 chains to extend your token's reach.
+				</p> */}
+				<p className={`text-left text-[13px] text-[#fff] lg:w-[668px]`}>
+					Your token lovers can transact your token on any chain of choice, with just a few approvals, right
+					here on ApeSafe.
 				</p>
 
-				<MultiChainSelector />
+				<div className={`mt-[30px]`}>
+					<CustomButton
+						text="Go back home"
+						onClick={() => navigate("/")}
+					/>
+				</div>
+
+				{/* <MultiChainSelector /> */}
 			</div>
 		</div>
 	)

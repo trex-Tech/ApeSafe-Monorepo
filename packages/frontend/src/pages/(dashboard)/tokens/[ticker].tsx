@@ -77,6 +77,30 @@ const BuyTab = () => {
 
 	const { address, chain } = useAccount()
 
+	let approveAddr
+	let marketAddr
+
+	if (chain?.id === 84532) {
+		approveAddr = "0x036CbD53842c5426634e7929541eC2318f3dCF7e"
+		marketAddr = `0x${contractAddress?.slice(2)}`
+	}
+
+	if (chain?.id === 80002) {
+		approveAddr = "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582"
+	}
+
+	if (chain?.id === 421614) {
+		approveAddr = "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"
+	}
+
+	if (chain?.id === 11155420) {
+		approveAddr = "0x5fd84259d66Cd46123540766Be93DFE6D43130D7"
+	}
+
+	if (approveAddr?.length === 0) {
+		return
+	}
+
 	const { writeContract, data: hash, error } = useWriteContract()
 
 	const {
@@ -90,19 +114,81 @@ const BuyTab = () => {
 	useEffect(() => {
 		if (isConfirmed && buyData && buyData.logs) {
 			console.log("New token buyData:", buyData)
-			console.log("New token ca:", buyData.logs[0].address)
+			console.log("New token ca:", buyData.logs[0].address, "isConfirmed:::", isConfirmed, "hash:::", hash)
+			if (approveAddr === "0x036CbD53842c5426634e7929541eC2318f3dCF7e") {
+				buyContract(amount)
+			} else {
+				buyContract(amount)
+			}
 		}
 	}, [isConfirmed, buyData])
+
+	const buyContract = (amount: string) => {
+		writeContract({
+			abi: [
+				{
+					name: "buy",
+					type: "function",
+					inputs: [
+						{
+							name: "_amountUsdc",
+							type: "uint256",
+						},
+					],
+					outputs: [],
+					stateMutability: "public",
+				},
+			],
+			address: marketAddr,
+			functionName: "buy",
+			account: address,
+			chain: chain,
+			args: [parseUnits(amount, 6)],
+		})
+
+		if (error) {
+			// error.message
+			// error.name
+			console.log("error:", error.message)
+			if (error.message.includes("Connector not connected.")) {
+				alert("Please connect your wallet.")
+			}
+		}
+	}
+
+	const transferContract = () => {}
 
 	const buyFn = () => {
 		if (amount !== "") {
 			writeContract({
-				abi: mockHubAbi,
-				address: `0x${contractAddress.slice(2)}`,
-				functionName: "buy",
+				abi: [
+					{
+						name: "approve",
+						type: "function",
+						inputs: [
+							{
+								name: "spender",
+								type: "address",
+							},
+							{
+								name: "amount",
+								type: "uint256",
+							},
+						],
+						outputs: [
+							{
+								name: "",
+								type: "bool",
+							},
+						],
+						stateMutability: "public",
+					},
+				],
+				address: `0x${approveAddr.slice(2)}`,
+				functionName: "approve",
 				account: address,
 				chain: chain,
-				args: [parseUnits(amount, 18)],
+				args: [marketAddr, parseUnits(amount, 6)],
 			})
 
 			if (error) {
@@ -144,24 +230,6 @@ const BuyTab = () => {
 					onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1"))}
 				/>
 			</div>
-
-			{/* <div className={"flex items-center justify-between"}>
-				<CustomButton
-					text={"Reset"}
-					variant={"text"}
-					onClick={() => setValue("amount", "")}
-					className={"mt-4 text-primary"}
-				/>
-				{[0.01, 0.05, 0.1, 0.5, 1].map((value, index) => (
-					<CustomButton
-						key={index}
-						onClick={() => setValue("amount", value)}
-						variant={"text"}
-						text={value + " " + ticker}
-						className={"mt-4 text-primary text-[12px] space-x-[40px]"}
-					/>
-				))}
-			</div> */}
 
 			<div className={`mt-[20px]`}>
 				<p>
@@ -220,6 +288,21 @@ const SellTab = () => {
 
 	const { address, chain } = useAccount()
 
+	let marketAddr
+
+	if (chain?.id === 84532) {
+		marketAddr = `0x${contractAddress?.slice(2)}`
+	}
+
+	if (chain?.id === 80002) {
+	}
+
+	if (chain?.id === 421614) {
+	}
+
+	if (chain?.id === 11155420) {
+	}
+
 	const { writeContract, data: hash, error } = useWriteContract()
 
 	const {
@@ -238,10 +321,24 @@ const SellTab = () => {
 	}, [isConfirmed, buyData])
 
 	const sellFn = () => {
+		console.log(amount)
 		if (amount !== "") {
 			writeContract({
-				abi: mockHubAbi,
-				address: `0x${contractAddress.slice(2)}`,
+				abi: [
+					{
+						name: "sell",
+						type: "function",
+						inputs: [
+							{
+								name: "_amountTokens",
+								type: "uint256",
+							},
+						],
+						outputs: [],
+						stateMutability: "public",
+					},
+				],
+				address: marketAddr,
 				functionName: "sell",
 				account: address,
 				chain: chain,
