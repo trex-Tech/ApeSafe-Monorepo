@@ -114,15 +114,11 @@ const BuyTab = () => {
 	useEffect(() => {
 		if (isConfirmed && buyData && buyData.logs) {
 			console.log("New token buyData:", buyData)
-			console.log("New token ca:", buyData.logs[0].address)
+			console.log("New token ca:", buyData.logs[0].address, "isConfirmed:::", isConfirmed, "hash:::", hash)
 			if (approveAddr === "0x036CbD53842c5426634e7929541eC2318f3dCF7e") {
 				buyContract(amount)
 			} else {
 				buyContract(amount)
-
-				// if ("buyContractIsConfrimed" === "") {
-				// 	transferContract()
-				// }
 			}
 		}
 	}, [isConfirmed, buyData])
@@ -234,24 +230,6 @@ const BuyTab = () => {
 					onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1"))}
 				/>
 			</div>
-
-			{/* <div className={"flex items-center justify-between"}>
-				<CustomButton
-					text={"Reset"}
-					variant={"text"}
-					onClick={() => setValue("amount", "")}
-					className={"mt-4 text-primary"}
-				/>
-				{[0.01, 0.05, 0.1, 0.5, 1].map((value, index) => (
-					<CustomButton
-						key={index}
-						onClick={() => setValue("amount", value)}
-						variant={"text"}
-						text={value + " " + ticker}
-						className={"mt-4 text-primary text-[12px] space-x-[40px]"}
-					/>
-				))}
-			</div> */}
 
 			<div className={`mt-[20px]`}>
 				<p>
