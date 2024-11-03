@@ -77,7 +77,7 @@ const CreateTokenPage = () => {
 				functionName: "approve",
 				account: address,
 				chain: chain,
-				args: ["0xA22B592c7e3e92d93A1e7E28565BfB3447fDD506", parseUnits("2.0", 6)],
+				args: ["0x7ae77e31Ba4aE8f961a2E586CB9A21331386945b", parseUnits("2.0", 6)],
 			})
 
 			if (error) {
@@ -138,7 +138,7 @@ const CreateTokenPage = () => {
 
 				writeContract({
 					abi: mockHubFactoryAbi,
-					address: "0xA22B592c7e3e92d93A1e7E28565BfB3447fDD506",
+					address: "0x7ae77e31Ba4aE8f961a2E586CB9A21331386945b",
 					functionName: "deploy",
 					account: address,
 					chain: chain,
@@ -153,18 +153,19 @@ const CreateTokenPage = () => {
 				})
 			} else {
 				console.log("Not approveAddress:::", data.logs[0].address)
-				if (data.logs[0].address === "0xa22b592c7e3e92d93a1e7e28565bfb3447fdd506") {
+				// if (data.logs[0].address === "0xb55db4f64e925b312cb0d391f6333ab36b80cdd6") {
 					setNewTokenAddress("0x" + data.logs[0]?.topics[1].slice(26))
 					setIsDeployConfirmed(true)
 					console.log("New token data:", data)
 					console.log("New token ca:", "0x" + data.logs[0]?.topics[1].slice(26))
-				}
+				// }
 			}
 		}
 	}, [isConfirmed, approveAddr])
 
 	useEffect(() => {
 		if (isDeployConfirmed) {
+			console.log(3939)
 			saveTokenToDB()
 		}
 	}, [isDeployConfirmed])
@@ -242,7 +243,7 @@ const CreateTokenPage = () => {
 							<p>
 								{hash && (
 									<a
-										href={`https://sepolia.basescan.org/tx/${hash}`}
+										href={`https://wormholescan.io/#/tx/${hash}?network=Testnet&view=overview`}
 										target="_blank"
 										rel="noopener noreferrer"
 										className={`text-blue-700 underline`}>
