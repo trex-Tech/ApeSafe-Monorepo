@@ -10,6 +10,7 @@ import { useParams } from "@router"
 import axios from "axios"
 import { useTokenMutation } from "@/src/commons/api/tokens"
 import { Toaster } from "react-hot-toast"
+import { parseUnits } from "viem"
 
 const API_URL = "https://api.solgram.app/api/v1"
 
@@ -26,6 +27,9 @@ const CreateTokenPage = () => {
 	const { data: hash, writeContract, error } = useWriteContract()
 	const { address, isConnecting, isDisconnected, chain } = useAccount()
 	const { create } = useParams()
+	let approveAddr = "0x036CbD53842c5426634e7929541eC2318f3dCF7e"
+	const [addressInUse, setAddressInUse] = useState("")
+	const [isDeployConfirmed, setIsDeployConfirmed] = useState(false)
 
 	const handleFileChange = (file: File, base64?: string) => {
 		console.log("File changed:", file)
@@ -38,6 +42,7 @@ const CreateTokenPage = () => {
 	const saveTokenMutation = useTokenMutation()
 
 	const createToken = async () => {
+		setAddressInUse("0x036CbD53842c5426634e7929541eC2318f3dCF7e")
 		if (create === "" || tokenTicker === "" || tokenDescription === "") {
 			alert("Please fill in needed fields.")
 			return
@@ -45,12 +50,34 @@ const CreateTokenPage = () => {
 			alert("Token Image is required.")
 		} else {
 			writeContract({
-				abi: mockHubFactoryAbi,
-				address: "0x10DfC741fFdfF34A3Fd3fA2B0165cCa25c476ba3",
-				functionName: "deploy",
+				abi: [
+					{
+						name: "approve",
+						type: "function",
+						inputs: [
+							{
+								name: "spender",
+								type: "address",
+							},
+							{
+								name: "amount",
+								type: "uint256",
+							},
+						],
+						outputs: [
+							{
+								name: "",
+								type: "bool",
+							},
+						],
+						stateMutability: "public",
+					},
+				],
+				address: `0x${approveAddr.slice(2)}`,
+				functionName: "approve",
 				account: address,
 				chain: chain,
-				args: [create, tokenTicker, "0x1124401c258653847Ea35de2cEe31c753629D1cB"],
+				args: ["0x79D8bd6f20cFF6151cB9A7008d9BD8Ba5305387a", parseUnits("2.0", 6)],
 			})
 
 			if (error) {
@@ -64,17 +91,6 @@ const CreateTokenPage = () => {
 		}
 	}
 
-	const tokenData = {
-		name: create,
-		ticker: tokenTicker,
-		description: tokenDescription,
-		twitter_url: twitterLink, //OPTIONAL
-		telegram_url: telegramLink, //OPTIONAL
-		website_url: websiteLink, //OPTIONAL
-		chains: [{ name: "base", contract_address: address }],
-		image: imageBase64,
-	}
-
 	const {
 		isLoading: isConfirming,
 		isSuccess: isConfirmed,
@@ -83,16 +99,70 @@ const CreateTokenPage = () => {
 		hash,
 	})
 
+	const tokenData = {
+		name: create,
+		ticker: tokenTicker,
+		description: tokenDescription,
+		twitter_url: twitterLink, //OPTIONAL
+		telegram_url: telegramLink, //OPTIONAL
+		website_url: websiteLink, //OPTIONAL
+		chains: [{ name: "base", contract_address: newTokenAddress }],
+		image: imageBase64,
+	}
+
+	const saveTokenToDB = async () => {
+		const token = localStorage.getItem("apesafe_access_token")
+
+		const response = await axios.post(`${API_URL}/tokens/token/`, tokenData, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+		})
+		if (response.status === 201) {
+			router.push({
+				pathname: `/select-chain/${newTokenAddress}`,
+				query: { address: newTokenAddress },
+			} as any)
+		}
+
+		console.log("Saving response:::", response)
+	}
+
 	useEffect(() => {
-		if (isConfirmed && data && data.logs) {
+		if (isConfirmed) {
 			setNewTokenAddress("0x" + data.logs[0]?.topics[1].slice(26))
 			console.log("New token data:", data)
 			console.log("New token ca:", "0x" + data.logs[0]?.topics[1].slice(26))
+			console.log("Address:::", address)
+
+			writeContract({
+				abi: mockHubFactoryAbi,
+				address: "0x79D8bd6f20cFF6151cB9A7008d9BD8Ba5305387a",
+				functionName: "deploy",
+				account: address,
+				chain: chain,
+				args: [
+					create,
+					tokenTicker,
+					"0x1124401c258653847Ea35de2cEe31c753629D1cB",
+					"0x40228E975C2bE8671E53f35c8c4D5Cda8Ce1c650",
+					"0x40228E975C2bE8671E53f35c8c4D5Cda8Ce1c650",
+					"0x061593E9Af7f6D73B4C8C6DEAFff7E4aE46A850D",
+				],
+			})
+
+			setTimeout(() => {
+				setIsDeployConfirmed(true) // Set deploy confirmation state
+			}, 20000)
 		}
-		if (isConfirmed && data && data.logs) {
-			saveTokenMutation.mutate(tokenData)
+	}, [isConfirmed])
+
+	useEffect(() => {
+		if (isDeployConfirmed) {
+			saveTokenToDB()
 		}
-	}, [isConfirmed, data])
+	}, [isDeployConfirmed])
 
 	return (
 		<div className={``}>
