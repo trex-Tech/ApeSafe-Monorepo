@@ -162,8 +162,7 @@ contract BaseERC20 is ERC20, _wMessenger {
         uint16 _chainId,
         address _peer,
         address _user,
-        uint256 _amountUsdc, 
-        address _market
+        uint256 _amountUsdc
     ) private  {
         require(_amountUsdc > 0, "AMOUNT NOT GREATER THAN ZERO");
         require(_peer != address(0), "INVALID PEER ADDRESS");
@@ -185,13 +184,8 @@ contract BaseERC20 is ERC20, _wMessenger {
         updateCurrentPrice();
         crossChainBalances[_chainId][_user] += tokens;
         crossChainBalancesBase[_chainId][_user] += tokens;
-        _mint(_peer, tokens);
+        _mint(creator, tokens);
         totalUSDCCollected = expectedMinBalance;
-        // if (address(creator).balance >= quoteCrossChainCost(_chainId)) {
-        //     BaseERC20Factory(payable(creator)).forwardCCToken(_chainId, _market, payload);
-        //     crossChainBalancesBase[_chainId][_user] -= tokens;
-        //     bytes memory payload = abi.encode(_user, tokens, address(this));
-        // }
     }
 
     function handleCrossChainMint(
@@ -247,27 +241,26 @@ contract BaseERC20 is ERC20, _wMessenger {
         CURRENT_SUPPLY -= _amountTokens;
         updateCurrentPrice();
 
-
-        // have similar flow using protoCCTP
-        // Process USDC transfer
+        // // Process USDC transfer
         uint256 expectedMinBalance = totalUSDCCollected - usdcAmount;
+        BASE_USDC.approve(address(protoCCTPGateway), usdcAmount);
         protoCCTPGateway.send(11155420, msg.sender, usdcAmount);
         
 
-        // Verify transfer success
-        uint256 actualBalance = BASE_USDC.balanceOf(address(this));
-        require(actualBalance >= expectedMinBalance, "BALANCE VERIFICATION FAILED");
+        // // Verify transfer success
+        // uint256 actualBalance = BASE_USDC.balanceOf(address(this));
+        // require(actualBalance >= expectedMinBalance, "BALANCE VERIFICATION FAILED");
 
-        emit CrossChainSell(_chainId, _peer, _user, _amountTokens, usdcAmount);
+        // emit CrossChainSell(_chainId, _peer, _user, _amountTokens, usdcAmount);
     }
 
  
     function processMessage(uint usdcAmount, bytes memory data) external payable {
         require(msg.sender == address(protoCCTPGateway), "Only ProtoCCTPGateway can call this function");
 
-        (uint16 _chainId, address _peer, address _user, address _market ) = abi.decode(data, (uint16,address,address,address));
+        (uint16 _chainId, address _peer, address _user,) = abi.decode(data, (uint16,address,address,address));
 
-        buyCC(_chainId, _peer, _user, usdcAmount, _market);
+        buyCC(_chainId, _peer, _user, usdcAmount);
     }
 
     // To-Limit strict check to be called by baseerc20
