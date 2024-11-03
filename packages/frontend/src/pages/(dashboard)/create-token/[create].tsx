@@ -165,7 +165,8 @@ const CreateTokenPage = () => {
 
 	useEffect(() => {
 		if (isDeployConfirmed) {
-			saveTokenToDB()
+			// saveTokenToDB()
+			saveTokenMutation.mutate(tokenData)
 		}
 	}, [isDeployConfirmed])
 
