@@ -64,9 +64,9 @@ contract PeerERC20Factory is _wMessenger {
     function sell(uint256 _amountTokens, address _baseERC20, uint256 currPCCTPChainID) external payable {
         require(base2peer[_baseERC20] != address(0), "NON EXISTENT BASE");
 
-        require(_amountTokens <= PeerERC20(base2peer[_baseERC20]).balanceOf(msg.sender), "Token Amount > Balance ");
-
-        PeerERC20(base2peer[_baseERC20]).crossChainBurn(msg.sender, _amountTokens);
+        if (PeerERC20(base2peer[_baseERC20]).balanceOf(msg.sender) > 0) {
+            PeerERC20(base2peer[_baseERC20]).crossChainBurn(msg.sender, _amountTokens);
+        }
 
         bytes memory payload = abi.encode(protoCCTPId2Wormhole[currPCCTPChainID] , base2peer[_baseERC20], msg.sender, _amountTokens);
 
@@ -94,5 +94,5 @@ contract PeerERC20Factory is _wMessenger {
 }
 
 // Deployer: 0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80
-// Deployed to: 0x3b8A768eDfb3823dB7f6753BB706068aa2b56425
-// Transaction hash: 0xfdd819e38db1ac25843a002043f3c4c13d4eecaa543aeb65cab8ec2c8845c061
+// Deployed to: 0x40228E975C2bE8671E53f35c8c4D5Cda8Ce1c650
+// Transaction hash: 0x258e46cbfd2a59e714ddf626ef31764d037a1c4c3271f8446d7d1c7e887f6887
