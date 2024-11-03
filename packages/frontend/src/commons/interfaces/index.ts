@@ -102,8 +102,29 @@ export interface TokenData {
 	creator: string
 }
 
+export interface NewTokenData {
+	image: string
+	chains: NewChain[]
+	name: string
+	ticker: string
+	description: string
+	website_url: string
+	telegram_url: string
+	twitter_url: string
+}
+
+export interface PendingToken extends NewTokenData {
+	retryCount: number
+	lastAttempt: number
+}
+
 export interface Chain {
 	id: string
 	name: string
-	contract_address: string
+	contract_address: `0x${string}`
+}
+
+export interface NewChain {
+	name: string
+	contract_address: `0x${string}`
 }

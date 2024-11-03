@@ -8,6 +8,7 @@ export type Path =
 	| `/create-token/:create`
 	| `/dashboard`
 	| `/login`
+	| `/pending-tokens`
 	| `/select-chain/:selectchain`
 	| `/tokens/:ticker`
 

@@ -5,15 +5,18 @@ import {ERC20} from "openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 import {IERC20} from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import "./_wMessenger.sol";
 import "forge-std/console.sol";
+import "./BaseERC20Factory.sol";
+import "lib/wormhole-solidity-sdk/src/interfaces/IWormholeRelayer.sol";
+import "lib/wormhole-solidity-sdk/src/interfaces/IWormholeReceiver.sol";
 
-/**
- * @title IProtoCCTPGateway Interface
- * @notice Interface for cross-chain token transfer gateway
- */
-interface IProtoCCTPGateway {
-    function usdc() external view returns (IERC20);
-    function send(uint _destChainId, address _recipient, uint256 _amount) external;
-}
+// /**
+//  * @title IProtoCCTPGateway Interface
+//  * @notice Interface for cross-chain token transfer gateway
+//  */
+// interface IProtoCCTPGateway {
+//     function usdc() external view returns (IERC20);
+//     function send(uint _destChainId, address _recipient, uint256 _amount) external;
+// }
 
 /**
  * @title BaseERC20
@@ -39,8 +42,10 @@ contract BaseERC20 is ERC20, _wMessenger {
     );
 
     // External contract interfaces
-    IProtoCCTPGateway private iProtoCCTPGateway = IProtoCCTPGateway(0x1124401c258653847Ea35de2cEE31c753629D1cB);
+    IProtoCCTPGateway private protoCCTPGateway = IProtoCCTPGateway(0x1124401c258653847Ea35de2cEe31c753629D1cB);
     IERC20 public constant BASE_USDC = IERC20(0x036CbD53842c5426634e7929541eC2318f3dCF7e);
+    ERC20 public protoUsdc = ERC20(address(protoCCTPGateway.usdc()));
+
 
     // Constants
     uint256 public constant MIN_TOKENS_PER_TX = 1 * 10**15;    // Minimum tokens per transaction
@@ -56,8 +61,8 @@ contract BaseERC20 is ERC20, _wMessenger {
 
     // Mappings for cross-chain functionality
     mapping(uint256 => mapping(address => uint256)) public crossChainBalances;
+    mapping(uint256 => mapping(address => uint256)) public crossChainBalancesBase;
     mapping(uint256 => uint256) private wormhole2ProtoCCTPId;
-    mapping(uint256 => uint16) private protoCCTPId2Wormhole;
 
     /**
      * @notice Contract constructor
@@ -71,9 +76,9 @@ contract BaseERC20 is ERC20, _wMessenger {
         wormhole2ProtoCCTPId[10005] = 11155420;
         wormhole2ProtoCCTPId[10003] = 421614;
         wormhole2ProtoCCTPId[10007] = 80002;
-        protoCCTPId2Wormhole[11155420] = 10005;
-        protoCCTPId2Wormhole[421614] = 10003;
-        protoCCTPId2Wormhole[80002] = 10007;
+
+    
+  
     }
 
     /**
@@ -158,7 +163,7 @@ contract BaseERC20 is ERC20, _wMessenger {
         address _peer,
         address _user,
         uint256 _amountUsdc
-    ) external {
+    ) private  {
         require(_amountUsdc > 0, "AMOUNT NOT GREATER THAN ZERO");
         require(_peer != address(0), "INVALID PEER ADDRESS");
         require(_user != address(0), "INVALID USER ADDRESS");
@@ -178,15 +183,34 @@ contract BaseERC20 is ERC20, _wMessenger {
         CURRENT_SUPPLY += tokens;
         updateCurrentPrice();
         crossChainBalances[_chainId][_user] += tokens;
-        _mint(_peer, tokens);
+        crossChainBalancesBase[_chainId][_user] += tokens;
+        _mint(creator, tokens);
         totalUSDCCollected = expectedMinBalance;
-
-        emit CrossChainMint(_chainId, _peer, _user, _amountUsdc, tokens);
-
-        // Send cross-chain message
-        bytes memory payload = abi.encode(_user, tokens);
-        sendMessage(_chainId, _peer, payload);
     }
+
+    function handleCrossChainMint(
+        uint16 _chainId,
+        uint256 _tokens,
+        address _market
+    ) external payable {
+        address _user = msg.sender;
+        require(_user != address(0), "INVALID USER ADDRESS");
+        require(_tokens > 0, "INVALID TOKEN AMOUNT");
+       
+        // Verify the user has the claimed balance on the source chain
+        require(crossChainBalances[_chainId][_user] >= _tokens, 
+            "INSUFFICIENT CROSS-CHAIN BALANCE");
+        require(crossChainBalancesBase[_chainId][_user] >= _tokens, 
+            "INSUFFICIENT CROSS-CHAIN BALANCE ON BASE");
+
+        // Deduct from cross-chain balance Base
+        crossChainBalancesBase[_chainId][_user] -= _tokens;
+        
+        bytes memory payload = abi.encode(_user, _tokens, address(this));
+
+        sendMessage(_chainId, _market, payload);
+    }
+
 
     /**
      * @notice Handles cross-chain token sales
@@ -196,11 +220,11 @@ contract BaseERC20 is ERC20, _wMessenger {
      * @param _amountTokens Amount of tokens to sell
      */
     function sellCC(
-        uint256 _chainId,
+        uint16 _chainId,
         address _peer,
         address _user,
         uint256 _amountTokens
-    ) external {
+    ) private {
         require(_amountTokens > 0, "AMOUNT NOT GREATER THAN ZERO");
         require(_peer != address(0), "INVALID PEER ADDRESS");
         require(_user != address(0), "INVALID USER ADDRESS");
@@ -209,13 +233,52 @@ contract BaseERC20 is ERC20, _wMessenger {
         // Calculate USDC amount
         uint256 usdcAmount = (_amountTokens * CURRENT_PRICE) / (10**18 * 10**12);
         require(usdcAmount > 0, "USDC AMOUNT TOO SMALL");
+        require(BASE_USDC.balanceOf(address(this)) >= usdcAmount, "INSUFFICIENT USDC BALANCE");
         
-        // Update state
-        crossChainBalances[_chainId][_user] -= _amountTokens;
-        _burn(_peer, _amountTokens);
-        CURRENT_SUPPLY -= _amountTokens;
-        updateCurrentPrice();
+        // // Update state
+        // crossChainBalances[_chainId][_user] -= _amountTokens;
+        // _burn(address(creator), _amountTokens);
+        // CURRENT_SUPPLY -= _amountTokens;
+        // updateCurrentPrice();
 
-        emit CrossChainSell(_chainId, _peer, _user, _amountTokens, usdcAmount);
+        // // // Process USDC transfer
+        // uint256 expectedMinBalance = totalUSDCCollected - usdcAmount;
+        BASE_USDC.approve(address(protoCCTPGateway), usdcAmount);
+        protoCCTPGateway.send(11155420, msg.sender, usdcAmount);
+        
+
+        // // // Verify transfer success
+        // uint256 actualBalance = BASE_USDC.balanceOf(address(this));
+        // require(actualBalance >= expectedMinBalance, "BALANCE VERIFICATION FAILED");
+
+        // emit CrossChainSell(_chainId, _peer, _user, _amountTokens, usdcAmount);
+    }
+
+ 
+    function processMessage(uint usdcAmount, bytes memory data) external payable {
+        require(msg.sender == address(protoCCTPGateway), "Only ProtoCCTPGateway can call this function");
+
+        (uint16 _chainId, address _peer, address _user,) = abi.decode(data, (uint16,address,address,address));
+
+        buyCC(_chainId, _peer, _user, usdcAmount);
+    }
+
+    // To-Limit strict check to be called by baseerc20
+    function receiveWormholeMessages(
+        bytes memory payload,
+        bytes[] memory,
+        bytes32 sourceAddress,
+        uint16 sourceChain,
+        bytes32
+    ) public payable {
+        require(
+            msg.sender == address(wormholeRelayer),
+            "Only the Wormhole relayer can call this function"
+        );
+
+        // Decode the payload to extract the message
+        (uint16 _chainId, address _peer, address _user, uint256 amount) = abi.decode(payload, (uint16,address,address,uint256));
+
+       sellCC(_chainId, _peer, _user, amount);
     }
 }

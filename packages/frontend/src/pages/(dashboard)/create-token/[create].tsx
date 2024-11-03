@@ -8,6 +8,9 @@ import mockHubFactoryAbi from "@/src/commons/abi/MockHubFactory"
 import { useAppKitState } from "@reown/appkit/react"
 import { useParams } from "@router"
 import axios from "axios"
+import { useTokenMutation } from "@/src/commons/api/tokens"
+import { Toaster } from "react-hot-toast"
+import { parseUnits } from "viem"
 
 const API_URL = "https://api.solgram.app/api/v1"
 
@@ -24,6 +27,9 @@ const CreateTokenPage = () => {
 	const { data: hash, writeContract, error } = useWriteContract()
 	const { address, isConnecting, isDisconnected, chain } = useAccount()
 	const { create } = useParams()
+	const approveAddr = "0x036CbD53842c5426634e7929541eC2318f3dCF7e"
+	const [addressInUse, setAddressInUse] = useState("")
+	const [isDeployConfirmed, setIsDeployConfirmed] = useState(false)
 
 	const handleFileChange = (file: File, base64?: string) => {
 		console.log("File changed:", file)
@@ -33,7 +39,10 @@ const CreateTokenPage = () => {
 		// Add any additional logic you need when a file changes
 	}
 
+	const saveTokenMutation = useTokenMutation()
+
 	const createToken = async () => {
+		setAddressInUse("0x036CbD53842c5426634e7929541eC2318f3dCF7e")
 		if (create === "" || tokenTicker === "" || tokenDescription === "") {
 			alert("Please fill in needed fields.")
 			return
@@ -41,12 +50,34 @@ const CreateTokenPage = () => {
 			alert("Token Image is required.")
 		} else {
 			writeContract({
-				abi: mockHubFactoryAbi,
-				address: "0x10DfC741fFdfF34A3Fd3fA2B0165cCa25c476ba3",
-				functionName: "deploy",
+				abi: [
+					{
+						name: "approve",
+						type: "function",
+						inputs: [
+							{
+								name: "spender",
+								type: "address",
+							},
+							{
+								name: "amount",
+								type: "uint256",
+							},
+						],
+						outputs: [
+							{
+								name: "",
+								type: "bool",
+							},
+						],
+						stateMutability: "public",
+					},
+				],
+				address: `0x${approveAddr.slice(2)}`,
+				functionName: "approve",
 				account: address,
 				chain: chain,
-				args: [create, tokenTicker, "0x1124401c258653847Ea35de2cEe31c753629D1cB"],
+				args: ["0x7ae77e31Ba4aE8f961a2E586CB9A21331386945b", parseUnits("2.0", 6)],
 			})
 
 			if (error) {
@@ -60,44 +91,6 @@ const CreateTokenPage = () => {
 		}
 	}
 
-	const saveCreatedToken = async (address: string) => {
-
-		console.log(address);
-		const data = {
-			name: create,
-			ticker: tokenTicker,
-			description: tokenDescription,
-			twitter_url: twitterLink, //OPTIONAL
-			telegram_url: telegramLink, //OPTIONAL
-			website_url: websiteLink, //OPTIONAL
-			chains: [{ name: "base", contract_address: address }],
-			image: imageBase64,
-		}
-
-		const token = localStorage.getItem("apesafe_access_token")
-
-		try {
-			const res = await axios.post(`${API_URL}/tokens/token/`, data, {
-				headers: {
-					Authorization: `Bearer ${token}`, // Add the authorization header
-					"Content-Type": "application/json",
-				},
-			})
-			// console.log("Token saved successfully:", res.data)
-			console.log("Token saved successfully:", res)
-
-			if (res.status === 201) {
-				router.push({
-					pathname: `/select-chain/${address}`,
-					query: { address: address },
-				} as any)
-			}
-		} catch (error) {
-			console.error("Error saving token:", error)
-			// Handle the error appropriately (e.g., show an error message to the user)
-		}
-	}
-
 	const {
 		isLoading: isConfirming,
 		isSuccess: isConfirmed,
@@ -106,16 +99,76 @@ const CreateTokenPage = () => {
 		hash,
 	})
 
+	const tokenData = {
+		name: create,
+		ticker: tokenTicker,
+		description: tokenDescription,
+		twitter_url: twitterLink, //OPTIONAL
+		telegram_url: telegramLink, //OPTIONAL
+		website_url: websiteLink, //OPTIONAL
+		chains: [{ name: "base", contract_address: newTokenAddress }],
+		image: imageBase64,
+	}
+
+	const saveTokenToDB = async () => {
+		const token = localStorage.getItem("apesafe_access_token")
+
+		const response = await axios.post(`${API_URL}/tokens/token/`, tokenData, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+		})
+		if (response.status === 201) {
+			router.push({
+				pathname: `/select-chain/${newTokenAddress}`,
+				query: { address: newTokenAddress },
+			} as any)
+		}
+
+		console.log("Saving response:::", response)
+	}
+
 	useEffect(() => {
-		if (isConfirmed && data && data.logs) {
-			setNewTokenAddress("0x" + data.logs[0]?.topics[1].slice(26))
-			console.log("New token data:", data)
-			console.log("New token ca:", "0x" + data.logs[0]?.topics[1].slice(26))
+		if (isConfirmed) {
+			console.log(data.logs[0].address)
+			const approveAddr = "0x036cbd53842c5426634e7929541ec2318f3dcf7e"
+			if (data.logs[0].address === approveAddr) {
+				console.log(2222)
+
+				writeContract({
+					abi: mockHubFactoryAbi,
+					address: "0x7ae77e31Ba4aE8f961a2E586CB9A21331386945b",
+					functionName: "deploy",
+					account: address,
+					chain: chain,
+					args: [
+						create,
+						tokenTicker,
+						"0x1124401c258653847Ea35de2cEe31c753629D1cB",
+						"0x40228E975C2bE8671E53f35c8c4D5Cda8Ce1c650",
+						"0x40228E975C2bE8671E53f35c8c4D5Cda8Ce1c650",
+						"0x061593E9Af7f6D73B4C8C6DEAFff7E4aE46A850D",
+					],
+				})
+			} else {
+				console.log("Not approveAddress:::", data.logs[0].address)
+				// if (data.logs[0].address === "0xb55db4f64e925b312cb0d391f6333ab36b80cdd6") {
+					setNewTokenAddress("0x" + data.logs[0]?.topics[1].slice(26))
+					setIsDeployConfirmed(true)
+					console.log("New token data:", data)
+					console.log("New token ca:", "0x" + data.logs[0]?.topics[1].slice(26))
+				// }
+			}
 		}
-		if (isConfirmed && data && data.logs) {
-			saveCreatedToken("0x" + data.logs[0]?.topics[1].slice(26))
+	}, [isConfirmed, approveAddr])
+
+	useEffect(() => {
+		if (isDeployConfirmed) {
+			// saveTokenToDB()
+			saveTokenMutation.mutate(tokenData)
 		}
-	}, [isConfirmed, data])
+	}, [isDeployConfirmed])
 
 	return (
 		<div className={``}>
@@ -190,7 +243,7 @@ const CreateTokenPage = () => {
 							<p>
 								{hash && (
 									<a
-										href={`https://sepolia.basescan.org/tx/${hash}`}
+										href={`https://wormholescan.io/#/tx/${hash}?network=Testnet&view=overview`}
 										target="_blank"
 										rel="noopener noreferrer"
 										className={`text-blue-700 underline`}>
