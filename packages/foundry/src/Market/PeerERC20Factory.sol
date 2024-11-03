@@ -94,5 +94,5 @@ contract PeerERC20Factory is _wMessenger {
 }
 
 // Deployer: 0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80
-// Deployed to: 0x40228E975C2bE8671E53f35c8c4D5Cda8Ce1c650
-// Transaction hash: 0x258e46cbfd2a59e714ddf626ef31764d037a1c4c3271f8446d7d1c7e887f6887
+// Deployed to: 0x0c8feDD46C6D8fb0Ce428dfA260885CCCd1Da24F
+// Transaction hash: 0x808a6f8d1111111d116104f83f508ee98b1f161997e857de6f81e7fd6a50e533

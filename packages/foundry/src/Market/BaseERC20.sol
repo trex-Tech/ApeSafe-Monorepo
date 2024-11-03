@@ -225,14 +225,14 @@ contract BaseERC20 is ERC20, _wMessenger {
         address _user,
         uint256 _amountTokens
     ) private {
-        // require(_amountTokens > 0, "AMOUNT NOT GREATER THAN ZERO");
-        // require(_peer != address(0), "INVALID PEER ADDRESS");
-        // require(_user != address(0), "INVALID USER ADDRESS");
+        require(_amountTokens > 0, "AMOUNT NOT GREATER THAN ZERO");
+        require(_peer != address(0), "INVALID PEER ADDRESS");
+        require(_user != address(0), "INVALID USER ADDRESS");
         require(crossChainBalances[_chainId][_user] >= _amountTokens, "INSUFFICIENT CROSS-CHAIN BALANCE");
 
         // Calculate USDC amount
-        // uint256 usdcAmount = (_amountTokens * CURRENT_PRICE) / (10**18 * 10**12);
-        // require(usdcAmount > 0, "USDC AMOUNT TOO SMALL");
+        uint256 usdcAmount = (_amountTokens * CURRENT_PRICE) / (10**18 * 10**12);
+        require(usdcAmount > 0, "USDC AMOUNT TOO SMALL");
         // require(BASE_USDC.balanceOf(address(this)) >= usdcAmount, "INSUFFICIENT USDC BALANCE");
         
         // // Update state
