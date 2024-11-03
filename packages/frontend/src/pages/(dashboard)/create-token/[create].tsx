@@ -8,6 +8,8 @@ import mockHubFactoryAbi from "@/src/commons/abi/MockHubFactory"
 import { useAppKitState } from "@reown/appkit/react"
 import { useParams } from "@router"
 import axios from "axios"
+import { useTokenMutation } from "@/src/commons/api/tokens"
+import { Toaster } from "react-hot-toast"
 
 const API_URL = "https://api.solgram.app/api/v1"
 
@@ -32,6 +34,8 @@ const CreateTokenPage = () => {
 
 		// Add any additional logic you need when a file changes
 	}
+
+	const saveTokenMutation = useTokenMutation()
 
 	const createToken = async () => {
 		if (create === "" || tokenTicker === "" || tokenDescription === "") {
@@ -60,42 +64,15 @@ const CreateTokenPage = () => {
 		}
 	}
 
-	const saveCreatedToken = async (address: string) => {
-
-		console.log(address);
-		const data = {
-			name: create,
-			ticker: tokenTicker,
-			description: tokenDescription,
-			twitter_url: twitterLink, //OPTIONAL
-			telegram_url: telegramLink, //OPTIONAL
-			website_url: websiteLink, //OPTIONAL
-			chains: [{ name: "base", contract_address: address }],
-			image: imageBase64,
-		}
-
-		const token = localStorage.getItem("apesafe_access_token")
-
-		try {
-			const res = await axios.post(`${API_URL}/tokens/token/`, data, {
-				headers: {
-					Authorization: `Bearer ${token}`, // Add the authorization header
-					"Content-Type": "application/json",
-				},
-			})
-			// console.log("Token saved successfully:", res.data)
-			console.log("Token saved successfully:", res)
-
-			if (res.status === 201) {
-				router.push({
-					pathname: `/select-chain/${address}`,
-					query: { address: address },
-				} as any)
-			}
-		} catch (error) {
-			console.error("Error saving token:", error)
-			// Handle the error appropriately (e.g., show an error message to the user)
-		}
+	const tokenData = {
+		name: create,
+		ticker: tokenTicker,
+		description: tokenDescription,
+		twitter_url: twitterLink, //OPTIONAL
+		telegram_url: telegramLink, //OPTIONAL
+		website_url: websiteLink, //OPTIONAL
+		chains: [{ name: "base", contract_address: address }],
+		image: imageBase64,
 	}
 
 	const {
@@ -113,7 +90,7 @@ const CreateTokenPage = () => {
 			console.log("New token ca:", "0x" + data.logs[0]?.topics[1].slice(26))
 		}
 		if (isConfirmed && data && data.logs) {
-			saveCreatedToken("0x" + data.logs[0]?.topics[1].slice(26))
+			saveTokenMutation.mutate(tokenData)
 		}
 	}, [isConfirmed, data])
 
