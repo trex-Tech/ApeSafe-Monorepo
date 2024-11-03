@@ -27,7 +27,7 @@ const CreateTokenPage = () => {
 	const { data: hash, writeContract, error } = useWriteContract()
 	const { address, isConnecting, isDisconnected, chain } = useAccount()
 	const { create } = useParams()
-	let approveAddr = "0x036CbD53842c5426634e7929541eC2318f3dCF7e"
+	const approveAddr = "0x036CbD53842c5426634e7929541eC2318f3dCF7e"
 	const [addressInUse, setAddressInUse] = useState("")
 	const [isDeployConfirmed, setIsDeployConfirmed] = useState(false)
 
@@ -77,7 +77,7 @@ const CreateTokenPage = () => {
 				functionName: "approve",
 				account: address,
 				chain: chain,
-				args: ["0x79D8bd6f20cFF6151cB9A7008d9BD8Ba5305387a", parseUnits("2.0", 6)],
+				args: ["0xA22B592c7e3e92d93A1e7E28565BfB3447fDD506", parseUnits("2.0", 6)],
 			})
 
 			if (error) {
@@ -131,32 +131,44 @@ const CreateTokenPage = () => {
 
 	useEffect(() => {
 		if (isConfirmed) {
-			setNewTokenAddress("0x" + data.logs[0]?.topics[1].slice(26))
-			console.log("New token data:", data)
-			console.log("New token ca:", "0x" + data.logs[0]?.topics[1].slice(26))
-			console.log("Address:::", address)
+			console.log(data.logs[0].address);
+			if (data.logs[0].address === approveAddr) {
+				console.log(2222);
+				
+					writeContract({
+						abi: mockHubFactoryAbi,
+						address: "0xA22B592c7e3e92d93A1e7E28565BfB3447fDD506",
+						functionName: "deploy",
+						account: address,
+						chain: chain,
+						args: [
+							create,
+							tokenTicker,
+							"0x1124401c258653847Ea35de2cEe31c753629D1cB",
+							"0x40228E975C2bE8671E53f35c8c4D5Cda8Ce1c650",
+							"0x40228E975C2bE8671E53f35c8c4D5Cda8Ce1c650",
+							"0x061593E9Af7f6D73B4C8C6DEAFff7E4aE46A850D",
+						],
+					})
+				
+		
+			} else {
+				if (data.logs[0].address === "0xA22B592c7e3e92d93A1e7E28565BfB3447fDD506") {
+					setNewTokenAddress("0x" + data.logs[0]?.topics[1].slice(26))
+					setIsDeployConfirmed(true) // Set deploy confirmation state
+					console.log("New token data:", data)
+					console.log("New token ca:", "0x" + data.logs[0]?.topics[1].slice(26))
+				}
+			}
 
-			writeContract({
-				abi: mockHubFactoryAbi,
-				address: "0x79D8bd6f20cFF6151cB9A7008d9BD8Ba5305387a",
-				functionName: "deploy",
-				account: address,
-				chain: chain,
-				args: [
-					create,
-					tokenTicker,
-					"0x1124401c258653847Ea35de2cEe31c753629D1cB",
-					"0x40228E975C2bE8671E53f35c8c4D5Cda8Ce1c650",
-					"0x40228E975C2bE8671E53f35c8c4D5Cda8Ce1c650",
-					"0x061593E9Af7f6D73B4C8C6DEAFff7E4aE46A850D",
-				],
-			})
 
-			setTimeout(() => {
-				setIsDeployConfirmed(true) // Set deploy confirmation state
-			}, 20000)
+			
+			
+			
+
+			
 		}
-	}, [isConfirmed])
+	}, [isConfirmed, approveAddr])
 
 	useEffect(() => {
 		if (isDeployConfirmed) {

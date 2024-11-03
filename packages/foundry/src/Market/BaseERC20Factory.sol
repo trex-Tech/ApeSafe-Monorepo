@@ -64,5 +64,5 @@ contract BaseERC20Factory is ReentrancyGuard, _wMessenger  {
 }
 
 // Deployer: 0xC855358E52E0efeF34aAd09a8914d9cCb6D96f80
-// Deployed to: 0x58700b1aE060B39759e50a5fD30DFf140C4F8455
-// Transaction hash: 0xc5cb4cf2f30470bc706bf9a682cf24f5ed9ad074e89ed8d19de3f331007d37ec
+// Deployed to: 0xA22B592c7e3e92d93A1e7E28565BfB3447fDD506
+// Transaction hash: 0xcdbff227c396f6fb5dfec027313d12a680bdd73af64e90647ab15a2edc01c6bd

@@ -27,6 +27,7 @@ export default function TokenPage({}) {
 	})
 	const { data } = useGetToken(ticker)
 	console.log("ticker:::", { ticker, data })
+	console.log(data)
 
 	return (
 		<div className={"m"}>
@@ -132,6 +133,8 @@ const BuyTab = () => {
 	}, [isConfirmed, buyData])
 
 	const buyContract = (amount: string) => {
+		console.log(approveAddr)
+		console.log(`contract address 0x${contractAddress?.slice(2)}`);
 		if (approveAddr === "0x036CbD53842c5426634e7929541eC2318f3dCF7e") {
 			writeContract({
 				abi: [
@@ -156,7 +159,8 @@ const BuyTab = () => {
 			})
 		} else {
 			// buy(uint256 _amountUsdc, address _baseERC20, uint256 currPCCTPChainID)
-
+			
+			console.log(`contract address 0x${contractAddress?.slice(2)}`);
 			writeContract({
 				abi: [
 					{
