@@ -235,7 +235,7 @@ contract BaseERC20 is ERC20, _wMessenger {
         require(usdcAmount > 0, "USDC AMOUNT TOO SMALL");
         require(BASE_USDC.balanceOf(address(this)) >= usdcAmount, "INSUFFICIENT USDC BALANCE");
         
-        // Update state
+        // // Update state
         // crossChainBalances[_chainId][_user] -= _amountTokens;
         // _burn(address(creator), _amountTokens);
         // CURRENT_SUPPLY -= _amountTokens;
@@ -243,8 +243,8 @@ contract BaseERC20 is ERC20, _wMessenger {
 
         // // // Process USDC transfer
         // uint256 expectedMinBalance = totalUSDCCollected - usdcAmount;
-        // BASE_USDC.approve(address(protoCCTPGateway), usdcAmount);
-        // protoCCTPGateway.send(11155420, msg.sender, usdcAmount);
+        BASE_USDC.approve(address(protoCCTPGateway), usdcAmount);
+        protoCCTPGateway.send(11155420, msg.sender, usdcAmount);
         
 
         // // // Verify transfer success
