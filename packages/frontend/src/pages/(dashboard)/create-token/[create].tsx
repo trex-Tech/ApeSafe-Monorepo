@@ -131,42 +131,35 @@ const CreateTokenPage = () => {
 
 	useEffect(() => {
 		if (isConfirmed) {
-			console.log(data.logs[0].address);
+			console.log(data.logs[0].address)
+			const approveAddr = "0x036cbd53842c5426634e7929541ec2318f3dcf7e"
 			if (data.logs[0].address === approveAddr) {
-				console.log(2222);
-				
-					writeContract({
-						abi: mockHubFactoryAbi,
-						address: "0xA22B592c7e3e92d93A1e7E28565BfB3447fDD506",
-						functionName: "deploy",
-						account: address,
-						chain: chain,
-						args: [
-							create,
-							tokenTicker,
-							"0x1124401c258653847Ea35de2cEe31c753629D1cB",
-							"0x40228E975C2bE8671E53f35c8c4D5Cda8Ce1c650",
-							"0x40228E975C2bE8671E53f35c8c4D5Cda8Ce1c650",
-							"0x061593E9Af7f6D73B4C8C6DEAFff7E4aE46A850D",
-						],
-					})
-				
-		
+				console.log(2222)
+
+				writeContract({
+					abi: mockHubFactoryAbi,
+					address: "0xA22B592c7e3e92d93A1e7E28565BfB3447fDD506",
+					functionName: "deploy",
+					account: address,
+					chain: chain,
+					args: [
+						create,
+						tokenTicker,
+						"0x1124401c258653847Ea35de2cEe31c753629D1cB",
+						"0x40228E975C2bE8671E53f35c8c4D5Cda8Ce1c650",
+						"0x40228E975C2bE8671E53f35c8c4D5Cda8Ce1c650",
+						"0x061593E9Af7f6D73B4C8C6DEAFff7E4aE46A850D",
+					],
+				})
 			} else {
-				if (data.logs[0].address === "0xA22B592c7e3e92d93A1e7E28565BfB3447fDD506") {
+				console.log("Not approveAddress:::", data.logs[0].address)
+				if (data.logs[0].address === "0xa22b592c7e3e92d93a1e7e28565bfb3447fdd506") {
 					setNewTokenAddress("0x" + data.logs[0]?.topics[1].slice(26))
-					setIsDeployConfirmed(true) // Set deploy confirmation state
+					setIsDeployConfirmed(true)
 					console.log("New token data:", data)
 					console.log("New token ca:", "0x" + data.logs[0]?.topics[1].slice(26))
 				}
 			}
-
-
-			
-			
-			
-
-			
 		}
 	}, [isConfirmed, approveAddr])
 
