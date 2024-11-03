@@ -93,13 +93,13 @@ const BuyTab = () => {
 		mintAddr = marketAddr
 	}
 
-	if (chain?.id === 80002) {
-		approveAddr = "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582"
-	}
+	// if (chain?.id === 80002) {
+	// 	approveAddr = "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582"
+	// }
 
-	if (chain?.id === 421614) {
-		approveAddr = "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"
-	}
+	// if (chain?.id === 421614) {
+	// 	approveAddr = "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"
+	// }
 
 	if (chain?.id === 11155420) {
 		approveAddr = "0x5fd84259d66Cd46123540766Be93DFE6D43130D7"
@@ -204,42 +204,42 @@ const BuyTab = () => {
 
 	const transferContract = () => {}
 
-	const mintContract = () => {
-		writeContract({
-			abi: [
-				{
-					name: "handleCrossChainMint",
-					type: "function",
-					inputs: [
-						{
-							name: "_chainId",
-							type: "uint16",
-						},
-						{
-							name: "_user",
-							type: "address",
-						},
-						{
-							name: "_tokens",
-							type: "uint256",
-						},
-						{
-							name: "_market",
-							type: "address",
-						},
-					],
-					outputs: [],
-					stateMutability: "public",
-				},
-			],
-			address: marketAddr,
-			functionName: "handleCrossChainMint",
-			account: address,
-			chain: chain,
-			args: [10005, address, parseUnits(amount, 18), "0xb48F1E15c21A643fd6C47542EdD097ea5f0aece0"],
-			value: parseEther("0.05"),
-		})
-	}
+	// const mintContract = () => {
+	// 	writeContract({
+	// 		abi: [
+	// 			{
+	// 				name: "handleCrossChainMint",
+	// 				type: "function",
+	// 				inputs: [
+	// 					{
+	// 						name: "_chainId",
+	// 						type: "uint16",
+	// 					},
+	// 					{
+	// 						name: "_user",
+	// 						type: "address",
+	// 					},
+	// 					{
+	// 						name: "_tokens",
+	// 						type: "uint256",
+	// 					},
+	// 					{
+	// 						name: "_market",
+	// 						type: "address",
+	// 					},
+	// 				],
+	// 				outputs: [],
+	// 				stateMutability: "public",
+	// 			},
+	// 		],
+	// 		address: marketAddr,
+	// 		functionName: "handleCrossChainMint",
+	// 		account: address,
+	// 		chain: chain,
+	// 		args: [10005, address, parseUnits(amount, 18), "0xb48F1E15c21A643fd6C47542EdD097ea5f0aece0"],
+	// 		value: parseEther("0.05"),
+	// 	})
+	// }
 
 	const buyFn = () => {
 		if (amount !== "") {
@@ -405,7 +405,6 @@ const SellTab = () => {
 	}, [isConfirmed, buyData])
 
 	const sellFn = () => {
-		console.log(amount)
 		if (amount !== "") {
 			writeContract({
 				abi: [
@@ -578,6 +577,7 @@ const MintTab = () => {
 	}, [isConfirmed, buyData])
 
 	const mintContract = () => {
+		console.log(3783737)
 		writeContract({
 			abi: [
 				{
@@ -587,10 +587,6 @@ const MintTab = () => {
 						{
 							name: "_chainId",
 							type: "uint16",
-						},
-						{
-							name: "_user",
-							type: "address",
 						},
 						{
 							name: "_tokens",
@@ -609,9 +605,18 @@ const MintTab = () => {
 			functionName: "handleCrossChainMint",
 			account: address,
 			chain: chain,
-			args: [10005, address, parseUnits(amount, 18), "0xb48F1E15c21A643fd6C47542EdD097ea5f0aece0"],
-			value: parseEther("0.05"),
+			args: [10005, parseUnits(amount, 18), "0x40228E975C2bE8671E53f35c8c4D5Cda8Ce1c650"],
+			value: parseEther("0.02")
 		})
+
+		if (error) {
+			// error.message
+			// error.name
+			console.log("error:", error.message)
+			if (error.message.includes("Connector not connected.")) {
+				alert("Please connect your wallet.")
+			}
+		}
 	}
 
 	return (
@@ -663,7 +668,8 @@ const MintTab = () => {
 				<p>
 					{hash && (
 						<a
-							href={`https://sepolia.basescan.org/tx/${hash}`}
+						
+							href={`https://wormholescan.io/#/tx/${hash}?network=Testnet&view=progress`}
 							target="_blank"
 							rel="noopener noreferrer"
 							className={`text-blue-700 underline`}>
