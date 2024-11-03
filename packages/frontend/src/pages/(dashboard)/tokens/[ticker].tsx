@@ -668,7 +668,7 @@ const MintTab = () => {
 							rel="noopener noreferrer"
 							className={`text-blue-700 underline`}>
 							{" "}
-							{`${isConfirmed ? "Minting" : "Selling"} $${ticker}, check status here`}
+							{`${isConfirmed ? "Minting" : "Minting"} $${ticker}, check status here`}
 						</a>
 					)}
 				</p>
