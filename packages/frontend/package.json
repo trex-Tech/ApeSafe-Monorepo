@@ -10,8 +10,8 @@
     }
   },
   "scripts": {
-    "start": "vite --host",
-    "build": "vite build",
+    "start": "node init && vite --host",
+    "build": "node init && vite build",
     "preview": "vite preview --port 2500",
     "prettier": "prettier '**/*.tsx' --write --plugin=prettier-plugin-tailwindcss"
   },
