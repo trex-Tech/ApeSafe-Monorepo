@@ -152,7 +152,7 @@ const CreateTokenPage = () => {
 					],
 				})
 			} else {
-				console.log("Not approveAddress:::", data.logs[0].address)
+				// console.log("Not approveAddress:::", data.logs[0].address)
 				// if (data.logs[0].address === "0xb55db4f64e925b312cb0d391f6333ab36b80cdd6") {
 					setNewTokenAddress("0x" + data.logs[0]?.topics[1].slice(26))
 					setIsDeployConfirmed(true)
